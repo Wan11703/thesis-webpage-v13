@@ -26,5 +26,5 @@ dbConnection.getConnection((err, connection) => {
 module.exports = dbConnection;
 //reverted some railway stuff
 //added db port
-//chenged env variables to match railway
+//chenged env variables to match railway v2
 
