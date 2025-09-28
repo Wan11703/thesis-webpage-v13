@@ -1,0 +1,13 @@
+fastapi==0.116.1
+Flask==3.1.2
+flask_cors==6.0.1
+numpy==2.3.3
+openai==1.107.2
+pandas==2.3.2
+Pillow==11.3.0
+protobuf==6.32.1
+rapidfuzz==3.14.1
+Requests==2.32.5
+torch==2.8.0
+transformers==4.55.0
+uvicorn==0.35.0

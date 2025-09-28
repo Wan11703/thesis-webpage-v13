@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MedExtract</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/user/user-settings.css" />
+</head>
+
+<body>
+    <nav class="user-navbar">
+        <div class="container">
+            <!-- Logo -->
+            <div class="logo">
+                <a href="/user-extract">
+                    <img src="/images/logo-nav.png" alt="MedExtract Logo" class="logo-img" />
+                </a>
+            </div>
+
+            <!-- Navigation -->
+            <ul class="nav" id="user-nav">
+                <li><a href="/user-extract">Extract</a></li>
+                <li><a href="/user-search">Search</a></li>
+            </ul>
+
+            <!-- User Dropdown -->
+            <div class="user-menu" onclick="toggleDropdown(event)">
+                <img src="/images/icons/user-circle.svg" alt="User Menu" class="user-icon" />
+                <span class="username">
+                    <%= username %>
+                </span>
+                <div class="dropdown">
+                    <a href="/user-settings">
+                        <img src="/images/icons/gear-six.svg" alt="Settings" />
+                        Settings
+                    </a>
+                    <a class="logout-confirm" href="#">
+                        <img src="/images/icons/sign-out.svg" alt="Sign Out" />
+                        Sign Out
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Logout Modal -->
+    <div class="logout-modal-container">
+        <div class="logout-modal">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <img src="images/icons/seal-question.svg" alt="question mark">
+                    <h3>Confirm Logout</h3>
+                </div>
+                <img id="logout-close-btn" class="close-btn" src="images/icons/x.svg" alt="close button">
+            </div>
+
+            <div class="modal-body">
+                <p>Are you sure you want to log out?</p>
+            </div>
+
+            <div class="modal-actions">
+                <button id="logout-cancel-btn" type="button" class="cancel-btn">Cancel</button>
+                <button id="logout-confirm-btn" type="button" class="logout-btn">Log Out</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="server-message" class="server-message hidden">
+        <img id="server-message-icon" src="/images/icons/seal-check.svg" alt="Status Icon"
+            class="server-message-icon" />
+        <span id="server-message-text">This is a server message</span>
+        <img id="server-message-close" src="/images/icons/x-circle.svg" alt="Close" class="server-message-close" />
+    </div>
+
+    <div class="settings">
+        <div class="container">
+            <h2>Account Settings</h2>
+            <div class="settings-container">
+                <div class="username-settings">
+                    <div class="username">
+                        <h3>Username</h3>
+                        <%= username %>
+                    </div>
+                    <p class="username-edit">Edit</p>
+                </div>
+                <div class="email-settings">
+                    <div class="email">
+                        <h3>Email</h3>
+                        <%= email %>
+                    </div>
+                    <p class="email-edit">Cannot be changed</p>
+                </div>
+                <div class="password-settings">
+                    <div class="password">
+                        <h3>Password</h3>
+                        <p>Last changed at <%= password_datetime %>
+                        </p>
+                    </div>
+                    <p class="password-edit">Edit</p>
+                </div>
+
+                <div class="history-settings">
+                    <div class="history">
+                        <h3>Bookmarks</h3>
+                        <p class="bookmark-title">Bookmark 1 -</p>
+                    </div>
+                    <p class="history-show">Show</p>
+                </div>
+
+                <div class="delete-settings">
+                    <div class="delete">
+                        <h3>Delete Account</h3>
+                        <p>Please make sure you want to delete this account.</p>
+                    </div>
+                    <p class="delete-confirm">Delete</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="username-setting-modal">
+        <form class="username-modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <img src="images/icons/seal-question.svg" alt="question mark">
+                    <h3>Edit Username</h3>
+                </div>
+                <img id="username-close-btn" class="close-btn" src="images/icons/x.svg" alt="close button">
+            </div>
+
+            <div class="modal-body">
+                <div class="input-control">
+                    <label for="new-username">New Username</label>
+                    <input type="text" id="new-username" name="new-username" />
+                    <div class="error"></div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="username-cancel-btn" type="button" class="cancel-btn">Cancel</button>
+                <button type="submit" class="save-btn">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="password-setting-modal">
+        <form class="password-modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <img src="images/icons/seal-question.svg" alt="question mark">
+                    <h3>Edit Password</h3>
+                </div>
+                <img id="password-close-btn" class="close-btn" src="images/icons/x.svg" alt="close button">
+            </div>
+
+            <div class="modal-body">
+                <div class="input-control">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" id="current-password" name="current-password" />
+                    <div class="error"></div>
+                </div>
+
+                <div class="input-control">
+                    <label for="new-password">New Password</label>
+                    <input type="password" id="new-password" name="new-password" />
+                    <div class="error"></div>
+                </div>
+
+                <div class="input-control">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm-password" />
+                    <div class="error"></div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="password-cancel-btn" type="button" class="cancel-btn">Cancel</button>
+                <button type="submit" class="save-btn">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div class="delete-setting-modal">
+        <form class="delete-modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <img src="images/icons/seal-question.svg" alt="question mark">
+                    <h3>Delete Account</h3>
+                </div>
+                <img id="delete-close-btn" class="close-btn" src="images/icons/x.svg" alt="close button">
+            </div>
+
+            <div class="modal-body">
+                <div class="input-control">
+                    <label for="delete-confirm-text">Type "CONFIRM" to proceed</label>
+                    <input type="text" id="delete-confirm-text" name="delete-confirm-text" />
+                    <div class="error"></div>
+                </div>
+
+                <div class="input-control">
+                    <label for="delete-current-password">Current Password</label>
+                    <input type="password" id="delete-current-password" name="delete-current-password" />
+                    <div class="error"></div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="delete-cancel-btn" type="button" class="cancel-btn">Cancel</button>
+                <button type="submit" class="save-btn" id="delete-btn">Delete</button>
+            </div>
+        </form>
+    </div>
+
+
+
+
+    <!-- Extraction modal (structure unchanged, only names updated) -->
+    <div id="modal_container" class="history-modal-container">
+        <div class="history-modal">
+            <div class="history-modal-header">
+                <h1 id="history-modal-title">Extraction Results</h1>
+
+                <!-- delete icon keeps same id for JS compatibility -->
+                <img class="history-modal-delete" id="delete" src="/images/icons/trash.svg" alt="Delete"
+                    onclick="deleteSave();" />
+
+                <!-- close icon keeps same id for JS compatibility -->
+                <img class="history-modal-close" id="close" src="/images/icons/x.svg" alt="Close" />
+            </div>
+
+            <div class="history-tabs">
+                <div class="container">
+                    <div class="history-tab-container">
+                        <div class="history-tab-box">
+                            <select id="history-tabSelector" class="history-tab-btn">
+                                <option value="0" selected>Medication Details</option>
+                                <option value="1">Drug Interactions</option>
+                                <option value="2">Dosage Guidelines</option>
+                                <option value="3">Side Effects</option>
+                                <option value="4">Drug Prices</option>
+                            </select>
+                        </div>
+
+                        <div class="history-content-box">
+                            <div class="history-content active">
+                                <p id="history-details">Medication Details</p>
+                            </div>
+
+                            <div class="history-content">
+                                <p id="history-interactions">Drug Interactions</p>
+                            </div>
+
+                            <div class="history-content">
+                                <p id="history-guidelines">Dosage Guidelines</p>
+                            </div>
+
+                            <div class="history-content">
+                                <p id="history-effects">Side Effects</p>
+                            </div>
+
+                            <div class="history-content">
+                                <p id="history-prices">Drug Prices</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <footer class="footer">
+    <div class="container">
+      <div class="f-1">
+        <a href="/user-extract">
+          <img src="/images/logo-footer.png" alt="MedExtract Logo" class="logo-img" />
+        </a>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci,
+          id aspernatur itaque cumque vitae odit sint eligendi nam libero
+          voluptate magni aperiam, veniam ullam tenetur quidem nostrum enim
+          eos a.
+        </p>
+      </div>
+
+      <div class="f-2">
+        <div>
+          <h2>Links</h2>
+          <ul class="nav">
+            <li><a href="/user-extract">Extract</a></li>
+            <li><a href="/user-search">Search</a></li>
+            <li><a href="/user-settings">Settings</a></li>
+            <li><a class="logout-confirm" href="#">Log Out</a></li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+      <div class="f-3">
+        <h2>Contacts</h2>
+        <div class="contacts">
+          <div>
+            <img src="/flaticons/user/location.png" /> &nbsp;
+            <p>
+              University of The East Caloocan, 105 Samson Rd, Caloocan, Metro
+              Manila
+            </p>
+          </div>
+          <div>
+            <img src="/flaticons/user/email.png" /> &nbsp;
+            <p>nogot.markvincent@ue.edu.ph</p>
+          </div>
+          <div>
+            <img src="/flaticons/user/call.png" /> &nbsp;
+            <p>09991624156</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+    <script>
+
+        // new codes, 14:40 09/12/2025
+
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            document.querySelector(".user-menu .dropdown").classList.toggle("active");
+        }
+
+        // Close dropdown if clicking outside
+        document.addEventListener("click", () => {
+            document.querySelector(".user-menu .dropdown").classList.remove("active");
+        });
+
+        // username form
+
+        const usernameEdit = document.querySelector(".username-edit");
+        const usernameModal = document.querySelector(".username-setting-modal");
+        const usernameCloseBtn = document.getElementById("username-close-btn");
+        const usernameCancelBtn = document.getElementById("username-cancel-btn");
+        const changeUsernameForm = document.querySelector(".username-modal-content");
+        const usernameInput = document.getElementById("new-username");
+
+        // Show modal
+        usernameEdit.addEventListener("click", () => {
+            usernameModal.classList.add("active");
+        });
+
+        function resetUsernameForm() {
+            changeUsernameForm.reset(); // clears input values
+            usernameInput.parentElement.classList.remove("error", "success");
+
+            const errorDisplay = usernameInput.parentElement.querySelector(".error");
+            if (errorDisplay) errorDisplay.innerText = "";
+        }
+
+        // Close modal with close button
+        usernameCloseBtn.addEventListener("click", () => {
+            usernameModal.classList.remove("active");
+            resetUsernameForm();
+        });
+
+        // Close modal with cancel button
+        usernameCancelBtn.addEventListener("click", () => {
+            usernameModal.classList.remove("active");
+            resetUsernameForm();
+        });
+
+        // password form
+
+        const passwordEdit = document.querySelector(".password-edit");
+        const passwordModal = document.querySelector(".password-setting-modal");
+        const passwordCloseBtn = document.getElementById("password-close-btn");
+        const passwordCancelBtn = document.getElementById("password-cancel-btn");
+        const changePasswordForm = document.querySelector(".password-modal-content");
+        const currentPasswordInput = document.getElementById("current-password");
+        const newPasswordInput = document.getElementById("new-password");
+        const confirmPasswordInput = document.getElementById("confirm-password");
+
+        // Show modal
+        passwordEdit.addEventListener("click", () => {
+            passwordModal.classList.add("active");
+        });
+
+        function resetPasswordForm() {
+            changePasswordForm.reset(); // clears input values
+
+            // clear error/success state for each input
+            [currentPasswordInput, newPasswordInput, confirmPasswordInput].forEach(
+                (input) => {
+                    input.parentElement.classList.remove("error", "success");
+                    const errorDisplay = input.parentElement.querySelector(".error");
+                    if (errorDisplay) errorDisplay.innerText = "";
+                }
+            );
+        }
+
+        // Close modal with close button
+        passwordCloseBtn.addEventListener("click", () => {
+            passwordModal.classList.remove("active");
+            resetPasswordForm();
+        });
+
+        // Close modal with cancel button
+        passwordCancelBtn.addEventListener("click", () => {
+            passwordModal.classList.remove("active");
+            resetPasswordForm();
+        });
+
+        // Validation helpers
+        function setError(input, message) {
+            const inputControl = input.parentElement;
+            inputControl.classList.add("error");
+            inputControl.classList.remove("success");
+            const errorDisplay = inputControl.querySelector(".error");
+            if (errorDisplay) errorDisplay.innerText = message;
+        }
+
+        function setSuccess(input) {
+            const inputControl = input.parentElement;
+            inputControl.classList.add("success");
+            inputControl.classList.remove("error");
+            const errorDisplay = inputControl.querySelector(".error");
+            if (errorDisplay) errorDisplay.innerText = "";
+        }
+
+        function validateUsername() {
+            const value = usernameInput.value.trim();
+            if (value === "") {
+                setError(usernameInput, "Username cannot be empty");
+                return false;
+            } else if (value.length < 8) {
+                setError(usernameInput, "Username must be at least 8 characters");
+                return false;
+            } else {
+                setSuccess(usernameInput);
+                return true;
+            }
+        }
+        // Password validation
+        function validatePassword() {
+            let valid = true;
+
+            const currentVal = currentPasswordInput.value.trim();
+            const newVal = newPasswordInput.value.trim();
+            const confirmVal = confirmPasswordInput.value.trim();
+
+            if (currentVal === "") {
+                setError(currentPasswordInput, "Enter your current password");
+                valid = false;
+            } else {
+                setSuccess(currentPasswordInput);
+            }
+
+            if (newVal.length < 8) {
+                setError(newPasswordInput, "New password must be at least 8 characters");
+                valid = false;
+            } else {
+                setSuccess(newPasswordInput);
+            }
+
+            if (confirmVal !== newVal || confirmVal === "") {
+                setError(confirmPasswordInput, "Passwords do not match");
+                valid = false;
+            } else {
+                setSuccess(confirmPasswordInput);
+            }
+
+            return valid;
+        }
+
+
+        changePasswordForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            // Run validation first
+            const isValid = validatePassword();
+            if (!isValid) return;
+
+            fetch("/user/change-password", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    currentPassword: currentPasswordInput.value.trim(),
+                    newPassword: newPasswordInput.value.trim(),
+                }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        return response.text().then((msg) => {
+                            throw new Error(msg);
+                        });
+                    }
+                    return response.text();
+                })
+                .then((message) => {
+                    showServerMessage(message, "success");
+
+                    // Reset the form fields
+                    resetPasswordForm();
+
+                    // Refresh to show updated password_datetime
+                    setTimeout(() => location.reload(), 1500);
+                })
+                .catch((error) => {
+                    showServerMessage(error.message, "error");
+                });
+        });
+
+
+        // Hook into form submit
+        changeUsernameForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            // Run validation
+            if (!validateUsername()) return;
+
+            fetch("/user/change-username", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    newUsername: usernameInput.value.trim(),
+                }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        return response.text().then((message) => {
+                            throw new Error(message);
+                        });
+                    }
+                    return response.text();
+                })
+                .then((message) => {
+                    // Success → show message + reload
+                    showServerMessage(message, "success");
+
+                    // Close & reset modal immediately
+                    usernameModal.classList.remove("active");
+                    changeUsernameForm.reset();
+                    usernameInput.parentElement.classList.remove("error", "success");
+                    const errorDisplay = usernameInput.parentElement.querySelector(".error");
+                    if (errorDisplay) errorDisplay.innerText = "";
+
+                    setTimeout(() => location.reload(), 1500);
+                })
+                .catch((error) => {
+                    // Error → show server error message
+                    showServerMessage(error.message, "error");
+                });
+        });
+
+        // server message
+
+        let serverMessageTimeout = null;
+
+        function showServerMessage(message, type = "success") {
+            const serverMessage = document.getElementById("server-message");
+            const messageText = document.getElementById("server-message-text");
+            const messageIcon = document.getElementById("server-message-icon");
+
+            // Reset classes
+            serverMessage.classList.remove("success", "error");
+
+            // Set text
+            messageText.textContent = message;
+
+            // Apply type + icon
+            if (type === "success") {
+                serverMessage.classList.add("success");
+                messageIcon.src = "/images/icons/seal-check-green.svg";
+            } else if (type === "error") {
+                serverMessage.classList.add("error");
+                messageIcon.src = "/images/icons/seal-warning-red.svg";
+            }
+
+            // Show with animation
+            serverMessage.classList.remove("hidden");
+            serverMessage.classList.add("show");
+
+            // Save to sessionStorage so it survives reload
+            sessionStorage.setItem(
+                "serverMessage",
+                JSON.stringify({ message, type })
+            );
+
+            // Reset timer if already running
+            if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
+
+            // Auto-close after 3s
+            serverMessageTimeout = setTimeout(() => {
+                hideServerMessage();
+            }, 3000);
+        }
+
+        function hideServerMessage() {
+            const serverMessage = document.getElementById("server-message");
+
+            // Stop timer
+            if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
+
+            // Remove from sessionStorage
+            sessionStorage.removeItem("serverMessage");
+            serverMessageTimeout = null;
+
+            // Animate out
+            serverMessage.classList.remove("show");
+
+            setTimeout(() => {
+                serverMessage.classList.add("hidden");
+            }, 400); // matches CSS transition
+        }
+
+        // Close button → hide immediately & clear sessionStorage
+        document
+            .getElementById("server-message-close")
+            .addEventListener("click", () => {
+                hideServerMessage();
+            });
+
+        window.addEventListener("load", () => {
+            const stored = sessionStorage.getItem("serverMessage");
+            if (stored) {
+                const { message, type } = JSON.parse(stored);
+                if (message) showServerMessage(message, type);
+                // don’t remove here — showServerMessage will auto-remove after timeout
+            }
+        });
+
+        // Elements
+        const historyShow = document.querySelector(".history-show");
+        const historyModalContainer = document.querySelector(".history-modal-container");
+        const historyCloseBtn = document.getElementById("close");
+
+        const historyTabSelector = document.getElementById("history-tabSelector");
+        const historyContents = document.querySelectorAll(".history-content");
+
+        const bookmarkTitle = document.querySelector(".bookmark-title");
+
+        // Fetch bookmark and update title
+        const checkBookmarkAndUpdate = async () => {
+            try {
+                const response = await fetch("/user/get-history");
+                const data = await response.json();
+
+                if (data.history_save) {
+                    const bookmarkArray = JSON.parse(data.history_save);
+                    const medicineName = bookmarkArray[0] || "Unknown Medicine";
+                    const savedDate = new Date(data.history_datetime);
+                    bookmarkTitle.textContent = `Bookmark 1 – ${medicineName} ${savedDate.toLocaleString()}`;
+                } else {
+                    bookmarkTitle.textContent = "Bookmark 1 – Empty";
+                }
+            } catch (err) {
+                console.error("Error fetching bookmark:", err);
+            }
+        };
+
+        // Show modal or message
+        const showBookmark = async () => {
+            try {
+                const response = await fetch("/user/get-history");
+                const data = await response.json();
+
+                if (data.history_save) {
+                    const bookmarkArray = JSON.parse(data.history_save);
+                    const medicineName = bookmarkArray[0] || "Unknown Medicine";
+                    const savedDate = new Date(data.history_datetime);
+
+                    // Update modal
+                    document.getElementById("history-modal-title").textContent =
+                        `Bookmark 1 – ${medicineName} ${savedDate.toLocaleString()}`;
+                    document.getElementById("history-details").textContent = bookmarkArray[1] || "";
+                    document.getElementById("history-interactions").textContent = bookmarkArray[2] || "";
+                    document.getElementById("history-guidelines").textContent = bookmarkArray[3] || "";
+                    document.getElementById("history-effects").textContent = bookmarkArray[4] || "";
+                    document.getElementById("history-prices").textContent = bookmarkArray[5] || "";
+
+                    // ✅ Show modal only if history exists
+                    historyModalContainer.classList.add("show");
+
+                    // Reset tabs
+                    document.querySelector(".history-tabs").classList.add("active");
+                    historyTabSelector.value = "0";
+                    historyContents.forEach((content, index) => {
+                        if (index === 0) {
+                            content.classList.add("active");
+                        } else {
+                            content.classList.remove("active");
+                        }
+                    });
+                } else {
+                    // No history → don’t open modal
+                    showServerMessage("No bookmark found.", "error");
+                }
+            } catch (err) {
+                console.error("Error showing bookmark:", err);
+            }
+        };
+
+
+        // Close modal
+        historyCloseBtn.addEventListener("click", () => {
+            historyModalContainer.classList.remove("show");
+            document.querySelector(".history-tabs").classList.remove("active");
+        });
+
+        // Handle tab switching
+        historyTabSelector.addEventListener("change", (e) => {
+            const selectedIndex = parseInt(e.target.value, 10);
+            historyContents.forEach((content, index) => {
+                content.classList.toggle("active", index === selectedIndex);
+            });
+        });
+
+        // Init
+        checkBookmarkAndUpdate();
+
+        // Bind Show click
+        historyShow.addEventListener("click", showBookmark);
+
+        const deleteShow = document.querySelector(".delete-confirm");
+        const deleteModal = document.querySelector(".delete-setting-modal");
+        const deleteCloseBtn = document.getElementById("delete-close-btn");
+        const deleteCancelBtn = document.getElementById("delete-cancel-btn");
+
+        const deleteConfirmInput = document.getElementById("delete-confirm-text");
+        const deleteCurrentPasswordInput = document.getElementById("delete-current-password");
+        const deleteForm = deleteModal.querySelector(".delete-modal-content");
+
+        deleteShow.addEventListener("click", () => {
+            deleteModal.classList.add("active");
+            resetDeleteForm();
+        });
+
+        function resetDeleteForm() {
+            deleteForm.reset(); // clears input values
+
+            // clear error state for each input
+            [deleteConfirmInput, deleteCurrentPasswordInput].forEach((input) => {
+                input.parentElement.classList.remove("error", "success");
+                const errorDisplay = input.parentElement.querySelector(".error");
+                if (errorDisplay) errorDisplay.innerText = "";
+            });
+        }
+
+        deleteCloseBtn.addEventListener("click", () => {
+            deleteModal.classList.remove("active");
+            resetDeleteForm();
+        });
+
+        deleteCancelBtn.addEventListener("click", () => {
+            deleteModal.classList.remove("active");
+            resetDeleteForm();
+        });
+
+        deleteForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            if (!validateDelete()) return; // stop if invalid
+
+            const confirmVal = deleteConfirmInput.value.trim();
+            const passwordVal = deleteCurrentPasswordInput.value.trim();
+
+            try {
+                const response = await fetch("/user/delete-account", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        confirm: confirmVal,
+                        password: passwordVal,
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // ✅ success → show server message and maybe redirect
+                    showServerMessage(data.message || "Account deleted successfully", "success");
+
+                    // optionally redirect to logout/login page
+                    setTimeout(() => {
+                        window.location.href = "/guest-login";
+                    }, 1500);
+                } else {
+                    // ❌ backend error (wrong password, wrong confirm, etc.)
+                    showServerMessage(data.message || "Failed to delete account", "error");
+                }
+            } catch (err) {
+                console.error("Error deleting account:", err);
+                showServerMessage("An unexpected error occurred.", "error");
+            }
+        });
+
+        function validateDelete() {
+            let valid = true;
+
+            const confirmVal = deleteConfirmInput.value.trim();
+            const passwordVal = deleteCurrentPasswordInput.value.trim();
+
+            if (confirmVal !== "CONFIRM") {
+                setError(deleteConfirmInput, 'Type "CONFIRM" to proceed');
+                valid = false;
+            } else {
+                setSuccess(deleteConfirmInput);
+            }
+
+            if (passwordVal === "") {
+                setError(deleteCurrentPasswordInput, "Enter your current password");
+                valid = false;
+            } else {
+                setSuccess(deleteCurrentPasswordInput);
+            }
+
+            return valid;
+        }
+
+        const deleteSave = async () => {
+            try {
+                const response = await fetch("/user/delete-history", {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // ✅ success
+                    showServerMessage(result.message || "History deleted successfully", "success");
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    // ❌ backend error
+                    showServerMessage(result.message || "Failed to delete history.", "error");
+                }
+            } catch (error) {
+                console.error("Error deleting history:", error);
+                showServerMessage("An unexpected error occurred while deleting history.", "error");
+            }
+        };
+
+        // logout
+
+        // Elements
+        const logoutLinks = document.querySelectorAll(".logout-confirm"); // 🔹 this is your trigger element (replace with your logout button/link class)
+        const logoutModal = document.querySelector(".logout-modal-container");
+        const logoutCloseBtn = document.getElementById("logout-close-btn");
+        const logoutCancelBtn = document.getElementById("logout-cancel-btn");
+        const logoutConfirmBtn = document.getElementById("logout-confirm-btn");
+
+        // Open modal
+        logoutLinks.forEach(link => {
+            link.addEventListener("click", (e) => {
+                e.preventDefault(); // prevent jumping to top
+                logoutModal.classList.add("active");
+            });
+        });
+
+        // Close modal (X button)
+        logoutCloseBtn.addEventListener("click", () => {
+            logoutModal.classList.remove("active");
+        });
+
+        // Close modal (Cancel button)
+        logoutCancelBtn.addEventListener("click", () => {
+            logoutModal.classList.remove("active");
+        });
+
+        // Confirm logout
+        logoutConfirmBtn.addEventListener("click", () => {
+            window.location.href = "/logout";
+        });
+
+
+
+    </script>
+</body>
+
+</html>

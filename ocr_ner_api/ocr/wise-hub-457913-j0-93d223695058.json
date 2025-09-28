@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "wise-hub-457913-j0",
+  "private_key_id": "93d223695058ce3cb729f0e47770691c7ca864b8",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC79Ztg+NVvIiIb\nkjW7OKaxBgNZSfLOxQTXxZJm5WX5Ly4ogpAauksPtPaytXp26XOpWS2cxrYbTsgq\nqwrifiWBrjcZ2QKtaw3Fea7lXmULFHHuHfeEm5pGEwvjgtrEfvvRRCNIhSbhMPrA\ndoLIJv6EyGs2Yex422kyhHtXZz2GCS+f2uvNwgTEB/Fl3NWRCuUH/tPbcoEZ/+b9\nPhBZhVhKjoOeGuib4ViINZduL2bQoUFXlgJbBI7Kmk5FnoBlCbDxwxRs93enRrTL\niggbeSbeYW5zu8+HPXaWG+x7lyYvd452tullLU/6o5F+DFVTfU3EU3VajaedqPTC\nFlgthEM5AgMBAAECggEAGRGQvSttpV+15oZ8Jcclra5By8AJ+IZHdz3Ry755zh/Q\nS1/f4hNfB9kYyXdck400ZhhPoJLSNAHbFEccHF7lwrjeftM2QQnqXCBhcWnDFpS4\nqKEU46SwkVBgrAybqqHNv+M+GiHZhdG3XUG71Kp6v3FO91cH0otfqaNeI1H7idY8\n8jBHTMu5orMTN2M38PkDkSmFBfU4rsYVqR5XIHHgeocN4I6XtcOJv94T8YIf2pdS\nNZ+Hj4a+lVdY3DVzifW2sXQYOTj3kvhbmSwtvXfjodutbvQvC9x2r5uBp72TV80z\n32PSeUPu0Xnnfa03fIlGipsUCfo9ahoQueLwRHkgxwKBgQDgvkH9GsFwE3cfXP6u\nINYmwGFaTg+YuH+LogbQqwjIQ80nZVEJbgYT9urrKn4dcsEsOZTM44sczHG3wXE4\nxdhBlYQ7fKfV9iTW/qUVI8dKWyjPYSSEfEz8jsjJQKOkjTrch8n53JgZuwkH/pTE\nA8hlHMg8uilSvTQcJNGVPoDXDwKBgQDWGbOPbbsfMuyt5kGhWmDOPwgA/BeQyTdl\n3pxZGFZpnkKhNf9Rst/imj/CS82i6G0Pdh6yQW8ue1s0wH2sJ6g/EI/s8pmFX1fY\nxFCM3GtMlwA72LR+O02Tj4Wrw0x9d/zx62uAi3SvcbLn0SZMhEBJjAUAKHC6dNvC\nQ6XdmREBNwKBgCv8sPez8+ZWuPr3fZVhMej1wFgnbSAMBFK1DLZss1RXCOFMEDdT\nRHdF3abXc0WaPzrDrl8HriOd1CgOAXYGKxRzCiWGeWcEPSOjRXZEwW3JN8yXC8mu\ndnb8D0psj1rWlY2yOhLgXRi0Jcldx4ox31gC8SIJoarjAz766dZXHGp7AoGAenLU\nmVFe1ecgKg0ouAmimBLAlx+Wsr4CKwb4UJR0x481+FGTprwxA77IfG0yPNvFlDQw\nNi7qUaFHdpIozg8YUIk+Z3wQhZEUAuu0Tfu6emFaRuAXyqJMKfrJroTR+GhpiErm\nfuxDXhwfACpERzrUMbwdGAwI/PrcvOxHrsdeTF0CgYAo+lAa1scznuTgrXOwDIce\n+dcwDxyZSfy8QKyrJp7Wd0n+YOpXuE8IAGIvJ3QAlVqDwRVc7iKd8/fZMIWpJmG8\nxVnJPY4dkNOqGSzTwbmASsqMw/PgmuDehYQ9VNNyMznasbXhYzPZJ/n6j9mPq5kj\nAT6GO3qG6Kd9pjP6ovYs5A==\n-----END PRIVATE KEY-----\n",
+  "client_email": "ritz-86@wise-hub-457913-j0.iam.gserviceaccount.com",
+  "client_id": "112027492740238463417",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ritz-86%40wise-hub-457913-j0.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

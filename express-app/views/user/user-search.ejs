@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/user/user-search.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <title>MedExtract</title>
+</head>
+
+<body>
+  <nav class="user-navbar">
+    <div class="container">
+      <!-- Logo -->
+      <div class="logo">
+        <a href="/user-extract">
+          <img src="/images/logo-nav.png" alt="MedExtract Logo" class="logo-img" />
+        </a>
+      </div>
+
+      <!-- Navigation -->
+      <ul class="nav" id="user-nav">
+        <li><a href="/user-extract">Extract</a></li>
+        <li><a href="/user-search">Search</a></li>
+      </ul>
+
+      <!-- User Dropdown -->
+      <div class="user-menu" onclick="toggleDropdown(event)">
+        <img src="/images/icons/user-circle.svg" alt="User Menu" class="user-icon" />
+        <span class="username">
+          <%= username %>
+        </span>
+        <div class="dropdown">
+          <a href="/user-settings">
+            <img src="/images/icons/gear-six.svg" alt="Settings" />
+            Settings
+          </a>
+          <a class="logout-confirm" href="#">
+            <img src="/images/icons/sign-out.svg" alt="Sign Out" />
+            Sign Out
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Logout Modal -->
+  <div class="logout-modal-container">
+    <div class="logout-modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <img src="images/icons/seal-question.svg" alt="question mark">
+          <h3>Confirm Logout</h3>
+        </div>
+        <img id="logout-close-btn" class="close-btn" src="images/icons/x.svg" alt="close button">
+      </div>
+
+      <div class="modal-body">
+        <p>Are you sure you want to log out?</p>
+      </div>
+
+      <div class="modal-actions">
+        <button id="logout-cancel-btn" type="button" class="cancel-btn">Cancel</button>
+        <button id="logout-confirm-btn" type="button" class="logout-btn">Log Out</button>
+      </div>
+    </div>
+  </div>
+
+<div id="server-message" class="server-message hidden">
+    <img id="server-message-icon" src="/images/icons/seal-check.svg" alt="Status Icon" class="server-message-icon" />
+    <span id="server-message-text">This is a server message</span>
+    <img id="server-message-close" src="/images/icons/x-circle.svg" alt="Close" class="server-message-close" />
+  </div>
+
+
+  <main class="search-function">
+    <div class="container">
+      <div class="wrapper">
+        <div class="search-bar">
+          <input type="text" placeholder="Search for drug..." />
+          <div class="drug-list"></div>
+          <div id="open" class="icon"><i class="fas fa-search"></i></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="modal_container" class="modal-container">
+    <div class="modal">
+      <h1 id="modal-title">Modal</h1>
+
+      <div class="loader active">
+        <div class="container">
+          <div class="loading">
+            <div class="text">Generating medical insight... Please wait.</div>
+            <!-- <div class="percent"> 100%</div> -->
+            <div class="progress-bar">
+              <div class="progress"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="container">
+          <div class="tab-container">
+            <div class="tab-box">
+              <button class="tab-btn active">Medication Details</button>
+              <button class="tab-btn">Drug Interactions</button>
+              <button class="tab-btn">Dosage Guidelines</button>
+              <button class="tab-btn">Side Effects</button>
+              <button class="tab-btn">Drug Prices</button>
+              <div class="line"></div>
+            </div>
+            <div class="content-box">
+              <div class="content active" id="drug_information">
+                <p>
+
+                </p>
+              </div>
+
+              <div class="content" id="interactions">
+                <p>
+
+                </p>
+              </div>
+
+              <div class="content" id="indications">
+                <p>
+
+                </p>
+              </div>
+
+              <div class="content" id="side_effects">
+                <p>
+
+                </p>
+              </div>
+
+              <div class="content" id="price">
+                <p>
+
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button id="close">Close</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="f-1">
+        <a href="/user-extract">
+          <img src="/images/logo-footer.png" alt="MedExtract Logo" class="logo-img" />
+        </a>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci,
+          id aspernatur itaque cumque vitae odit sint eligendi nam libero
+          voluptate magni aperiam, veniam ullam tenetur quidem nostrum enim
+          eos a.
+        </p>
+      </div>
+
+      <div class="f-2">
+        <div>
+          <h2>Links</h2>
+          <ul class="nav">
+            <li><a href="/user-extract">Extract</a></li>
+            <li><a href="/user-search">Search</a></li>
+            <li><a href="/user-settings">Settings</a></li>
+            <li><a class="logout-confirm" href="#">Log Out</a></li>
+            </a>
+          </ul>
+        </div>
+      </div>
+
+      <div class="f-3">
+        <h2>Contacts</h2>
+        <div class="contacts">
+          <div>
+            <img src="/flaticons/user/location.png" /> &nbsp;
+            <p>
+              University of The East Caloocan, 105 Samson Rd, Caloocan, Metro
+              Manila
+            </p>
+          </div>
+          <div>
+            <img src="/flaticons/user/email.png" /> &nbsp;
+            <p>nogot.markvincent@ue.edu.ph</p>
+          </div>
+          <div>
+            <img src="/flaticons/user/call.png" /> &nbsp;
+            <p>09991624156</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <script src="../../js/user/user-search.js"></script>
+  <script src="../../js/user/auto-complete.js"></script>
+  <script>
+    // tabs
+
+    const tabs = document.querySelectorAll(".tab-btn");
+    const contents = document.querySelectorAll(".content");
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", (e) => {
+        tabs.forEach((tab) => {
+          tab.classList.remove("active");
+        });
+        tab.classList.add("active");
+        var line = document.querySelector(".line");
+        line.style.width = e.target.offsetWidth + "px";
+        line.style.left = e.target.offsetLeft + "px";
+
+        contents.forEach((content) => {
+          content.classList.remove("active");
+        });
+        contents[index].classList.add("active");
+      });
+    });
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,582 @@
+/* global styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+  background-color: #B3E5FC;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins";
+}
+
+a {
+  text-decoration: none;
+}
+
+a {
+  color: white;
+}
+
+/* .username-holder{
+  border: 1px solid white;
+  padding: 10px;
+} */
+
+/* headings and font size*/
+
+html {
+  font-size: 18px;
+}
+
+h1 { font-size: 2rem; }   /* 36px */
+h2 { font-size: 1.5rem; } /* 27px */
+h3 { font-size: 1.17rem; }/* 21px */
+h4 { font-size: 1rem; }   /* 18px */
+h5 { font-size: 0.83rem; }/* 15px */
+h6 { font-size: 0.67rem; }/* 12px */
+
+/* flexbox */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+/* guest navbar */
+
+.guest-navbar {
+  height: 60px;
+  display: flex;
+  background-color: black;
+}
+
+.guest-navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.guest-navbar ul {
+  display: flex;
+  list-style: none;
+  column-gap: 20px;
+}
+
+/* user navbar */
+
+/* #user-nav {
+  align-items: center;
+  margin: 10px;
+}
+
+.user-navbar {
+  color: white;
+  height: 60px;
+  display: flex;
+  background-color: black;
+}
+
+.user-navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.user-navbar ul {
+  display: flex;
+  list-style: none;
+  column-gap: 20px;
+  text-align: left;
+} */
+
+/* Navbar */
+.user-navbar {
+  color: white;
+  height: 70px;
+  display: flex;
+  background-color: black;
+}
+
+.user-navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+/* Logo */
+
+.logo a {
+  display: flex;       /* make link a flexbox */
+  align-items: center; /* vertically center the logo */
+}
+
+.logo-img {
+  height: 60px;
+  display: block;      /* remove inline baseline gap */
+}
+
+/* Navigation */
+.user-navbar ul {
+  display: flex;
+  list-style: none;
+  column-gap: 40px;
+  text-align: left;
+}
+
+.user-navbar ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+/* User Menu */
+.user-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* .user-icon {
+  height: 24px;
+} */
+
+.username {
+  font-size: 18px;
+}
+
+/* Dropdown */
+.dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  color: black;
+  border-radius: 6px;
+  margin-top: 5px;
+  min-width: 140px;
+  flex-direction: column;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  padding: 5px 0;
+  z-index: 100;
+}
+
+.dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  color: black;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.dropdown a:hover {
+  background: #f0f0f0;
+}
+
+/* Active dropdown */
+.dropdown.active {
+  display: flex;
+}
+
+/* footer */
+
+.footer {
+  height: 230px;
+  display: flex;
+  background-color: #0288D1;
+  color: white;
+}
+
+.footer .container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+}
+
+.footer ul {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  gap: 10px;
+}
+
+.f-1 {
+  flex: 2;
+}
+
+.f-1 p{
+  padding-left: 15px;
+  text-align: justify;
+}
+
+.f-2 {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.f-3 {
+  flex: 2;
+}
+
+.contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contacts div {
+  display: flex;
+}
+
+.contacts div img {
+  width: 24px;
+  height: 24px;
+}
+
+/* Base style */
+.server-message {
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px); /* start slightly above */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  gap: 12px;
+  min-width: 300px;
+  max-width: 500px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  z-index: 9999;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.server-message.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0); /* slide into place */
+  pointer-events: auto;
+}
+
+#server-message-close {
+  cursor: pointer;
+}
+
+/* Success */
+.server-message.success {
+  background-color: #e6f9ed;
+  color: #1e7e34;
+  border-left: 5px solid #28a745;
+}
+
+/* Error */
+.server-message.error {
+  background-color: #fdecea;
+  color: #a71d2a;
+  border-left: 5px solid #dc3545;
+}
+
+/* logout */
+
+/* logout-modal.css
+   Keeps the same modal styling as your other modals (username/password/delete),
+   only difference: the confirm logout button (.logout-btn) is red.
+*/
+
+/* Container (matches other modal containers) */
+.logout-modal-container {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    opacity: 0;
+    pointer-events: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: opacity 0.1s ease;
+    z-index: 1000;
+}
+
+/* Active state */
+.logout-modal-container.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Modal content box (same sizing/spacing as other modal-content classes) */
+.logout-modal {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 400px;
+}
+
+/* Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid black;
+    padding-bottom: 10px;
+}
+
+/* Title block */
+.modal-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal-title img {
+    height: 42px;
+    width: 42px;
+}
+
+/* Close button (same behaviour as other modals) */
+.close-btn {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    padding: 5px;
+    border-radius: 50%;
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.close-btn:hover {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Body */
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.modal-body p {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Actions (same layout as other modals) */
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Generic button base used by other modals */
+.modal-actions button {
+    font-size: 18px;
+    padding: 6px 30px;
+    font-family: inherit;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    font-size: 18px;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+/* Cancel button (matches other modals) */
+.cancel-btn {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+.cancel-btn:hover {
+    background-color: #e0e0e0;
+}
+
+/* Logout/Confirm button — red destructive style */
+.logout-btn {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+}
+
+
+
+
+
+@media (max-width: 730px) {
+  .server-message-modal {
+    width: 100%;
+    font-size: 12px;
+  }
+}
+
+.message-container .container.active {
+  padding: 10px 30px;
+  display: block;
+}
+
+/* media */
+
+@media (max-width: 768px) {
+  .guest-navbar .nav {
+    display: none;
+    flex-direction: column;
+    background-color: black;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .guest-navbar .nav.show {
+    display: flex;
+    padding: 20px;
+    background-color: #333333;
+
+  }
+
+  #user-nav {
+    align-items: flex-start;
+    margin: 0px;
+  }
+
+  .username-holder {
+    width: 100%;
+  }
+
+  .menu-toggle {
+    display: block;
+
+  }
+
+  .user-navbar .nav {
+    display: none;
+    flex-direction: column;
+    background-color: black;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
+    padding: 10px 0;
+
+
+
+  }
+
+  .user-navbar .nav.show {
+    display: flex;
+    padding: 20px;
+    background-color: #333333;
+    z-index: 1;
+
+
+  }
+
+  .user-navbar .username-holder {
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .footer .container {
+    flex-direction: column;
+  
+  }
+  
+  .footer {
+    height: auto;
+  }
+  
+  .f-2 {
+  
+    width: 100%;
+  }
+  
+  .f-2 div {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .footer ul {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    gap: 10px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .footer .container {
+    flex-direction: column;
+
+  }
+
+  .footer {
+    height: auto;
+  }
+
+  .f-2 {
+
+    width: 100%;
+  }
+
+  .f-2 div {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer ul {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 410px) {
+  .f-2 div{
+    flex-direction: column;
+  }
+}

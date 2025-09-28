@@ -1,0 +1,32 @@
+[
+    {
+        "original": "Home medications",
+        "corrected": "Threshold too low",
+        "corrected_with_err": "err err"
+    },
+    {
+        "original": "Furovemider pptab",
+        "corrected": "Furosemide",
+        "corrected_with_err": "Furosemide err"
+    },
+    {
+        "original": "Phcytoin suspension",
+        "corrected": "Threshold too low",
+        "corrected_with_err": "Phenytoin err"
+    },
+    {
+        "original": "ropons",
+        "corrected": "Threshold too low",
+        "corrected_with_err": "err"
+    },
+    {
+        "original": "Multimitamins miles",
+        "corrected": "Multivitamins",
+        "corrected_with_err": "Multivitamins err"
+    },
+    {
+        "original": "Famous suffate",
+        "corrected": "ferrous sulfate",
+        "corrected_with_err": "err err"
+    }
+]
