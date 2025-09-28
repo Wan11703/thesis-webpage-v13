@@ -1,8 +1,8 @@
 const mysql = require('mysql2');
-var colors = require('colors');
 require("dotenv").config();
+var colors = require('colors');
 
-const pool = mysql.createPool({
+const dbConnection = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USERNAME,
     password: process.env.DB_ROOT_PASSWORD,
@@ -13,14 +13,14 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-module.exports = { dbConnection: pool };
-
-dbConnection.connect(function(err){
-    if(!err){
-        console.log("Connected to the MySQL server!".underline.cyan);
-    } else{
+// test the connection
+dbConnection.getConnection((err, connection) => {
+    if (err) {
         console.error("Error connecting: " + err.stack);
+    } else {
+        console.log("Connected to the MySQL server!".underline.cyan);
+        connection.release();
     }
 });
 
-module.exports = {dbConnection};
+module.exports = dbConnection;
