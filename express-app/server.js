@@ -13,7 +13,7 @@ const unlinkFile = util.promisify(fs.unlink);
 
 // const multerS3 = require("multer-s3-v2");
 // const { s3, getImageStream, deleteImage } = require("./s3.js");
-const dbConnection = require("./db.js");
+const { dbConnection } = require("./db");
 
 
 const storage = multer.memoryStorage(); // or use multer.diskStorage({...}) for disk
