@@ -1,6 +1,7 @@
 fastapi==0.116.1
 Flask==3.1.2
 mysql_connector_repackaged==0.3.1
+mysql-connector-python==8.0.29
 numpy==2.3.3
 openai==1.107.2
 pandas==2.3.2
