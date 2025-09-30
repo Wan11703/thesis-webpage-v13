@@ -1,5 +1,5 @@
 import os
-import ocr.config as config
+from . import config
 import io
 from PIL import Image, ImageEnhance, ImageOps
 import numpy as np
