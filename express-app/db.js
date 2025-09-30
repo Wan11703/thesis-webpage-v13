@@ -11,7 +11,7 @@ const dbConnection = mysql.createConnection({
   connectionLimit: 10
 });
 // Changed url port
-// removed ""
+// removed ''
 // test the connection
 dbConnection.connect((error) => {
   if (error) {
