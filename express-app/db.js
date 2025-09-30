@@ -12,16 +12,15 @@ const dbConnection = mysql.createConnection({
 });
 // Changed url 
 // test the connection
-dbConnection.connect((err, connection) => {
-  if (err) {
-    console.error("Error connecting:", err);
+dbConnection.connect((error) => {
+  if (error) {
+    console.log("❌ Connection error:", error);
   } else {
-    console.log("Connected to MySQL!".cyan);
-    connection.release();
+    console.log("✅ Connected to the MySQL database!");
   }
 });
 
-module.exports = dbConnection;
+export default dbConnection;
 
 //reverted some railway stuff
 //added db port
