@@ -33,6 +33,7 @@ from io import BytesIO
 from PIL import Image
 from fastapi import FastAPI, Request, Header
 import mysql.connector
+from dotenv import load_dotenv
 
 DB_CONFIG = { "host": "localhost", "user": "root", "password": "admin", "database": "user_db" }
 
@@ -77,8 +78,11 @@ from app2 import extract_drug_names
 
 
 # Azure Computer Vision API credentials
-AZURE_ENDPOINT = config.AZURE_ENDPOINT
-AZURE_API_KEY = config.AZURE_API_KEY
+load_dotenv()
+
+AZURE_ENDPOINT = os.getenv("AZURE_ENDPOINT")
+AZURE_API_KEY = os.getenv("AZURE_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Load the fine-tuned model and tokenizer
 model_path = "vincentmark/biobert-ner"
