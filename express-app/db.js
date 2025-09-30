@@ -10,7 +10,7 @@ const dbConnection = mysql.createConnection({
   database: process.env.DB_NAME,
   connectionLimit: 10
 });
-// Changed url and port
+// Changed url and port to env variables
 // test the connection
 //removed "" in env
 //changed password to admin
