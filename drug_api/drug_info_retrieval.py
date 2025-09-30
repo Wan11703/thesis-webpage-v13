@@ -4,7 +4,7 @@ import pandas as pd
 import openai
 import os
 import re
-from config import OPENAI_API_KEY
+
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
