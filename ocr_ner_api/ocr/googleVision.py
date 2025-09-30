@@ -75,11 +75,10 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 
-# Add the directory containing app2.py to sys.path
-sys.path.append(os.path.abspath("C:/Users/Mark Vincent/Desktop/thesis-webpage/ocr_ner_api/ner"))
+
 
 # Import the extract_drug_names function from app2.py
-from app2 import extract_drug_names
+from ner.app2 import extract_drug_names
 
 
 # Azure Computer Vision API credentials
