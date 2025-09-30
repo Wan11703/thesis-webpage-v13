@@ -1,3 +1,8 @@
+import mysql from "mysql2";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 const mysql = require('mysql2');
 require("dotenv").config();
 var colors = require('colors');
