@@ -63,7 +63,7 @@ def get_image_from_db(user_id):
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://thesis-webpage-v13-production.up.railway.app",
-                   "https://thesis-webpage-v13-production.up.railway.app"],  # Replace with your frontend's URL
+                   "https://thesis-webpage-v13-production-c1fa.up.railway.app"],  # Replace with your frontend's URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -93,13 +93,7 @@ model_path = "castoBin/BiobertNer"
 model = BertForTokenClassification.from_pretrained(model_path)
 tokenizer = BertTokenizer.from_pretrained(model_path)
 
-# Replace with the path to your service account key file
-key_path = 'C:\\Users\\Mark Vincent\\Desktop\\thesis-webpage\\ocr_ner_api\\ocr\\wise-hub-457913-j0-93d223695058.json'  # Replace with your actual file name
-# Authenticate with the service account
-credentials = service_account.Credentials.from_service_account_file(key_path)
 
-# Initialize the Vision API client using the service account credentials
-client = vision.ImageAnnotatorClient(credentials=credentials)
 
 
 # Function to get the path of a local image in the same folder
