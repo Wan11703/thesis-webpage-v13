@@ -12,6 +12,7 @@ const dbConnection = mysql.createConnection({
 });
 // Changed url and port
 // test the connection
+//removed "" in env
 dbConnection.connect((error) => {
   if (error) {
     console.log("❌ Connection error:", error);
