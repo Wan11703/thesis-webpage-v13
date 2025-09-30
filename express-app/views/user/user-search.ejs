@@ -13,20 +13,17 @@
 <body>
   <nav class="user-navbar">
     <div class="container">
-      <!-- Logo -->
       <div class="logo">
         <a href="/user-extract">
           <img src="/images/logo-nav.png" alt="MedExtract Logo" class="logo-img" />
         </a>
       </div>
 
-      <!-- Navigation -->
       <ul class="nav" id="user-nav">
         <li><a href="/user-extract">Extract</a></li>
         <li><a href="/user-search">Search</a></li>
       </ul>
 
-      <!-- User Dropdown -->
       <div class="user-menu" onclick="toggleDropdown(event)">
         <img src="/images/icons/user-circle.svg" alt="User Menu" class="user-icon" />
         <span class="username">
@@ -46,7 +43,6 @@
     </div>
   </nav>
 
-  <!-- Logout Modal -->
   <div class="logout-modal-container">
     <div class="logout-modal">
       <div class="modal-header">
@@ -68,7 +64,7 @@
     </div>
   </div>
 
-<div id="server-message" class="server-message hidden">
+  <div id="server-message" class="server-message hidden">
     <img id="server-message-icon" src="/images/icons/seal-check.svg" alt="Status Icon" class="server-message-icon" />
     <span id="server-message-text">This is a server message</span>
     <img id="server-message-close" src="/images/icons/x-circle.svg" alt="Close" class="server-message-close" />
@@ -89,16 +85,17 @@
 
   <div id="modal_container" class="modal-container">
     <div class="modal">
-      <h1 id="modal-title">Modal</h1>
+      <div class="modal-header">
+        <h1 id="modal-title"></h1>
+        <img class="modal-save-icon" id="save" src="/images/icons/bookmark-simple.svg" alt="Save"
+          onclick="saveData();" />
+        <img src="/images/icons/x.svg" alt="Close" class="modal-close-icon" id="close">
+      </div>
 
       <div class="loader active">
         <div class="container">
           <div class="loading">
-            <div class="text">Generating medical insight... Please wait.</div>
-            <!-- <div class="percent"> 100%</div> -->
-            <div class="progress-bar">
-              <div class="progress"></div>
-            </div>
+            <div class="loading-text"></div>
           </div>
         </div>
       </div>
@@ -107,12 +104,13 @@
         <div class="container">
           <div class="tab-container">
             <div class="tab-box">
-              <button class="tab-btn active">Medication Details</button>
-              <button class="tab-btn">Drug Interactions</button>
-              <button class="tab-btn">Dosage Guidelines</button>
-              <button class="tab-btn">Side Effects</button>
-              <button class="tab-btn">Drug Prices</button>
-              <div class="line"></div>
+              <select id="tabSelector" class="tab-btn">
+                <option value="0" selected>Medication Details</option>
+                <option value="1">Drug Interactions</option>
+                <option value="2">Dosage Guidelines</option>
+                <option value="3">Side Effects</option>
+                <option value="4">Drug Prices</option>
+              </select>
             </div>
             <div class="content-box">
               <div class="content active" id="drug_information">
@@ -148,7 +146,6 @@
           </div>
         </div>
       </div>
-      <button id="close">Close</button>
     </div>
   </div>
 
@@ -202,31 +199,351 @@
     </div>
   </footer>
 
-
-  <script src="../../js/user/user-search.js"></script>
   <script src="../../js/user/auto-complete.js"></script>
   <script>
-    // tabs
-
-    const tabs = document.querySelectorAll(".tab-btn");
     const contents = document.querySelectorAll(".content");
+    const tabSelector = document.getElementById("tabSelector");
 
-    tabs.forEach((tab, index) => {
-      tab.addEventListener("click", (e) => {
-        tabs.forEach((tab) => {
-          tab.classList.remove("active");
-        });
-        tab.classList.add("active");
-        var line = document.querySelector(".line");
-        line.style.width = e.target.offsetWidth + "px";
-        line.style.left = e.target.offsetLeft + "px";
-
-        contents.forEach((content) => {
-          content.classList.remove("active");
-        });
-        contents[index].classList.add("active");
+    tabSelector.addEventListener("change", () => {
+      const index = parseInt(tabSelector.value, 10);
+      contents.forEach((content, i) => {
+        content.classList.toggle("active", i === index);
       });
     });
+
+    const searchWrapper = document.querySelector(".search-bar");
+    const inputBox = searchWrapper.querySelector("input");
+    const drug_list = searchWrapper.querySelector(".drug-list");
+
+    function select(element) {
+      let selectedUserData = element.textContent;
+      inputBox.value = selectedUserData;
+      searchWrapper.classList.remove("active");
+    }
+
+    function showDrugList(list) {
+      let listData;
+      if (!list.length) {
+        userValue = inputBox.value;
+        listData = `<li>${userValue}</li>`;
+      }
+      else {
+        listData = list.join('');
+      }
+
+      drug_list.innerHTML = listData;
+    }
+
+    const open = document.getElementById("open");
+    const modal_container = document.getElementById("modal_container");
+    const close = document.getElementById("close");
+    const modalTitle = document.querySelector("#modal-title");
+    const saveBtn = document.querySelector("#save");
+
+    const tabActive = document.querySelector(".tabs");
+    const loaderActive = document.querySelector(".loader");
+
+    let loading;
+
+    const drug_information = document.querySelector("#drug_information");
+    const interaction = document.querySelector("#interactions");
+    const dosage = document.querySelector("#indications");
+    const side_effects = document.querySelector("#side_effects");
+    const price = document.querySelector("#price");
+
+    open.addEventListener('click', () => {
+      const drugNameChecker = inputBox.value.trim(); // trim to remove spaces
+
+      if (!drugNameChecker) {
+        showServerMessage("Please enter a medicine name.", "error");
+        return;
+      }
+
+      const rawDrugName = inputBox.value;
+      const drugName = rawDrugName
+        .toLowerCase()
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+      modalTitle.textContent = "You searched for: " + drugName;
+      modal_container.classList.add('show');
+
+      const tabSelector = document.getElementById("tabSelector");
+      tabSelector.value = "0";
+
+      const allContents = document.querySelectorAll(".content-box .content");
+      allContents.forEach((c, i) => c.classList.remove("active"));
+      document.getElementById("drug_information").classList.add("active");
+
+      count = 0;
+      per = 0;
+      loading = setInterval(animate, 100);
+      disableModalClose();
+
+      fetch('https://thesis-webpage-v13-production-55fa.up.railway.app', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ drug_name: drugName }),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Medicine not found.");
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.error) {
+            drug_information.textContent = "";
+            interaction.textContent = "";
+            dosage.textContent = "";
+            side_effects.textContent = "";
+            price.textContent = "";
+            stopLoaderAndShowTabsError();
+            return;
+          }
+
+          drug_information.textContent = data.drug_information || "No details available.";
+          interaction.textContent = data.interaction || "No interactions available.";
+          dosage.textContent = data.dosage || "No indications available.";
+          side_effects.textContent = data.side_effects || "No side effects available.";
+          price.textContent = data.price || "No price information available.";
+
+          stopLoaderAndShowTabs();
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          stopLoaderAndShowTabsError();
+        });
+    });
+
+    close.addEventListener("click", () => {
+      modal_container.classList.remove("show");
+      clearInterval(loading);
+      count = 0;
+      per = 0;
+
+      loaderActive.classList.add("active");
+      loadingText.innerHTML = "";
+      tabActive.classList.remove("active");
+      saveBtn.classList.remove("active");
+
+      const tabBox = document.querySelector(".tab-box");
+      if (tabBox) tabBox.style.display = "";
+
+      // ✅ Always reset to Medication Details tab
+      tabSelector.value = "0";
+      contents.forEach((c, i) => c.classList.remove("active"));
+      document.getElementById("drug_information").classList.add("active");
+
+      disableModalClose();
+    });
+
+
+
+    var loadingText = document.querySelector(".loading-text");
+    var count = 0;
+    var per = 0;
+
+    function animate() {
+      loadingText.innerHTML = "Searching drug... Please wait.";
+      if ((count == 10000) & (per == 60000)) {
+        loaderActive.classList.remove("active");
+        tabActive.classList.add("active");
+      } else {
+        loadingText.classList.add("loading-text-blink");
+        per = per + 6;
+        count = count + 1;
+      }
+    }
+
+    function stopLoaderAndShowTabs() {
+      clearInterval(loading);
+      loaderActive.classList.remove("active");
+      loadingText.innerHTML = "";
+      tabActive.classList.add("active");
+      saveBtn.classList.add("active");
+      enableModalClose();
+    }
+
+    function stopLoaderAndShowTabsError() {
+      clearInterval(loading);
+      loaderActive.classList.remove("active");
+      loadingText.innerHTML = "";
+
+      tabActive.classList.add("active");
+
+      const drugInfo = document.getElementById("drug_information");
+      drugInfo.innerHTML = `
+  <div class="tabs-error-message">
+    <p>Sorry, we could not find any information for the medicine you searched. This may happen if:</p>
+    <ul>
+      <li>The name was misspelled</li>
+      <li>The input is not a medicine</li>
+      <li>The medicine is not included in our dataset</li>
+      <li>A brand name was used instead of the generic name</li>
+    </ul>
+    <p><strong>Please try searching again using the correct generic medicine name.</strong></p>
+  </div>
+`;
+
+      const tabBox = document.querySelector(".tab-box");
+      if (tabBox) tabBox.style.display = "none";
+      saveBtn.classList.remove("active");
+
+      enableModalClose();
+    }
+
+
+
+    function disableModalClose() {
+      if (close) {
+        close.style.pointerEvents = "none";
+        close.style.opacity = "0.5";
+      }
+    }
+
+    function enableModalClose() {
+      if (close) {
+        close.style.pointerEvents = "auto";
+        close.style.opacity = "1";
+      }
+    }
+
+    function saveData() {
+      const modalTitle = document.querySelector("#modal-title");
+      const medicineName = modalTitle.textContent.replace("You searched for: ", "");
+
+      var details = document.getElementById("drug_information").textContent;
+      const interactions = document.getElementById("interactions").textContent;
+      const guidelines = document.getElementById("indications").textContent; // double check your ID here
+      const effects = document.getElementById("side_effects").textContent;
+      const prices = document.getElementById("price").textContent;
+
+      const data = {
+        medicineName,
+        details,
+        interactions,
+        guidelines,
+        effects,
+        prices
+      };
+
+      fetch("/user/save-history", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+        .then((response) =>
+          response.json().then((json) => {
+            if (!response.ok) throw new Error(json.message);
+            showServerMessage(json.message, "success");
+          })
+        )
+        .catch((error) => {
+          console.error("Error:", error);
+          showServerMessage(error.message, "error");
+        });
+    }
+
+    function toggleDropdown(event) {
+      event.stopPropagation();
+      document.querySelector(".user-menu .dropdown").classList.toggle("active");
+    }
+
+    document.addEventListener("click", () => {
+      document.querySelector(".user-menu .dropdown").classList.remove("active");
+    });
+
+    const logoutLinks = document.querySelectorAll(".logout-confirm"); // 🔹 this is your trigger element (replace with your logout button/link class)
+    const logoutModal = document.querySelector(".logout-modal-container");
+    const logoutCloseBtn = document.getElementById("logout-close-btn");
+    const logoutCancelBtn = document.getElementById("logout-cancel-btn");
+    const logoutConfirmBtn = document.getElementById("logout-confirm-btn");
+
+    logoutLinks.forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        logoutModal.classList.add("active");
+      });
+    });
+
+    logoutCloseBtn.addEventListener("click", () => {
+      logoutModal.classList.remove("active");
+    });
+
+    logoutCancelBtn.addEventListener("click", () => {
+      logoutModal.classList.remove("active");
+    });
+
+    logoutConfirmBtn.addEventListener("click", () => {
+      window.location.href = "/logout";
+    });
+
+    let serverMessageTimeout = null;
+
+    function showServerMessage(message, type = "success") {
+      const serverMessage = document.getElementById("server-message");
+      const messageText = document.getElementById("server-message-text");
+      const messageIcon = document.getElementById("server-message-icon");
+
+      serverMessage.classList.remove("success", "error");
+
+      messageText.textContent = message;
+
+      if (type === "success") {
+        serverMessage.classList.add("success");
+        messageIcon.src = "/images/icons/seal-check-green.svg";
+      } else if (type === "error") {
+        serverMessage.classList.add("error");
+        messageIcon.src = "/images/icons/seal-warning-red.svg";
+      }
+
+      serverMessage.classList.remove("hidden");
+      serverMessage.classList.add("show");
+
+      sessionStorage.setItem(
+        "serverMessage",
+        JSON.stringify({ message, type })
+      );
+
+      if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
+
+      serverMessageTimeout = setTimeout(() => {
+        hideServerMessage();
+      }, 3000);
+    }
+
+    function hideServerMessage() {
+      const serverMessage = document.getElementById("server-message");
+
+      if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
+
+      sessionStorage.removeItem("serverMessage");
+      serverMessageTimeout = null;
+
+      serverMessage.classList.remove("show");
+
+      setTimeout(() => {
+        serverMessage.classList.add("hidden");
+      }, 400);
+    }
+
+    document
+      .getElementById("server-message-close")
+      .addEventListener("click", () => {
+        hideServerMessage();
+      });
+
+    window.addEventListener("load", () => {
+      const stored = sessionStorage.getItem("serverMessage");
+      if (stored) {
+        const { message, type } = JSON.parse(stored);
+        if (message) showServerMessage(message, type);
+      }
+    });
+
 
   </script>
 </body>
