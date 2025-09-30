@@ -1,5 +1,3 @@
-
-
 const mysql = require('mysql2');
 require("dotenv").config();
 var colors = require('colors');
