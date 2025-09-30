@@ -34,6 +34,7 @@ from PIL import Image
 from fastapi import FastAPI, Request, Header
 import mysql.connector
 from dotenv import load_dotenv
+import ocr.config as config
 
 DB_CONFIG = { "host": "localhost", "user": "root", "password": "admin", "database": "user_db" }
 
@@ -65,7 +66,7 @@ app.add_middleware(
 )
 
 
-
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 
@@ -78,7 +79,7 @@ from app2 import extract_drug_names
 
 
 # Azure Computer Vision API credentials
-load_dotenv()
+
 
 AZURE_ENDPOINT = os.getenv("AZURE_ENDPOINT")
 AZURE_API_KEY = os.getenv("AZURE_API_KEY")
