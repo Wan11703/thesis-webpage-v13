@@ -8,7 +8,7 @@ from transformers import BertForTokenClassification, BertTokenizer
 import torch
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-import config
+#import config
 import openai
 openai.api_key = config.OPENAI_API_KEY
 import os
