@@ -1,5 +1,5 @@
 import os
-from . import config
+
 import io
 from PIL import Image, ImageEnhance, ImageOps
 import numpy as np
@@ -11,7 +11,7 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 #import config
 import openai
-openai.api_key = config.OPENAI_API_KEY
+
 import os
 from flask import Flask, jsonify
 from flask import send_file
@@ -34,10 +34,12 @@ from io import BytesIO
 from PIL import Image
 from fastapi import FastAPI, Request, Header
 import mysql.connector
-from dotenv import load_dotenv
+
 
 
 DB_CONFIG = { "host": "localhost", "user": "root", "password": "admin", "database": "user_db" }
+
+DB_URL = os.getenv('DB_URL')
 
 app = FastAPI()
 
@@ -60,7 +62,8 @@ def get_image_from_db(user_id):
 # Add CORS middleware to allow requests from your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Replace with your frontend's URL
+    allow_origins=["https://thesis-webpage-v13-production.up.railway.app",
+                   "https://thesis-webpage-v13-production.up.railway.app"],  # Replace with your frontend's URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
