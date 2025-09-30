@@ -63,7 +63,7 @@ def get_image_from_db(user_id):
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://thesis-webpage-v13-production.up.railway.app",
-                   "https://thesis-webpage-v13-production-c1fa.up.railway.app"],  # Replace with your frontend's URL
+                   "https://thesis-webpage-v13-production-775f.up.railway.app/"],  # Replace with your frontend's URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -177,7 +177,7 @@ words_to_filter = [
 line_removal_words = ["AGE", "NAME", "ADDRESS", "CITY", "CLINIC", "HOSPITAL", "PHARMACY", "PHYSICIAN", "DOCTOR", "SIGNATURE",]
 
 # Load the FDA dictionary
-drug_dictionary_path = "C:\\Users\\Mark Vincent\\Desktop\\thesis-webpage\\ocr_ner_api\\ner\\FDA_dictionary.txt"
+drug_dictionary_path = "FDA_dictionary.txt"
 with open(drug_dictionary_path, 'r', encoding='utf-8') as f:
     dictionary_terms = [line.strip() for line in f]
 
@@ -359,13 +359,13 @@ def format_corrected_text_with_openai(raw_text):
 
 def save_extracted_medicines_to_json(extracted_medicine_names):
     """Save the extracted medicine names to a JSON file and notify the API server."""
-    json_file_path = 'C:/Users/Mark Vincent/Desktop/thesis-webpage/ocr_ner_api/ocr/extracted_medicines.json'
+    json_file_path = 'thesis-webpage/ocr_ner_api/ocr/extracted_medicines.json'
     with open(json_file_path, 'w') as json_file:
         json.dump(extracted_medicine_names, json_file)
 
     # Notify the API server about the new extracted medicines
     try:
-        response = requests.post("http://127.0.0.1:8001/process-image", json={"medicineArray": extracted_medicine_names})
+        response = requests.post("https://thesis-webpage-v13-production-c1fa.up.railway.app", json={"medicineArray": extracted_medicine_names})
         if response.status_code == 200:
             print("Successfully notified the API server.")
         else:
@@ -377,6 +377,3 @@ def save_extracted_medicines_to_json(extracted_medicine_names):
 
    
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8001)
