@@ -177,7 +177,9 @@ words_to_filter = [
 line_removal_words = ["AGE", "NAME", "ADDRESS", "CITY", "CLINIC", "HOSPITAL", "PHARMACY", "PHYSICIAN", "DOCTOR", "SIGNATURE",]
 
 # Load the FDA dictionary
-drug_dictionary_path = "FDA_dictionary.txt"
+
+drug_dictionary_path = os.path.join(os.path.dirname(__file__), "..", "ner", "FDA_dictionary.txt")
+drug_dictionary_path = os.path.abspath(drug_dictionary_path)
 with open(drug_dictionary_path, 'r', encoding='utf-8') as f:
     dictionary_terms = [line.strip() for line in f]
 
