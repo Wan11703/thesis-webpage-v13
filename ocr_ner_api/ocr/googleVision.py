@@ -89,7 +89,7 @@ AZURE_API_KEY = os.getenv("AZURE_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Load the fine-tuned model and tokenizer
-model_path = "vincentmark/biobert-ner"
+model_path = "castoBin/BiobertNer"
 model = BertForTokenClassification.from_pretrained(model_path)
 tokenizer = BertTokenizer.from_pretrained(model_path)
 
