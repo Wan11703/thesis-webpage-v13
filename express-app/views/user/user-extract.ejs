@@ -504,12 +504,12 @@
       per = 0;
       loading = setInterval(animate, 100);
 
-      const imageUrl = `https://thesis-webpage-v13-production.up.railway.app/api/image-proxy/${userId}`;
+      const imageUrl = `https://thesis-webpage-v13-production.up.railway.app/image-proxy/${userId}`;
       console.log("Image URL:", imageUrl);
       console.log("User ID:", userId);
 
       try {
-        const response = await fetch("https://thesis-webpage-v13-production-775f.up.railway.app/api/process-image", {
+        const response = await fetch("https://thesis-webpage-v13-production-775f.up.railway.app/process-image", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -577,12 +577,12 @@
       back.classList.remove("active");
       saveBtn.classList.remove("active");
 
-      const imageUrl = `https://thesis-webpage-v13-production.up.railway.app/api/image-proxy/${userId}`;
+      const imageUrl = `https://thesis-webpage-v13-production.up.railway.app/image-proxy/${userId}`;
       console.log("Rescan Image URL:", imageUrl);
       console.log("User ID:", userId);
 
       try {
-        const response = await fetch("https://thesis-webpage-v13-production-775f.up.railway.app/api/process-image", {
+        const response = await fetch("https://thesis-webpage-v13-production-775f.up.railway.app/process-image", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -1405,7 +1405,7 @@
 
 
     // Listen for real-time updates using SSE
-    const eventSource = new EventSource("https://thesis-webpage-v13-production-775f.up.railway.app/api/stream-medicines");
+    const eventSource = new EventSource("https://thesis-webpage-v13-production-775f.up.railway.app/stream-medicines");
 
 
 
