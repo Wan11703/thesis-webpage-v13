@@ -20,7 +20,7 @@ dbConnection.connect((error) => {
   }
 });
 
-export default dbConnection;
+module.exports = dbConnection;
 
 //reverted some railway stuff
 //added db port
