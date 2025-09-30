@@ -7,7 +7,7 @@ import torch
 app = Flask(__name__)
 
 # Load the fine-tuned model and tokenizer
-model_path = "C:\\Users\\Mark Vincent\\Desktop\\thesis-webpage\\drug_api\\checkpoint-1175"
+model_path = "castoBin/BiobertNer"
 model = BertForTokenClassification.from_pretrained(model_path)
 tokenizer = BertTokenizer.from_pretrained(model_path)
 
