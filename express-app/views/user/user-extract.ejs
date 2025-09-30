@@ -339,7 +339,7 @@
       if (image && image.user_id) {
         savedDiv.innerHTML = `
       <div class="image">
-        <img id="prescrip-img" src="http://localhost:3000/user-image/${image.user_id}" alt="Saved Image">
+        <img id="prescrip-img" src="https://thesis-webpage-v13-production.up.railway.app/user-image/${image.user_id}" alt="Saved Image">
       </div>`;
       } else {
         savedDiv.innerHTML = ""; // Nothing to show
@@ -571,12 +571,12 @@
       loading = setInterval(animate, 100);
 
       // const imageUrl = "http://localhost:3000/api/image-proxy/{user_id}";
-      const imageUrl = `http://localhost:3000/api/image-proxy/${userId}`;
+      const imageUrl = `https://thesis-webpage-v13-production.up.railway.app/api/image-proxy/${userId}`;
       console.log("Image URL:", imageUrl);
       console.log("User ID:", userId);
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/api/process-image", {
+        const response = await fetch("https://thesis-webpage-v13-production-775f.up.railway.app/api/process-image", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -758,7 +758,7 @@
 
     async function sendRawTextToBackend(rawText) {
       try {
-        const response = await fetch("http://127.0.0.1:5000/process-raw-text", { // Update URL as needed
+        const response = await fetch("https://thesis-webpage-v13-production-55fa.up.railway.app/process-raw-text", { // Update URL as needed
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -975,7 +975,7 @@
 
 
     // Listen for real-time updates using SSE
-    const eventSource = new EventSource("http://127.0.0.1:8000/api/stream-medicines");
+    const eventSource = new EventSource("https://thesis-webpage-v13-production-775f.up.railway.app/api/stream-medicines");
 
 
 
@@ -1021,7 +1021,7 @@
 
       // Fetch drug information from the API
       try {
-        const response = await fetch("http://127.0.0.1:5000/get-extract-info", {
+        const response = await fetch("https://thesis-webpage-v13-production-55fa.up.railway.app/get-extract-info", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -84,7 +84,7 @@ open.addEventListener('click', () => {
     loading = setInterval(animate, 150); // Start the animation
 
     // Send the drug name to the backend
-    fetch('http://localhost:5000/get-drug-info', {
+    fetch('https://thesis-webpage-v13-production-55fa.up.railway.app/get-drug-info', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ function animate() {
 
 async function summarizeField(fieldText, fieldType) {
     try {
-        const response = await fetch('http://localhost:5000/summarize-field', {
+        const response = await fetch('https://thesis-webpage-v13-production-55fa.up.railway.app/summarize-field', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
