@@ -10,7 +10,7 @@ const dbConnection = mysql.createConnection({
   database: process.env.DB_NAME,
   connectionLimit: 10
 });
-// Changed url in env
+// Changed url 
 // test the connection
 dbConnection.connect((error) => {
   if (error) {
