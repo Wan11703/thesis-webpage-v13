@@ -35,13 +35,24 @@ from PIL import Image
 from fastapi import FastAPI, Request, Header
 import mysql.connector
 
-
+app = FastAPI()
+# Add CORS middleware to allow requests from your frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://thesis-webpage-v13-production.up.railway.app",
+        "https://thesis-webpage-v13-production-775f.up.railway.app"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 DB_CONFIG = { "host": "localhost", "user": "root", "password": "admin", "database": "user_db" }
 
 DB_URL = os.getenv('DB_URL')
 
-app = FastAPI()
+
 
 def get_image_from_db(user_id):
     """Fetches the image from the database for the given user_id."""
@@ -59,17 +70,7 @@ def get_image_from_db(user_id):
         return None, None
         
 
-# Add CORS middleware to allow requests from your frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "https://thesis-webpage-v13-production.up.railway.app",
-        "https://thesis-webpage-v13-production-775f.up.railway.app"
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+
 
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
