@@ -369,7 +369,7 @@ def save_extracted_medicines_to_json(extracted_medicine_names):
 
     # Notify the API server about the new extracted medicines
     try:
-        response = requests.post("https://thesis-webpage-v13-production-c1fa.up.railway.app", json={"medicineArray": extracted_medicine_names})
+        response = requests.post("https://thesis-webpage-v13-production-c1fa.up.railway.app/process-image", json={"medicineArray": extracted_medicine_names})
         if response.status_code == 200:
             print("Successfully notified the API server.")
         else:
