@@ -12,7 +12,7 @@ const dbConnection = mysql.createConnection({
 });
 // Changed url 
 // test the connection
-dbConnection.getConnection((err, connection) => {
+dbConnection.connect((err, connection) => {
   if (err) {
     console.error("Error connecting:", err);
   } else {
