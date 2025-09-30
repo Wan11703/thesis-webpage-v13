@@ -1,6 +1,4 @@
 import os
-from google.oauth2 import service_account
-from google.cloud import vision
 import io
 from PIL import Image, ImageEnhance, ImageOps
 import numpy as np
@@ -11,18 +9,12 @@ import torch
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import config
-
-
-
 import openai
 openai.api_key = config.OPENAI_API_KEY
-
 import os
 from flask import Flask, jsonify
-
 from flask import send_file
 from flask import render_template
-
 import subprocess
 import sys
 import json
