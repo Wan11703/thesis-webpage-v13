@@ -29,6 +29,6 @@ module.exports = dbConnection;
 // changed some stuff to use pool instead of single connection
 // changed to mysql2
 // added connection limit
-//enabled "enables static ips" in railway settings
+//enabled "enables static ips" in railway setting
 
 
