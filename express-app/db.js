@@ -10,7 +10,7 @@ const dbConnection = mysql.createPool({
   database: process.env.DB_NAME,
   connectionLimit: 10
 });
-// Changed url but different port
+// Changed url
 // test the connection
 dbConnection.getConnection((err, connection) => {
   if (err) {
