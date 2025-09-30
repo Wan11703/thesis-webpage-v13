@@ -1,7 +1,3 @@
-const mysql = require('mysql2');
-const dotenv = require('dotenv');
-const colors = require('colors');
-
 dotenv.config();
 
 const mysql = require('mysql2');
