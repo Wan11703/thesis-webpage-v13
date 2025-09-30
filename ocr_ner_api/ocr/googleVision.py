@@ -1,4 +1,5 @@
 import os
+import ocr.config as config
 import io
 from PIL import Image, ImageEnhance, ImageOps
 import numpy as np
@@ -34,7 +35,7 @@ from PIL import Image
 from fastapi import FastAPI, Request, Header
 import mysql.connector
 from dotenv import load_dotenv
-import ocr.config as config
+
 
 DB_CONFIG = { "host": "localhost", "user": "root", "password": "admin", "database": "user_db" }
 
