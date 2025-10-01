@@ -23,9 +23,7 @@ irrelevant_words = {
     "age", "ad", "day"
 }
 
-
 def run_ner(model, tokenizer, text, threshold=0.2):
-    """Run NER on text with a given model and tokenizer"""
     if len(text.split()) > 1024:
         raise ValueError("Input text is too long. Please split it.")
 
@@ -41,53 +39,73 @@ def run_ner(model, tokenizer, text, threshold=0.2):
     labels = [model.config.id2label[p.item()] for p in predictions[0]]
     confidences = [scores[0, i, p.item()].item() for i, p in enumerate(predictions[0])]
 
-    # Reconstruct entities
-    word_labels = []
-    current_word, current_label, current_conf = "", "O", 0.0
     drugs = []
+    current_drug, current_conf = [], []
+
+    def finalize_entity():
+        if current_drug and min(current_conf) > threshold:
+            word = ""
+            for t in current_drug:
+                if t.startswith("##"):
+                    word += t[2:]
+                elif word == "":
+                    word = t
+                else:
+                    word += " " + t
+            drugs.append(word)
 
     for token, label, conf in zip(tokens, labels, confidences):
-        if token.startswith("##"):
-            current_word += token[2:]
-            current_conf = min(current_conf, conf)
+        if label.startswith("B-"):
+            finalize_entity()
+            current_drug = [token]
+            current_conf = [conf]
+        elif label.startswith("I-") and current_drug:
+            current_drug.append(token)
+            current_conf.append(conf)
         else:
-            if current_word and (current_label.startswith("B-") or current_label.startswith("I-")):
-                if current_conf > threshold:
-                    drugs.append(current_word)
-            current_word = token
-            current_label = label
-            current_conf = conf
+            finalize_entity()
+            current_drug, current_conf = [], []
 
-    if current_word and (current_label.startswith("B-") or current_label.startswith("I-")):
-        if current_conf > threshold:
-            drugs.append(current_word)
-
+    finalize_entity()
     return drugs
 
-def extract_drug_names(text):
-    # Step 1: Extract with custom fine-tuned model
-    custom_drugs = run_ner(custom_model, custom_tokenizer, text)
 
-    # Step 2: Extract with pretrained BioBERT for extra matching
+
+
+
+
+def extract_drug_names(text):
+    # Step 1: Extract with both models
+    custom_drugs = run_ner(custom_model, custom_tokenizer, text)
     pretrained_drugs = run_ner(pretrained_model, pretrained_tokenizer, text)
 
-    # Step 3: Merge results
+    # Step 2: Merge results
     merged_drugs = custom_drugs + pretrained_drugs
 
-    # ✅ Improved cleaning & filtering
-    text_lower = text.lower()
+    # Step 3: Clean irrelevant words
     cleaned_drugs = []
     for drug in merged_drugs:
-        # remove irrelevant words
         cleaned = " ".join([w for w in drug.split() if w.lower() not in irrelevant_words])
-        cleaned = cleaned.strip()
-        if cleaned:  # only keep non-empty
-            cleaned_drugs.append(cleaned)
+        if cleaned:
+            cleaned_drugs.append(cleaned.strip())
 
-    # ✅ Deduplicate while preserving order
+    # Step 4: Remove fragments & duplicates
+    normalized = [(d.replace(" ", "").lower(), d) for d in cleaned_drugs]
+    keep = []
+
+    for i, (nd, orig) in enumerate(normalized):
+        # Drop very short fragments if longer exists
+        if len(nd) < 4 and any(nd in other for j, (other, _) in enumerate(normalized) if i != j):
+            continue
+        # Drop substrings of longer drugs
+        if any(len(nd) < len(other) and nd in other for j, (other, _) in enumerate(normalized) if i != j):
+            continue
+        keep.append(orig)
+
+    # Deduplicate preserving order
     unique_drugs = []
     seen = set()
-    for drug in cleaned_drugs:
+    for drug in keep:
         d_lower = drug.lower()
         if d_lower not in seen:
             seen.add(d_lower)
@@ -97,10 +115,8 @@ def extract_drug_names(text):
 
 
 
-
-
 # Example test
-corrected_text = "Losartan was prescribed. Aspirin was prescribed. Citicoline was prescribed. Baclofen was prescribed."
+corrected_text = "Losartan was prescribed. Ferrous sulfate was prescribed. Citicoline was prescribed. Baclofen was prescribed."
 extracted_drugs = extract_drug_names(corrected_text)
 print("Extracted Drugs:", extracted_drugs)
 
