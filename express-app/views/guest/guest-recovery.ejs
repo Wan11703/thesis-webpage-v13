@@ -68,21 +68,31 @@
                 <h1>Account Recovery</h1>
                 <div class="input-control">
                     <label for="password1">New Password</label>
-                    <input id="password1" name="password1" type="password" />
+                    <div class="input-wrapper">
+                        <input type="password" id="password1" name="password1" />
+                        <img src="/images/icons/eye-slash.svg" alt="Toggle Password" class="toggle-password"
+                            id="toggle1" />
+                    </div>
+
                     <div class="error"></div>
-                    <div class="password">
+                    <!-- <div class="password">
                         <label for="show-password1">Show Password</label>
                         <input type="checkbox" id="show-password1" class="show-password" />
-                    </div>
+                    </div> -->
                 </div>
                 <div class="input-control">
                     <label for="password2">Confirm Password</label>
-                    <input id="password2" name="password2" type="password" />
+                    <div class="input-wrapper">
+                        <input type="password" id="password2" name="password2" />
+                        <img src="/images/icons/eye-slash.svg" alt="Toggle Password" class="toggle-password"
+                            id="toggle2" />
+                    </div>
+
                     <div class="error"></div>
-                    <div class="password">
+                    <!-- <div class="password">
                         <label for="show-password2">Show Password</label>
                         <input type="checkbox" id="show-password2" class="show-password" />
-                    </div>
+                    </div> -->
                 </div>
                 <div class="buttons">
                     <button type="button" onclick="CancelChange();">Cancel</button>
@@ -152,22 +162,26 @@
         const password1 = document.getElementById("password1");
         const password2 = document.getElementById("password2");
 
-        const toggle1 = document.getElementById("show-password1");
-        const toggle2 = document.getElementById("show-password2");
+        const toggle1 = document.getElementById("toggle1");
+        const toggle2 = document.getElementById("toggle2");
 
         toggle1.addEventListener("click", () => {
-            if (toggle1.checked) {
-                password1.setAttribute("type", "text");
+            if (password1.type === "password") {
+                password1.type = "text";
+                toggle1.src = "/images/icons/eye.svg";
             } else {
-                password1.setAttribute("type", "password");
+                password1.type = "password";
+                toggle1.src = "/images/icons/eye-slash.svg";
             }
         });
 
         toggle2.addEventListener("click", () => {
-            if (toggle2.checked) {
-                password2.setAttribute("type", "text");
+            if (password2.type === "password") {
+                password2.type = "text";
+                toggle2.src = "/images/icons/eye.svg";
             } else {
-                password2.setAttribute("type", "password");
+                password2.type = "password";
+                toggle2.src = "/images/icons/eye-slash.svg";
             }
         });
 
@@ -272,7 +286,7 @@
 
 
         const setError = (element, message) => {
-            const inputControl = element.parentElement;
+            const inputControl = element.closest(".input-control");
             const errorDisplay = inputControl.querySelector(".error");
 
             errorDisplay.innerText = message;
@@ -281,13 +295,14 @@
         };
 
         const setSuccess = (element) => {
-            const inputControl = element.parentElement;
+            const inputControl = element.closest(".input-control");
             const errorDisplay = inputControl.querySelector(".error");
 
             errorDisplay.innerText = "";
             inputControl.classList.add("success");
             inputControl.classList.remove("error");
         };
+
 
         function CancelChange() {
             change_form.classList.remove("show");
@@ -320,6 +335,9 @@
 
             if (rcvCodeValue === "") {
                 setError(rcv_code, "Recovery code is required");
+
+            } else if (!/^\d{6}$/.test(rcvCodeValue)) {
+                setError(rcv_code, "Recovery code must be 6 digits");
             } else {
                 setSuccess(rcv_code);
             }
@@ -335,7 +353,13 @@
                 setError(password1, "Password is required");
             } else if (password1Value.length < 8) {
                 setError(password1, "Password must be at least 8 character.");
-            } else {
+            }
+
+            else if (password1Value.length > 64) {
+                setError(password1, "Password must not exceed 64 characters");
+            }
+
+            else {
                 setSuccess(password1);
             }
 
