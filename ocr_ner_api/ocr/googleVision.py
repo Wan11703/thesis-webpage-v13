@@ -1,5 +1,4 @@
 import os
-
 import io
 from PIL import Image, ImageEnhance, ImageOps
 import numpy as np
@@ -7,12 +6,8 @@ import re
 from rapidfuzz import process, fuzz
 from transformers import BertForTokenClassification, BertTokenizer
 import torch
-import sys, os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 #import config
 import openai
-
-import os
 from flask import Flask, jsonify
 from flask import send_file
 from flask import render_template
@@ -22,74 +17,123 @@ import json
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 import json
-import os
 # filepath: c:\Users\Mark\OneDrive\Desktop\thesis-webpage\ocr\googleVision.py
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 from fastapi import Request
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-import requests
 from io import BytesIO
 from PIL import Image
 from fastapi import FastAPI, Request, Header
+from urllib.parse import urlparse
 import mysql.connector
 
-app = FastAPI()
-# Add CORS middleware to allow requests from your frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "https://thesis-webpage-v13-production.up.railway.app",
-        "https://thesis-webpage-v13-production-775f.up.railway.app"
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-DB_CONFIG = { "host": "localhost", "user": "root", "password": "admin", "database": "user_db" }
-
-DB_URL = os.getenv('DB_URL')
-
-
-
-def get_image_from_db(user_id):
-    """Fetches the image from the database for the given user_id."""
-    
-    conn = mysql.connector.connect(**DB_CONFIG)
-    cursor = conn.cursor()
-    cursor.execute("SELECT image, image_type FROM user_tbl WHERE user_id = %s", (user_id,))
-    row = cursor.fetchone()
-    cursor.close()
-    conn.close()
-
-    if row and row[0]:
-        return row[0], row[1] or "image/jpeg"
-    else:
-        return None, None
-        
-
-
-
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-
-
-
-
-
-# Import the extract_drug_names function from app2.py
 from ner.app2 import extract_drug_names
 
-
-# Azure Computer Vision API credentials
 
 
 AZURE_ENDPOINT = os.getenv("AZURE_ENDPOINT")
 AZURE_API_KEY = os.getenv("AZURE_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+DB_URL = os.getenv('DB_URL')
+
+app = FastAPI(title="OCR and NER API", version="1.0.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://thesis-webpage-v13-production.up.railway.app",  
+                   "https://thesis-webpage-v13-production-775f.up.railway.app"],  # Replace with your frontend's URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+
+DB_CONFIG = { "host": "localhost", "user": "root", "password": "admin", "database": "user_db" }
+
+
+
+
+
+def get_image_from_db(user_id):
+    """Fetches the image from the database for the given user_id."""
+    # Parse the DB_URL
+    result = urlparse(DB_URL)
+
+    # Prepare the database connection details
+    db_config = {
+        'user': result.username,
+        'password': result.password,
+        'host': result.hostname,
+        'port': result.port,
+        'database': result.path[1:],  # Remove the leading '/' from the path (database name)
+        'charset': 'utf8mb4'  # Explicitly set the character set
+    }
+
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+
+        # Explicitly set the character set for the session
+        cursor.execute("SET NAMES utf8mb4;")
+
+        # Execute the query to fetch the image
+        cursor.execute("SELECT image, image_type FROM user_tbl WHERE user_id = %s", (user_id,))
+        row = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if row and row[0]:
+            return row[0], row[1] or "image/jpeg"
+        else:
+            return None, None
+    except mysql.connector.Error as e:
+        print(f"Database error: {e}")
+        return None, None
+
+def test_db_connection():
+    """Test the database connection and character set."""
+    result = urlparse(DB_URL)
+    db_config = {
+        'user': result.username,
+        'password': result.password,
+        'host': result.hostname,
+        'port': result.port,
+        'database': result.path[1:],
+        'charset': 'utf8mb4'
+    }
+
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("SHOW VARIABLES LIKE 'character_set%';")
+        print("Character Set Variables:", cursor.fetchall())
+        cursor.close()
+        conn.close()
+    except mysql.connector.Error as e:
+        print(f"Database connection test failed: {e}")
+        
+
+
+
+
+
+# Set up your OpenAI API key
+openai.api_key = OPENAI_API_KEY
+
+# Define the cache directory for persistent storage
+cache_dir = "/mnt/data/models/checkpoint-1622"
+
+# Ensure the cache directory exists
+os.makedirs(cache_dir, exist_ok=True)
+
+
+
 
 # Load the fine-tuned model and tokenizer
 model_path = "castoBin/BiobertNer"
@@ -106,38 +150,44 @@ async def process_image(request: Request):
     print(f"Received data: {data}")
     
     user_id = data.get("user_id")
+    image_url = data.get("image_url")  # Get the image_url from the request payload
 
-    if not user_id:
-        return JSONResponse(content={"error": "No user_id provided"}, status_code=400)
-    print(f"Processing image for user_id: {user_id}")
+    if not user_id and not image_url:
+        return JSONResponse(content={"error": "No user_id or image_url provided"}, status_code=400)
+    
+    print(f"Processing image for user_id: {user_id} or image_url: {image_url}")
 
     temp_image_path = None
 
     try:
-        image_data, image_type = get_image_from_db(user_id)
-        if not image_data:
-            return JSONResponse(content={"error": "Image not found in database"}, status_code=404)
-       
-        image = Image.open(BytesIO(image_data))
-        temp_image_path = f"temp_image_{user_id}.jpg"
+        if user_id:
+            # Fetch image from the database
+            image_data, image_type = get_image_from_db(user_id)
+            if not image_data:
+                return JSONResponse(content={"error": "Image not found in database"}, status_code=404)
+            image = Image.open(BytesIO(image_data))
+        elif image_url:
+            # Fetch image from the provided URL
+            response = requests.get(image_url)
+            if response.status_code != 200:
+                return JSONResponse(content={"error": "Failed to fetch image from URL"}, status_code=400)
+            image_data = response.content
+            image = Image.open(BytesIO(image_data))
+
+        # Save the image to a temporary file
+        temp_image_path = f"temp_image_{user_id or 'url'}.jpg"
         image.save(temp_image_path)
         print(f"Image saved to {temp_image_path}")
-        
-        
 
         # Process the image
         raw_text, corrected_text, formatted_text, extracted_medicine_names = detect_text_in_image(temp_image_path)
-
 
         return JSONResponse(content={
             "raw_text": raw_text,
             "corrected_text": corrected_text,
             "formatted_text": formatted_text,
             "medicineArray": extracted_medicine_names
-        
-        
         })
-    
 
     except Exception as e:
         print(f"Unexpected error: {str(e)}")
