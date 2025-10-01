@@ -13,25 +13,13 @@ app = FastAPI()
 # Add CORS middleware to allow requests from your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Replace with your frontend's URL
+    allow_origins=["https://thesis-webpage-v13-production.up.railway.app",
+                   "https://thesis-webpage-v13-production-775f.up.railway.app",
+                   "https://thesis-webpage-v13-production-c1fa.up.railway.app"],  # Replace with your frontend's URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Global variable to store the latest extracted medicines
-latest_extracted_medicines = []
-
-# Endpoint to serve extracted medicine names
-@app.get("/api/extracted-medicines")
-def get_extracted_medicines():
-    json_file_path = r'C:\Users\Mark Vincent\Desktop\thesis-webpage\ocr_ner_api\ocr\extracted_medicines.json'
-    if os.path.exists(json_file_path):
-        with open(json_file_path, 'r') as file:
-            extracted_medicines = json.load(file)
-        return JSONResponse(content={"medicineArray": extracted_medicines})
-    else:
-        return JSONResponse(content={"medicineArray": []}, status_code=404)
 
 # SSE endpoint to stream updates to the frontend
 @app.get("/api/stream-medicines")
@@ -44,7 +32,6 @@ async def stream_medicines():
             await asyncio.sleep(1)  # Check for updates every second
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
-
 
 # Endpoint to update the latest extracted medicines
 @app.post("/api/update-medicines")
@@ -59,8 +46,6 @@ async def update_medicines(request: Request):
         return JSONResponse(content={"message": "Medicines updated successfully"})
     else:
         return JSONResponse(content={"error": "No medicines provided"}, status_code=400)
-
-
 
 # Global variable to store the latest extracted medicines
 latest_extracted_medicines = []
@@ -77,15 +62,14 @@ async def process_image(request: Request):
         return JSONResponse(content={"error": "No user_id provided"}, status_code=403)
 
     # Use the proxy route on your Node server
-    image_url = f"http://localhost:3000/api/image-proxy/{user_id}"
-
-
-
+    image_url = f"https://thesis-webpage-v13-production.up.railway.app/api/image-proxy/{user_id}"
+    # image_url = f"http://localhost:3000/api/image-proxy/{user_id}"
+    
     try:
         # Forward the proxy URL to googleVision.py
         response = requests.post(
-            "http://127.0.0.1:8001/process-image",
-            json={"image_url": image_url, "user_id": user_id}
+    "https://thesis-webpage-v13-production-c1fa.up.railway.app/process-image",
+    json={"user_id": user_id, "image_url": image_url}
         )
         if response.status_code == 200:
             return JSONResponse(content=response.json())
@@ -95,13 +79,3 @@ async def process_image(request: Request):
             return JSONResponse(content={"error": "Failed to process the image in googleVision.py"}, status_code=500)
     except requests.exceptions.RequestException as e:
         return JSONResponse(content={"error": f"Error communicating with googleVision.py: {str(e)}"}, status_code=500)
-
-
-
-
-
-
-if __name__ == "__main__":
-    import uvicorn
-    # Run the FastAPI app
-    uvicorn.run(app, host="127.0.0.1", port=8000)
