@@ -433,6 +433,31 @@ h6 { font-size: 0.67rem; }/* 12px */
     background-color: #c82333;
 }
 
+.tabs-error-message {
+  background-color: #fdecea;    /* light red background */
+  border: 2px solid #f5c2c0;    /* subtle red border */
+  color: #b71c1c;               /* dark red text */
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+
+.tabs-error-message p {
+  margin-bottom: 10px;
+}
+
+.tabs-error-message ul {
+  margin: 10px 0 15px 20px;
+  list-style-type: disc;
+}
+
+.tabs-error-message li {
+  margin-bottom: 6px;
+}
+
+
 
 
 
