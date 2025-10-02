@@ -48,12 +48,17 @@
                 </div>
                 <div class="input-control">
                     <label for="password1">Password</label>
-                    <input id="password1" name="password1" type="password" />
+                    <div class="input-wrapper">
+                        <input type="password" id="password1" name="password1" />
+                        <img src="/images/icons/eye-slash.svg" alt="Toggle Password" class="toggle-password"
+                            id="toggle1" />
+                    </div>
+
                     <div class="error"></div>
-                    <div class="password">
+                    <!-- <div class="password">
                         <label for="show-password1">Show Password</label>
                         <input type="checkbox" id="show-password1" class="show-password" />
-                    </div>
+                    </div> -->
 
 
                     <div class="links">
@@ -136,7 +141,10 @@
 
             const errors = form.querySelectorAll(".error");
             const hasErrors = Array.from(errors).some(err => err.innerText !== "");
-            if (hasErrors) return;
+            if (hasErrors) {
+                showServerMessage("Fix highlighted fields.", "error");
+                return;
+            }
 
             const formData = new FormData(form);
 
@@ -164,19 +172,32 @@
 
 
 
-        const toggle1 = document.getElementById("show-password1");
+        // const toggle1 = document.getElementById("show-password1");
+
+        // toggle1.addEventListener("click", () => {
+        //     if (toggle1.checked) {
+        //         password1.setAttribute("type", "text");
+        //     } else {
+        //         password1.setAttribute("type", "password");
+        //     }
+        // });
+
+        const toggle1 = document.getElementById("toggle1");
+        const password1Input = document.getElementById("password1");
 
         toggle1.addEventListener("click", () => {
-            if (toggle1.checked) {
-                password1.setAttribute("type", "text");
+            if (password1Input.type === "password") {
+                password1Input.type = "text";
+                toggle1.src = "/images/icons/eye.svg"; // show icon
             } else {
-                password1.setAttribute("type", "password");
+                password1Input.type = "password";
+                toggle1.src = "/images/icons/eye-slash.svg"; // hide icon
             }
         });
 
 
         const setError = (element, message) => {
-            const inputControl = element.parentElement;
+            const inputControl = element.closest(".input-control"); // <-- use closest
             const errorDisplay = inputControl.querySelector(".error");
 
             errorDisplay.innerText = message;
@@ -185,13 +206,14 @@
         };
 
         const setSuccess = (element) => {
-            const inputControl = element.parentElement;
+            const inputControl = element.closest(".input-control"); // <-- use closest
             const errorDisplay = inputControl.querySelector(".error");
 
             errorDisplay.innerText = "";
             inputControl.classList.add("success");
             inputControl.classList.remove("error");
         };
+
 
         const isValidEmail = (email) => {
             const re =
@@ -216,10 +238,13 @@
             if (password1Value === "") {
                 setError(password1, "Password is required");
             } else if (password1Value.length < 8) {
-                setError(password1, "Password must be at least 8 character.");
+                setError(password1, "Password must be at least 8 characters");
+            } else if (password1Value.length > 64) {
+                setError(password1, "Password must not exceed 64 characters");
             } else {
                 setSuccess(password1);
             }
+
         };
 
         let serverMessageTimeout = null;
