@@ -721,7 +721,6 @@ const transporter = nodemailer.createTransport({
 });
 
 // --- Recovery Step 1: Request Recovery Code ---
-// --- Recovery Step 1: Request Recovery Code ---
 app.post("/recovery-request", formUpload.none(), (req, res) => {
     const { email } = req.body;
 

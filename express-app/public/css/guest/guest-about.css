@@ -34,7 +34,7 @@
 .mission .container,
 .story .container {
   display: flex;
-  height: 1000px;
+  height: 400px;
 }
 
 .mission-img1 {
