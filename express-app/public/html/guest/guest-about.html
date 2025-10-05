@@ -12,20 +12,36 @@
 <body>
   <nav class="guest-navbar">
     <div class="container">
+
+      <!-- Logo -->
       <div class="logo">
         <a href="/">
           <img src="/images/logo-nav.png" alt="MedExtract Logo" class="logo-img" />
         </a>
       </div>
 
-      <div class="menu-toggle" id="menu-toggle">&#9776;</div> <!-- Burger icon -->
-
+      <!-- Desktop Nav -->
       <ul class="nav" id="guest-nav">
         <li><a href="/">Home</a></li>
         <li><a href="/html/guest/guest-about.html">About</a></li>
         <li><a href="/guest-login">Login</a></li>
         <li><a href="/guest-register">Register</a></li>
       </ul>
+
+      <!-- Burger Button -->
+      <div class="burger" id="burger-toggle" onclick="toggleBurger()">
+        <img src="/images/icons/list-white.svg" alt="Menu" />
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div class="mobile-menu" id="mobile-menu">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/html/guest/guest-about.html">About</a></li>
+          <li><a href="/guest-login">Login</a></li>
+          <li><a href="/guest-register">Register</a></li>
+        </ul>
+      </div>
 
     </div>
   </nav>
@@ -46,16 +62,14 @@
       <div class="story-text">
         <h1>Our Story</h1>
         <p>
-          Our journey began with the vision to bridge the gap between clinical
-  narratives and accessible medical insights. We recognized that vital
-  information often remains hidden in prescriptions and notes, making it
-  difficult for healthcare professionals to interpret efficiently.
+          Our journey began with the vision to bridge the gap between clinical narratives and accessible medical
+          insights. We recognized that vital information often remains hidden in prescriptions and notes, making it
+          difficult for healthcare professionals to interpret efficiently.
         </p>
         <p>
-          By combining OCR, NLP, and BioBERT NER, we developed a system that
-  transforms unstructured text into clear, actionable knowledge. This
-  empowers healthcare providers to access accurate data with ease and
-  enhances decision-making for better patient outcomes.
+          By combining OCR, NLP, and BioBERT NER, we developed a system that transforms unstructured text into clear,
+          actionable knowledge. This empowers healthcare providers to access accurate data with ease and enhances
+          decision-making for better patient outcomes.
         </p>
       </div>
     </div>
@@ -69,16 +83,14 @@
       <div class="mission-text">
         <h1>Our Mission</h1>
         <p>
-          Our mission is to harness the power of technology to decode complex
-  clinical narratives and make vital healthcare information more accessible.
-  We aim to reduce barriers caused by unstructured medical text and ensure
-  that insights are clear, accurate, and actionable for healthcare providers.
+          Our mission is to harness the power of technology to decode complex clinical narratives and make vital
+          healthcare information more accessible. We aim to reduce barriers caused by unstructured medical text and
+          ensure that insights are clear, accurate, and actionable for healthcare providers.
         </p>
         <p>
-          By integrating OCR, NLP, and BioBERT NER, we strive to deliver a system
-  that enhances medical decision-making, supports patient safety, and drives
-  innovation in the healthcare industry. Through this, we hope to contribute
-  to a future where technology empowers better care for everyone.
+          By integrating OCR, NLP, and BioBERT NER, we strive to deliver a system that enhances medical decision-making,
+          supports patient safety, and drives innovation in the healthcare industry. Through this, we hope to contribute
+          to a future where technology empowers better care for everyone.
         </p>
       </div>
       <div class="mission-img2">
@@ -96,16 +108,14 @@
       </div>
       <div class="solution-text">
         <p>
-           Our solution combines OCR technology with advanced NLP models to
-    seamlessly convert prescriptions and clinical notes into digital text.
-    This process ensures that important medical details such as medicines
-    and dosages are captured with accuracy and reliability.
+          Our solution combines OCR technology with advanced NLP models to seamlessly convert prescriptions and clinical
+          notes into digital text. This process ensures that important medical details such as medicines and dosages are
+          captured with accuracy and reliability.
         </p>
         <p>
-          Through the use of BioBERT NER, the system identifies medicine names and
-    retrieves their related information including drug relations, prices,
-    and side effects. This provides structured medical insights that help
-    healthcare professionals make faster and safer decisions.
+          Through the use of BioBERT NER, the system identifies medicine names and retrieves their related information
+          including drug relations, prices, and side effects. This provides structured medical insights that help
+          healthcare professionals make faster and safer decisions.
         </p>
       </div>
     </div>
@@ -118,7 +128,9 @@
           <img src="/images/logo-footer.png" alt="MedExtract Logo" class="logo-img" />
         </a>
         <p>
-          Empowering healthcare through intelligent technology. Our system combines OCR, NLP, and BioBERT NER to transform complex clinical narratives into structured medical insights—supporting accuracy, efficiency, and better patient care.
+          Empowering healthcare through intelligent technology. Our system combines OCR, NLP, and BioBERT NER to
+          transform complex clinical narratives into structured medical insights—supporting accuracy, efficiency, and
+          better patient care.
         </p>
       </div>
 
@@ -138,18 +150,18 @@
         <h2>Contacts</h2>
         <div class="contacts">
           <div>
-            <img src="/Flaticons/index/location.png" /> &nbsp;
+            <img src="/flaticons/index/location.png" /> &nbsp;
             <p>
               University of The East Caloocan, 105 Samson Rd, Caloocan, Metro
               Manila
             </p>
           </div>
           <div>
-            <img src="/Flaticons/index/email.png" /> &nbsp;
+            <img src="/flaticons/index/email.png" /> &nbsp;
             <p>nogot.markvincent@ue.edu.ph</p>
           </div>
           <div>
-            <img src="/Flaticons/index/call.png" /> &nbsp;
+            <img src="/flaticons/index/call.png" /> &nbsp;
             <p>09991624156</p>
           </div>
         </div>
@@ -158,12 +170,19 @@
   </footer>
 
   <script>
-    const toggle = document.getElementById('menu-toggle');
-    const nav = document.getElementById('guest-nav');
+    function toggleBurger() {
+      const burger = document.getElementById("burger-toggle");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const burgerIcon = burger.querySelector("img");
 
-    toggle.addEventListener('click', () => {
-      nav.classList.toggle('show');
-    });
+      mobileMenu.classList.toggle("open");
+
+      if (mobileMenu.classList.contains("open")) {
+        burgerIcon.src = "/images/icons/x-white.svg";
+      } else {
+        burgerIcon.src = "/images/icons/list-white.svg";
+      }
+    }
   </script>
 </body>
 

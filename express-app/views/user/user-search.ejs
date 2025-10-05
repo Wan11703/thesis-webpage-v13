@@ -13,17 +13,20 @@
 <body>
   <nav class="user-navbar">
     <div class="container">
+      <!-- Logo -->
       <div class="logo">
         <a href="/user-extract">
           <img src="/images/logo-nav.png" alt="MedExtract Logo" class="logo-img" />
         </a>
       </div>
 
+      <!-- Desktop Navigation -->
       <ul class="nav" id="user-nav">
         <li><a href="/user-extract">Extract</a></li>
         <li><a href="/user-search">Search</a></li>
       </ul>
 
+      <!-- User Dropdown -->
       <div class="user-menu" onclick="toggleDropdown(event)">
         <img src="/images/icons/user-circle.svg" alt="User Menu" class="user-icon" />
         <span class="username">
@@ -31,15 +34,35 @@
         </span>
         <div class="dropdown">
           <a href="/user-settings">
-            <img src="/images/icons/gear-six.svg" alt="Settings" />
-            Settings
+            <img src="/images/icons/gear-six.svg" alt="Settings" /> Settings
           </a>
           <a class="logout-confirm" href="#">
-            <img src="/images/icons/sign-out.svg" alt="Sign Out" />
-            Sign Out
+            <img src="/images/icons/sign-out.svg" alt="Sign Out" /> Sign Out
           </a>
         </div>
       </div>
+
+      <!-- Burger Toggle -->
+      <div class="burger" id="burger-toggle" onclick="toggleBurger()">
+        <img src="/images/icons/list-white.svg" alt="Menu" class="burger-icon" />
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-user">
+        <img src="/images/icons/user-circle.svg" alt="User Menu" class="user-icon" />
+        <span class="username">
+          <%= username %>
+        </span>
+      </div>
+
+      <ul>
+        <li><a href="/user-extract">Extract</a></li>
+        <li><a href="/user-search">Search</a></li>
+        <li><a href="/user-settings">Settings</a></li>
+        <li><a class="logout-confirm" href="#">Sign Out</a></li>
+      </ul>
     </div>
   </nav>
 
@@ -156,10 +179,9 @@
           <img src="/images/logo-footer.png" alt="MedExtract Logo" class="logo-img" />
         </a>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci,
-          id aspernatur itaque cumque vitae odit sint eligendi nam libero
-          voluptate magni aperiam, veniam ullam tenetur quidem nostrum enim
-          eos a.
+          Empowering healthcare through intelligent technology. Our system combines OCR, NLP, and BioBERT NER to
+          transform complex clinical narratives into structured medical insights—supporting accuracy, efficiency, and
+          better patient care.
         </p>
       </div>
 
@@ -251,8 +273,8 @@
     const side_effects = document.querySelector("#side_effects");
     const price = document.querySelector("#price");
 
-    open.addEventListener('click', () => {
-      const drugNameChecker = inputBox.value.trim(); // trim to remove spaces
+    open.addEventListener("click", () => {
+      const drugNameChecker = inputBox.value.trim();
 
       if (!drugNameChecker) {
         showServerMessage("Please enter a medicine name.", "error");
@@ -263,16 +285,17 @@
       const drugName = rawDrugName
         .toLowerCase()
         .split(" ")
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
-      modalTitle.textContent = "You searched for: " + drugName;
-      modal_container.classList.add('show');
+
+      modalTitle.textContent = "Searched: " + drugName;
+      modal_container.classList.add("show");
 
       const tabSelector = document.getElementById("tabSelector");
       tabSelector.value = "0";
 
       const allContents = document.querySelectorAll(".content-box .content");
-      allContents.forEach((c, i) => c.classList.remove("active"));
+      allContents.forEach((c) => c.classList.remove("active"));
       document.getElementById("drug_information").classList.add("active");
 
       count = 0;
@@ -280,20 +303,28 @@
       loading = setInterval(animate, 100);
       disableModalClose();
 
-      fetch('https://thesis-webpage-v13-production-55fa.up.railway.app/get-drug-info', {
-        method: 'POST',
+      
+      function setContentWithNotice(element, notice, content) {
+        element.innerHTML = `
+      <p class="info-source">${notice}</p>
+      <p>${content}</p>
+    `;
+      }
+
+      fetch("https://thesis-webpage-v13-production-55fa.up.railway.app/get-drug-info", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ drug_name: drugName }),
       })
-        .then(response => {
+        .then((response) => {
           if (!response.ok) {
             throw new Error("Medicine not found.");
           }
           return response.json();
         })
-        .then(data => {
+        .then((data) => {
           if (data.error) {
             drug_information.textContent = "";
             interaction.textContent = "";
@@ -304,19 +335,45 @@
             return;
           }
 
-          drug_information.textContent = data.drug_information || "No details available.";
-          interaction.textContent = data.interaction || "No interactions available.";
-          dosage.textContent = data.dosage || "No indications available.";
-          side_effects.textContent = data.side_effects || "No side effects available.";
-          price.textContent = data.price || "No price information available.";
+          
+          setContentWithNotice(
+            drug_information,
+            "The information provided is derived from Drug Bank.",
+            data.drug_information || "No details available."
+          );
+
+          setContentWithNotice(
+            interaction,
+            "The information provided is derived from Drug Bank.",
+            data.interaction || "No interactions available."
+          );
+
+          setContentWithNotice(
+            dosage,
+            "The information provided is derived from Drug Bank.",
+            data.dosage || "No indications available."
+          );
+
+          setContentWithNotice(
+            side_effects,
+            "The information provided is derived from Drug Bank.",
+            data.side_effects || "No side effects available."
+          );
+
+          setContentWithNotice(
+            price,
+            "The information provided was derived from publicly available online sources via OpenAI. Prices are suggested retail and may vary or change without notice.",
+            (data.price || "No price information available.").replace(/\n/g, "<br>")
+          );
 
           stopLoaderAndShowTabs();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
           stopLoaderAndShowTabsError();
         });
     });
+
 
     close.addEventListener("click", () => {
       modal_container.classList.remove("show");
@@ -332,7 +389,6 @@
       const tabBox = document.querySelector(".tab-box");
       if (tabBox) tabBox.style.display = "";
 
-      // ✅ Always reset to Medication Details tab
       tabSelector.value = "0";
       contents.forEach((c, i) => c.classList.remove("active"));
       document.getElementById("drug_information").classList.add("active");
@@ -413,21 +469,51 @@
 
     function saveData() {
       const modalTitle = document.querySelector("#modal-title");
-      const medicineName = modalTitle.textContent.replace("You searched for: ", "");
+      const medicineName = modalTitle.textContent.replace("Searched: ", "").trim();
 
-      var details = document.getElementById("drug_information").textContent;
-      const interactions = document.getElementById("interactions").textContent;
-      const guidelines = document.getElementById("indications").textContent; // double check your ID here
-      const effects = document.getElementById("side_effects").textContent;
-      const prices = document.getElementById("price").textContent;
+      
+      function cleanText(id, notice) {
+        const el = document.getElementById(id);
+        if (!el) return "";
+
+        let text = el.textContent.trim();
+
+      
+        if (text.startsWith(notice)) {
+          text = text.replace(notice, "").trim();
+        }
+
+        return text;
+      }
+
+      const details = cleanText(
+        "drug_information",
+        "The information provided is derived from Drug Bank."
+      );
+      const interactions = cleanText(
+        "interactions",
+        "The information provided is derived from Drug Bank."
+      );
+      const guidelines = cleanText(
+        "indications",
+        "The information provided is derived from Drug Bank."
+      );
+      const effects = cleanText(
+        "side_effects",
+        "The information provided is derived from Drug Bank."
+      );
+      const prices = cleanText(
+        "price",
+        "The information provided was derived from publicly available online sources via OpenAI. Prices are suggested retail and may vary or change without notice."
+      );
 
       const data = {
         medicineName,
-        details,
-        interactions,
-        guidelines,
-        effects,
-        prices
+        details: details || "No details available.",
+        interactions: interactions || "No interactions available.",
+        guidelines: guidelines || "No indications available.",
+        effects: effects || "No side effects available.",
+        prices: prices || "No price information available.",
       };
 
       fetch("/user/save-history", {
@@ -447,6 +533,7 @@
         });
     }
 
+
     function toggleDropdown(event) {
       event.stopPropagation();
       document.querySelector(".user-menu .dropdown").classList.toggle("active");
@@ -456,7 +543,7 @@
       document.querySelector(".user-menu .dropdown").classList.remove("active");
     });
 
-    const logoutLinks = document.querySelectorAll(".logout-confirm"); // 🔹 this is your trigger element (replace with your logout button/link class)
+    const logoutLinks = document.querySelectorAll(".logout-confirm");
     const logoutModal = document.querySelector(".logout-modal-container");
     const logoutCloseBtn = document.getElementById("logout-close-btn");
     const logoutCancelBtn = document.getElementById("logout-cancel-btn");
@@ -543,6 +630,20 @@
         if (message) showServerMessage(message, type);
       }
     });
+
+    function toggleBurger() {
+      const burger = document.getElementById("burger-toggle");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const burgerIcon = burger.querySelector("img");
+
+      mobileMenu.classList.toggle("open");
+
+      if (mobileMenu.classList.contains("open")) {
+        burgerIcon.src = "/images/icons/x-white.svg";
+      } else {
+        burgerIcon.src = "/images/icons/list-white.svg";
+      }
+    }
 
 
   </script>

@@ -12,18 +12,36 @@
 <body>
   <nav class="guest-navbar">
     <div class="container">
+
+      <!-- Logo -->
       <div class="logo">
         <a href="/">
           <img src="/images/logo-nav.png" alt="MedExtract Logo" class="logo-img" />
         </a>
       </div>
 
+      <!-- Desktop Nav -->
       <ul class="nav" id="guest-nav">
         <li><a href="/">Home</a></li>
         <li><a href="/html/guest/guest-about.html">About</a></li>
         <li><a href="/guest-login">Login</a></li>
         <li><a href="/guest-register">Register</a></li>
       </ul>
+
+      <!-- Burger Button -->
+      <div class="burger" id="burger-toggle" onclick="toggleBurger()">
+        <img src="/images/icons/list-white.svg" alt="Menu" />
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div class="mobile-menu" id="mobile-menu">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/html/guest/guest-about.html">About</a></li>
+          <li><a href="/guest-login">Login</a></li>
+          <li><a href="/guest-register">Register</a></li>
+        </ul>
+      </div>
 
     </div>
   </nav>
@@ -33,7 +51,9 @@
       <div class="header-txt">
         <h1>Clinical Narratives</h1>
         <p>
-          Clinical narratives hold vast amounts of hidden insights within medical text. They provide essential details on treatments, medications, and patient history. Unlocking this knowledge through NLP empowers healthcare professionals to access accurate, structured, and meaningful information with ease.
+          Clinical narratives hold vast amounts of hidden insights within medical text. They provide essential details
+          on treatments, medications, and patient history. Unlocking this knowledge through NLP empowers healthcare
+          professionals to access accurate, structured, and meaningful information with ease.
         </p>
         <div class="button">
           <button>
@@ -55,7 +75,8 @@
           <h2>OCR Scanning</h2>
           <img src="/flaticons/index/ocr.png" />
           <p>
-            Our system transforms handwritten or printed prescriptions into digital text. By automating this process, it reduces human error and ensures important details such as drug names and dosages are captured effectively.
+            Our system transforms handwritten or printed prescriptions into digital text. By automating this process, it
+            reduces human error and ensures important details such as drug names and dosages are captured effectively.
           </p>
         </div>
 
@@ -63,7 +84,9 @@
           <h2>Machine Learning</h2>
           <img src="/flaticons/index/coding.png" />
           <p>
-            The system leverages BioBERT NER to accurately detect medicine names within clinical text. After identification, it retrieves detailed information such as dosages, drug relations, and prices, transforming unstructured data into meaningful medical insights.
+            The system leverages BioBERT NER to accurately detect medicine names within clinical text. After
+            identification, it retrieves detailed information such as dosages, drug relations, and prices, transforming
+            unstructured data into meaningful medical insights.
           </p>
         </div>
 
@@ -71,7 +94,9 @@
           <h2>Medical Insights</h2>
           <img src="/flaticons/index/documents.png" />
           <p>
-            Extracted information is structured into clear, readable outputs. This enables healthcare professionals to quickly access drug details, side effects, and relations, supporting safer prescribing and faster decision-making.
+            Extracted information is structured into clear, readable outputs. This enables healthcare professionals to
+            quickly access drug details, side effects, and relations, supporting safer prescribing and faster
+            decision-making.
           </p>
         </div>
       </div>
@@ -85,7 +110,9 @@
           <img src="/images/logo-footer.png" alt="MedExtract Logo" class="logo-img" />
         </a>
         <p>
-          Empowering healthcare through intelligent technology. Our system combines OCR, NLP, and BioBERT NER to transform complex clinical narratives into structured medical insights. Supporting accuracy, efficiency, and better patient care.
+          Empowering healthcare through intelligent technology. Our system combines OCR, NLP, and BioBERT NER to
+          transform complex clinical narratives into structured medical insights. Supporting accuracy, efficiency, and
+          better patient care.
         </p>
       </div>
 
@@ -125,7 +152,19 @@
   </footer>
 
   <script>
+    function toggleBurger() {
+      const burger = document.getElementById("burger-toggle");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const burgerIcon = burger.querySelector("img");
 
+      mobileMenu.classList.toggle("open");
+
+      if (mobileMenu.classList.contains("open")) {
+        burgerIcon.src = "/images/icons/x-white.svg";
+      } else {
+        burgerIcon.src = "/images/icons/list-white.svg";
+      }
+    }
   </script>
 
 </body>

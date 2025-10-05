@@ -13,18 +13,36 @@
 <body>
     <nav class="guest-navbar">
         <div class="container">
+
+            <!-- Logo -->
             <div class="logo">
                 <a href="/">
                     <img src="/images/logo-nav.png" alt="MedExtract Logo" class="logo-img" />
                 </a>
             </div>
 
+            <!-- Desktop Nav -->
             <ul class="nav" id="guest-nav">
                 <li><a href="/">Home</a></li>
                 <li><a href="/html/guest/guest-about.html">About</a></li>
                 <li><a href="/guest-login">Login</a></li>
                 <li><a href="/guest-register">Register</a></li>
             </ul>
+
+            <!-- Burger Button -->
+            <div class="burger" id="burger-toggle" onclick="toggleBurger()">
+                <img src="/images/icons/list-white.svg" alt="Menu" />
+            </div>
+
+            <!-- Mobile Dropdown Menu -->
+            <div class="mobile-menu" id="mobile-menu">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/html/guest/guest-about.html">About</a></li>
+                    <li><a href="/guest-login">Login</a></li>
+                    <li><a href="/guest-register">Register</a></li>
+                </ul>
+            </div>
 
         </div>
     </nav>
@@ -59,7 +77,7 @@
                 </div>
                 <div class="links">
                     <a href="/guest-recovery">Change Email</a>
-                    <a id="resend" onclick="">Resend Recovery Code</a>
+                    <a id="resend" onclick="sendRecoveryCode(true)">Resend Recovery Code</a>
                 </div>
                 <button type="submit">Confirm Recovery Code</button>
             </form>
@@ -75,10 +93,6 @@
                     </div>
 
                     <div class="error"></div>
-                    <!-- <div class="password">
-                        <label for="show-password1">Show Password</label>
-                        <input type="checkbox" id="show-password1" class="show-password" />
-                    </div> -->
                 </div>
                 <div class="input-control">
                     <label for="password2">Confirm Password</label>
@@ -89,10 +103,6 @@
                     </div>
 
                     <div class="error"></div>
-                    <!-- <div class="password">
-                        <label for="show-password2">Show Password</label>
-                        <input type="checkbox" id="show-password2" class="show-password" />
-                    </div> -->
                 </div>
                 <div class="buttons">
                     <button type="button" onclick="CancelChange();">Cancel</button>
@@ -110,10 +120,9 @@
                     <img src="/images/logo-footer.png" alt="MedExtract Logo" class="logo-img" />
                 </a>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci,
-                    id aspernatur itaque cumque vitae odit sint eligendi nam libero
-                    voluptate magni aperiam, veniam ullam tenetur quidem nostrum enim
-                    eos a.
+                    Empowering healthcare through intelligent technology. Our system combines OCR, NLP, and BioBERT NER
+                    to transform complex clinical narratives into structured medical insights—supporting accuracy,
+                    efficiency, and better patient care.
                 </p>
             </div>
 
@@ -133,18 +142,18 @@
                 <h2>Contacts</h2>
                 <div class="contacts">
                     <div>
-                        <img src="/Flaticons/index/location.png" /> &nbsp;
+                        <img src="/flaticons/index/location.png" /> &nbsp;
                         <p>
                             University of The East Caloocan, 105 Samson Rd, Caloocan, Metro
                             Manila
                         </p>
                     </div>
                     <div>
-                        <img src="/Flaticons/index/email.png" /> &nbsp;
+                        <img src="/flaticons/index/email.png" /> &nbsp;
                         <p>nogot.markvincent@ue.edu.ph</p>
                     </div>
                     <div>
-                        <img src="/Flaticons/index/call.png" /> &nbsp;
+                        <img src="/flaticons/index/call.png" /> &nbsp;
                         <p>09991624156</p>
                     </div>
                 </div>
@@ -156,6 +165,9 @@
         const recovery_form = document.getElementById("recovery-form");
         const confirm_form = document.getElementById("confirm-form");
         const change_form = document.getElementById("change-form");
+
+        const resendLink = document.getElementById("resend");
+        let resendTimer;
 
         const email = document.getElementById("email");
         const rcv_code = document.getElementById("rcv-code");
@@ -185,11 +197,13 @@
             }
         });
 
-        // 1️⃣ Send Recovery Code
-        recovery_form.addEventListener("submit", async (e) => {
+        recovery_form.addEventListener("submit", (e) => {
             e.preventDefault();
+            sendRecoveryCode();
+        });
 
-            // Clear previous validation errors
+        async function sendRecoveryCode(isResend = false) {
+            
             const inputControls = recovery_form.querySelectorAll(".input-control");
             inputControls.forEach(ic => {
                 ic.classList.remove("error", "success");
@@ -210,16 +224,51 @@
                 const message = await res.text();
                 if (!res.ok) throw new Error(message);
 
-                // Success → move to confirm form
-                recovery_form.classList.remove("show");
-                confirm_form.classList.add("show");
+                if (!isResend) {
+                    recovery_form.classList.remove("show");
+                    confirm_form.classList.add("show");
+                }
+
                 document.querySelector(".email-holder").textContent = `Recovery Code sent to ${email.value.trim()}`;
+
+                if (isResend) {
+                    showServerMessage("Recovery code resent successfully!");
+                }
+
+                
+                if (isResend || !isResend) {
+                    disableResendLink();
+                }
+
             } catch (err) {
                 showServerMessage(err.message, "error");
             }
-        });
+        }
 
-        // 2️⃣ Verify Recovery Code
+        function disableResendLink() {
+            clearInterval(resendTimer);
+
+            let countdown = 60;
+            resendLink.style.pointerEvents = "none";
+            resendLink.style.opacity = "0.6";
+            resendLink.textContent = `Resend in ${countdown}s`;
+
+            resendTimer = setInterval(() => {
+                countdown--;
+                resendLink.textContent = `Resend in ${countdown}s`;
+
+                if (countdown <= 0) {
+                    clearInterval(resendTimer);
+                    resendLink.style.pointerEvents = "auto";
+                    resendLink.style.opacity = "1";
+                    resendLink.textContent = "Resend Recovery Code";
+                }
+            }, 1000);
+        }
+
+
+
+        // Verify Recovery Code
         confirm_form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
@@ -251,7 +300,7 @@
             }
         });
 
-        // 3️⃣ Change Password
+        // Change Password
         change_form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
@@ -380,13 +429,13 @@
             const messageText = document.getElementById("server-message-text");
             const messageIcon = document.getElementById("server-message-icon");
 
-            // Reset classes
+            
             serverMessage.classList.remove("success", "error");
 
-            // Set text
+            
             messageText.textContent = message;
 
-            // Apply type + icon
+            
             if (type === "success") {
                 serverMessage.classList.add("success");
                 messageIcon.src = "/images/icons/seal-check-green.svg";
@@ -395,20 +444,20 @@
                 messageIcon.src = "/images/icons/seal-warning-red.svg";
             }
 
-            // Show with animation
+            
             serverMessage.classList.remove("hidden");
             serverMessage.classList.add("show");
 
-            // Save to sessionStorage so it survives reload
+            
             sessionStorage.setItem(
                 "serverMessage",
                 JSON.stringify({ message, type })
             );
 
-            // Reset timer if already running
+            
             if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
 
-            // Auto-close after 3s
+            
             serverMessageTimeout = setTimeout(() => {
                 hideServerMessage();
             }, 3000);
@@ -417,22 +466,22 @@
         function hideServerMessage() {
             const serverMessage = document.getElementById("server-message");
 
-            // Stop timer
+            
             if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
 
-            // Remove from sessionStorage
+            
             sessionStorage.removeItem("serverMessage");
             serverMessageTimeout = null;
 
-            // Animate out
+            
             serverMessage.classList.remove("show");
 
             setTimeout(() => {
                 serverMessage.classList.add("hidden");
-            }, 400); // matches CSS transition
+            }, 400); 
         }
 
-        // Close button → hide immediately & clear sessionStorage
+        
         document
             .getElementById("server-message-close")
             .addEventListener("click", () => {
@@ -444,9 +493,23 @@
             if (stored) {
                 const { message, type } = JSON.parse(stored);
                 if (message) showServerMessage(message, type);
-                // don’t remove here — showServerMessage will auto-remove after timeout
+            
             }
         });
+
+        function toggleBurger() {
+            const burger = document.getElementById("burger-toggle");
+            const mobileMenu = document.getElementById("mobile-menu");
+            const burgerIcon = burger.querySelector("img");
+
+            mobileMenu.classList.toggle("open");
+
+            if (mobileMenu.classList.contains("open")) {
+                burgerIcon.src = "/images/icons/x-white.svg";
+            } else {
+                burgerIcon.src = "/images/icons/list-white.svg";
+            }
+        }
 
 
     </script>

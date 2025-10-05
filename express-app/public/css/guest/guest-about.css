@@ -102,7 +102,13 @@
 
 /* media */
 
-@media (max-width: 940px) {
+@media (max-width: 1200px) {
+  .header .container{
+    padding: 0px;
+  }
+}
+
+@media (max-width: 1000px) {
 
   .story-text,
   .mission-text {
@@ -129,7 +135,11 @@
   }
 }
 
-@media (max-width: 750px) {
+@media (max-width: 850px) {
+
+  .banner h1{
+    font-size: 60px;
+  }
 
   .story-text,
   .mission-text {
@@ -156,7 +166,7 @@
   }
 }
 
-@media (max-width: 630px) {
+@media (max-width: 750px) {
 
   .header {
     color: white;
@@ -180,11 +190,6 @@
     align-items: center;
     justify-content: center;
   }
-
-  /* .mission-img1 {
-    display: block;
-
-  } */
 
   .mission-img2 {
     display: none;
@@ -222,12 +227,13 @@
 }
 
 @media (max-width: 480px){
+
+  .banner h1{
+    font-size: 48px;
+  }
   .solution-img{
     flex-direction: column;
     gap: 10px;
-  }
-  p{
-    text-align: left;
   }
 
   .header {

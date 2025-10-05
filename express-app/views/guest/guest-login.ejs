@@ -14,12 +14,14 @@
     <nav class="guest-navbar">
         <div class="container">
 
+            <!-- Logo -->
             <div class="logo">
                 <a href="/">
                     <img src="/images/logo-nav.png" alt="MedExtract Logo" class="logo-img" />
                 </a>
             </div>
 
+            <!-- Desktop Nav -->
             <ul class="nav" id="guest-nav">
                 <li><a href="/">Home</a></li>
                 <li><a href="/html/guest/guest-about.html">About</a></li>
@@ -27,8 +29,24 @@
                 <li><a href="/guest-register">Register</a></li>
             </ul>
 
+            <!-- Burger Button -->
+            <div class="burger" id="burger-toggle" onclick="toggleBurger()">
+                <img src="/images/icons/list-white.svg" alt="Menu" />
+            </div>
+
+            <!-- Mobile Dropdown Menu -->
+            <div class="mobile-menu" id="mobile-menu">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/html/guest/guest-about.html">About</a></li>
+                    <li><a href="/guest-login">Login</a></li>
+                    <li><a href="/guest-register">Register</a></li>
+                </ul>
+            </div>
+
         </div>
     </nav>
+
 
     <div id="server-message" class="server-message hidden">
         <img id="server-message-icon" src="/images/icons/seal-check.svg" alt="Status Icon"
@@ -55,11 +73,6 @@
                     </div>
 
                     <div class="error"></div>
-                    <!-- <div class="password">
-                        <label for="show-password1">Show Password</label>
-                        <input type="checkbox" id="show-password1" class="show-password" />
-                    </div> -->
-
 
                     <div class="links">
                         <a href="/guest-recovery">Forgot Password?</a>
@@ -81,10 +94,9 @@
                     <img src="/images/logo-footer.png" alt="MedExtract Logo" class="logo-img" />
                 </a>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci,
-                    id aspernatur itaque cumque vitae odit sint eligendi nam libero
-                    voluptate magni aperiam, veniam ullam tenetur quidem nostrum enim
-                    eos a.
+                    Empowering healthcare through intelligent technology. Our system combines OCR, NLP, and BioBERT NER
+                    to transform complex clinical narratives into structured medical insights—supporting accuracy,
+                    efficiency, and better patient care.
                 </p>
             </div>
 
@@ -104,18 +116,18 @@
                 <h2>Contacts</h2>
                 <div class="contacts">
                     <div>
-                        <img src="/Flaticons/index/location.png" /> &nbsp;
+                        <img src="/flaticons/index/location.png" /> &nbsp;
                         <p>
                             University of The East Caloocan, 105 Samson Rd, Caloocan, Metro
                             Manila
                         </p>
                     </div>
                     <div>
-                        <img src="/Flaticons/index/email.png" /> &nbsp;
+                        <img src="/flaticons/index/email.png" /> &nbsp;
                         <p>nogot.markvincent@ue.edu.ph</p>
                     </div>
                     <div>
-                        <img src="/Flaticons/index/call.png" /> &nbsp;
+                        <img src="/flaticons/index/call.png" /> &nbsp;
                         <p>09991624156</p>
                     </div>
                 </div>
@@ -168,36 +180,22 @@
             }
         });
 
-
-
-
-
-        // const toggle1 = document.getElementById("show-password1");
-
-        // toggle1.addEventListener("click", () => {
-        //     if (toggle1.checked) {
-        //         password1.setAttribute("type", "text");
-        //     } else {
-        //         password1.setAttribute("type", "password");
-        //     }
-        // });
-
         const toggle1 = document.getElementById("toggle1");
         const password1Input = document.getElementById("password1");
 
         toggle1.addEventListener("click", () => {
             if (password1Input.type === "password") {
                 password1Input.type = "text";
-                toggle1.src = "/images/icons/eye.svg"; // show icon
+                toggle1.src = "/images/icons/eye.svg";
             } else {
                 password1Input.type = "password";
-                toggle1.src = "/images/icons/eye-slash.svg"; // hide icon
+                toggle1.src = "/images/icons/eye-slash.svg";
             }
         });
 
 
         const setError = (element, message) => {
-            const inputControl = element.closest(".input-control"); // <-- use closest
+            const inputControl = element.closest(".input-control");
             const errorDisplay = inputControl.querySelector(".error");
 
             errorDisplay.innerText = message;
@@ -206,7 +204,7 @@
         };
 
         const setSuccess = (element) => {
-            const inputControl = element.closest(".input-control"); // <-- use closest
+            const inputControl = element.closest(".input-control");
             const errorDisplay = inputControl.querySelector(".error");
 
             errorDisplay.innerText = "";
@@ -308,6 +306,21 @@
                 if (message) showServerMessage(message, type);
             }
         });
+
+        function toggleBurger() {
+            const burger = document.getElementById("burger-toggle");
+            const mobileMenu = document.getElementById("mobile-menu");
+            const burgerIcon = burger.querySelector("img");
+
+            mobileMenu.classList.toggle("open");
+
+            if (mobileMenu.classList.contains("open")) {
+                burgerIcon.src = "/images/icons/x-white.svg";
+            } else {
+                burgerIcon.src = "/images/icons/list-white.svg";
+            }
+        }
+
 
     </script>
 </body>

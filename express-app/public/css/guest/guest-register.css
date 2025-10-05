@@ -37,11 +37,11 @@ button {
 
 .input-control input {
     border: 2px solid #f0f0f0;
-	border-radius: 4px;
-	display: block;
-	font-size: 18px;
-	padding: 10px;
-	width: 100%;
+    border-radius: 4px;
+    display: block;
+    font-size: 18px;
+    padding: 10px;
+    width: 100%;
 }
 
 .input-control input:focus {
@@ -65,8 +65,8 @@ button {
 /* password */
 
 .password {
-    display: flex;  
-    gap: 8px; /* Add spacing between the checkbox and label */
+    display: flex;
+    gap: 8px;
     justify-content: flex-end;
 }
 
@@ -116,7 +116,7 @@ button {
     align-self: flex-end;
 }
 
-#modal-title{
+#modal-title {
     font-size: 28px;
     align-self: center;
 }
@@ -129,7 +129,7 @@ button {
 
 .input-wrapper input {
     width: 100%;
-    padding-right: 36px; /* space for eye icon */
+    padding-right: 36px;
 }
 
 .toggle-password {
@@ -144,4 +144,30 @@ button {
 
 .toggle-password:hover {
     opacity: 1;
+}
+
+@media (max-width: 1200px) {
+
+    #form,
+    .input-control input {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    #form,
+    .input-control input {
+        font-size: 14px;
+    }
+
+    .input-control .error,
+    .links a {
+        font-size: 12px;
+    }
+
+
+    button {
+        font-size: 14px;
+    }
 }

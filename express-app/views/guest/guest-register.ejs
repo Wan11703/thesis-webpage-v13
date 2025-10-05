@@ -13,18 +13,36 @@
 <body>
     <nav class="guest-navbar">
         <div class="container">
+
+            <!-- Logo -->
             <div class="logo">
                 <a href="/">
                     <img src="/images/logo-nav.png" alt="MedExtract Logo" class="logo-img" />
                 </a>
             </div>
 
+            <!-- Desktop Nav -->
             <ul class="nav" id="guest-nav">
                 <li><a href="/">Home</a></li>
                 <li><a href="/html/guest/guest-about.html">About</a></li>
                 <li><a href="/guest-login">Login</a></li>
                 <li><a href="/guest-register">Register</a></li>
             </ul>
+
+            <!-- Burger Button -->
+            <div class="burger" id="burger-toggle" onclick="toggleBurger()">
+                <img src="/images/icons/list-white.svg" alt="Menu" />
+            </div>
+
+            <!-- Mobile Dropdown Menu -->
+            <div class="mobile-menu" id="mobile-menu">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/html/guest/guest-about.html">About</a></li>
+                    <li><a href="/guest-login">Login</a></li>
+                    <li><a href="/guest-register">Register</a></li>
+                </ul>
+            </div>
 
         </div>
     </nav>
@@ -58,10 +76,6 @@
                             id="toggle1" />
                     </div>
                     <div class="error"></div>
-                    <!-- <div class="password">
-                        <label for="show-password1">Show Password</label>
-                        <input type="checkbox" id="show-password1" class="show-password" />
-                    </div> -->
                 </div>
                 <div class="input-control">
                     <label for="password2">Confirm Password</label>
@@ -72,10 +86,6 @@
                     </div>
 
                     <div class="error"></div>
-                    <!-- <div class="password">
-                        <label for="show-password2">Show Password</label>
-                        <input type="checkbox" id="show-password2" class="show-password" />
-                    </div> -->
                 </div>
                 <button id="open" type="submit">Sign Up</button>
             </form>
@@ -89,10 +99,9 @@
                     <img src="/images/logo-footer.png" alt="MedExtract Logo" class="logo-img" />
                 </a>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci,
-                    id aspernatur itaque cumque vitae odit sint eligendi nam libero
-                    voluptate magni aperiam, veniam ullam tenetur quidem nostrum enim
-                    eos a.
+                    Empowering healthcare through intelligent technology. Our system combines OCR, NLP, and BioBERT NER
+                    to transform complex clinical narratives into structured medical insights—supporting accuracy,
+                    efficiency, and better patient care.
                 </p>
             </div>
 
@@ -112,18 +121,18 @@
                 <h2>Contacts</h2>
                 <div class="contacts">
                     <div>
-                        <img src="/Flaticons/index/location.png" /> &nbsp;
+                        <img src="/flaticons/index/location.png" /> &nbsp;
                         <p>
                             University of The East Caloocan, 105 Samson Rd, Caloocan, Metro
                             Manila
                         </p>
                     </div>
                     <div>
-                        <img src="/Flaticons/index/email.png" /> &nbsp;
+                        <img src="/flaticons/index/email.png" /> &nbsp;
                         <p>nogot.markvincent@ue.edu.ph</p>
                     </div>
                     <div>
-                        <img src="/Flaticons/index/call.png" /> &nbsp;
+                        <img src="/flaticons/index/call.png" /> &nbsp;
                         <p>09991624156</p>
                     </div>
                 </div>
@@ -167,14 +176,14 @@
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            // Reset all previous validation errors
+
             const inputControls = form.querySelectorAll(".input-control");
             inputControls.forEach(ic => {
                 ic.classList.remove("error", "success");
                 ic.querySelector(".error").innerText = "";
             });
 
-            // Validate inputs
+
             validateInputs();
 
             const errors = form.querySelectorAll(".error");
@@ -182,9 +191,9 @@
             if (hasErrors) {
                 showServerMessage("Fix highlighted fields.", "error");
                 return;
-            } // stop submission if client validation fails
+            }
 
-            // Send form data to server
+
             const formData = new FormData(form);
 
             try {
@@ -197,14 +206,14 @@
 
                 if (!res.ok) throw new Error(message);
 
-                // ✅ Success
+
                 showServerMessage(message, "success");
                 setTimeout(() => {
                     window.location.href = "/guest-login";
                 }, 1500);
 
             } catch (err) {
-                // ❌ Server error — user can retry immediately
+
                 showServerMessage(err.message, "error");
             }
         });
@@ -221,41 +230,22 @@
                     const message = await response.text();
 
                     if (!response.ok) {
-                        throw new Error(message); // Will go to catch
+                        throw new Error(message);
                     }
 
-                    showServerMessage(message, "success"); // ✅ Show success message
+                    showServerMessage(message, "success");
 
                     setTimeout(() => {
                         window.location.href = "/guest-login";
                     }, 1500);
                 })
                 .catch((error) => {
-                    showServerMessage(error.message, "error"); // ❌ Show error message
+                    showServerMessage(error.message, "error");
                 });
         }
 
-
-        // const setError = (element, message) => {
-        //     const inputControl = element.parentElement;
-        //     const errorDisplay = inputControl.querySelector(".error");
-
-        //     errorDisplay.innerText = message;
-        //     inputControl.classList.add("error");
-        //     inputControl.classList.remove("success");
-        // };
-
-        // const setSuccess = (element) => {
-        //     const inputControl = element.parentElement;
-        //     const errorDisplay = inputControl.querySelector(".error");
-
-        //     errorDisplay.innerText = "";
-        //     inputControl.classList.add("success");
-        //     inputControl.classList.remove("error");
-        // };
-
         const setError = (element, message) => {
-            const inputControl = element.closest(".input-control"); // <-- use closest
+            const inputControl = element.closest(".input-control");
             const errorDisplay = inputControl.querySelector(".error");
 
             errorDisplay.innerText = message;
@@ -264,7 +254,7 @@
         };
 
         const setSuccess = (element) => {
-            const inputControl = element.closest(".input-control"); // <-- use closest
+            const inputControl = element.closest(".input-control");
             const errorDisplay = inputControl.querySelector(".error");
 
             errorDisplay.innerText = "";
@@ -278,43 +268,6 @@
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(String(email).toLowerCase());
         };
-
-        // const validateInputs = () => {
-        //     const usernameValue = username.value.trim();
-        //     const emailValue = email.value.trim();
-        //     const password1Value = password1.value.trim();
-        //     const password2Value = password2.value.trim();
-
-        //     if (usernameValue === "") {
-        //         setError(username, "Username is required");
-        //     } else {
-        //         setSuccess(username);
-        //     }
-
-        //     if (emailValue === "") {
-        //         setError(email, "Email is required");
-        //     } else if (!isValidEmail(emailValue)) {
-        //         setError(email, "Provide a valid email address");
-        //     } else {
-        //         setSuccess(email);
-        //     }
-
-        //     if (password1Value === "") {
-        //         setError(password1, "Password is required");
-        //     } else if (password1Value.length < 8) {
-        //         setError(password1, "Password must be at least 8 character.");
-        //     } else {
-        //         setSuccess(password1);
-        //     }
-
-        //     if (password2Value === "") {
-        //         setError(password2, "Please confirm your password");
-        //     } else if (password2Value !== password1Value) {
-        //         setError(password2, "Passwords doesn't match");
-        //     } else {
-        //         setSuccess(password2);
-        //     }
-        // };
 
         const validateInputs = () => {
             const usernameValue = username.value.trim();
@@ -371,13 +324,13 @@
             const messageText = document.getElementById("server-message-text");
             const messageIcon = document.getElementById("server-message-icon");
 
-            // Reset classes
+
             serverMessage.classList.remove("success", "error");
 
-            // Set text
+
             messageText.textContent = message;
 
-            // Apply type + icon
+
             if (type === "success") {
                 serverMessage.classList.add("success");
                 messageIcon.src = "/images/icons/seal-check-green.svg";
@@ -386,20 +339,20 @@
                 messageIcon.src = "/images/icons/seal-warning-red.svg";
             }
 
-            // Show with animation
+
             serverMessage.classList.remove("hidden");
             serverMessage.classList.add("show");
 
-            // Save to sessionStorage so it survives reload
+
             sessionStorage.setItem(
                 "serverMessage",
                 JSON.stringify({ message, type })
             );
 
-            // Reset timer if already running
+
             if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
 
-            // Auto-close after 3s
+
             serverMessageTimeout = setTimeout(() => {
                 hideServerMessage();
             }, 3000);
@@ -408,22 +361,22 @@
         function hideServerMessage() {
             const serverMessage = document.getElementById("server-message");
 
-            // Stop timer
+
             if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
 
-            // Remove from sessionStorage
+
             sessionStorage.removeItem("serverMessage");
             serverMessageTimeout = null;
 
-            // Animate out
+
             serverMessage.classList.remove("show");
 
             setTimeout(() => {
                 serverMessage.classList.add("hidden");
-            }, 400); // matches CSS transition
+            }, 400);
         }
 
-        // Close button → hide immediately & clear sessionStorage
+
         document
             .getElementById("server-message-close")
             .addEventListener("click", () => {
@@ -435,9 +388,22 @@
             if (stored) {
                 const { message, type } = JSON.parse(stored);
                 if (message) showServerMessage(message, type);
-                // don’t remove here — showServerMessage will auto-remove after timeout
             }
         });
+
+        function toggleBurger() {
+            const burger = document.getElementById("burger-toggle");
+            const mobileMenu = document.getElementById("mobile-menu");
+            const burgerIcon = burger.querySelector("img");
+
+            mobileMenu.classList.toggle("open");
+
+            if (mobileMenu.classList.contains("open")) {
+                burgerIcon.src = "/images/icons/x-white.svg";
+            } else {
+                burgerIcon.src = "/images/icons/list-white.svg";
+            }
+        }
 
     </script>
 </body>
