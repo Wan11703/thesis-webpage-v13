@@ -10,6 +10,7 @@
 </head>
 
 <body>
+
   <nav class="user-navbar">
     <div class="container">
       <!-- Logo -->
@@ -19,7 +20,7 @@
         </a>
       </div>
 
-      <!-- Navigation -->
+      <!-- Desktop Navigation -->
       <ul class="nav" id="user-nav">
         <li><a href="/user-extract">Extract</a></li>
         <li><a href="/user-search">Search</a></li>
@@ -33,17 +34,38 @@
         </span>
         <div class="dropdown">
           <a href="/user-settings">
-            <img src="/images/icons/gear-six.svg" alt="Settings" />
-            Settings
+            <img src="/images/icons/gear-six.svg" alt="Settings" /> Settings
           </a>
           <a class="logout-confirm" href="#">
-            <img src="/images/icons/sign-out.svg" alt="Sign Out" />
-            Sign Out
+            <img src="/images/icons/sign-out.svg" alt="Sign Out" /> Sign Out
           </a>
         </div>
       </div>
+
+      <!-- Burger Toggle -->
+      <div class="burger" id="burger-toggle" onclick="toggleBurger()">
+        <img src="/images/icons/list-white.svg" alt="Menu" class="burger-icon" />
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-user">
+        <img src="/images/icons/user-circle.svg" alt="User Menu" class="user-icon" />
+        <span class="username">
+          <%= username %>
+        </span>
+      </div>
+
+      <ul>
+        <li><a href="/user-extract">Extract</a></li>
+        <li><a href="/user-search">Search</a></li>
+        <li><a href="/user-settings">Settings</a></li>
+        <li><a class="logout-confirm" href="#">Sign Out</a></li>
+      </ul>
     </div>
   </nav>
+
 
   <!-- Logout Modal -->
   <div class="logout-modal-container">
@@ -89,7 +111,7 @@
 
     <div class="camera-div" id="camera-div">
       <div class="camera-box-container">
-        <!-- Camera live view -->
+        
         <div class="camera-header">
           <button class="camera-close-btn" onclick="closeCamera()">
             <img src="/images/icons/x.svg" alt="Close" />
@@ -97,12 +119,12 @@
         </div>
 
         <div class="camera-container" id="camera-container">
-          <!-- Header: close button -->
+          
 
-          <!-- Video feed -->
+          
           <video class="camera-video" id="camera-video" autoplay></video>
 
-          <!-- Footer: capture button -->
+          
           <div class="camera-footer">
             <button class="camera-capture-btn" onclick="captureImage()">
               <img src="/images/icons/camera.svg" alt="Capture" />
@@ -110,19 +132,19 @@
           </div>
         </div>
 
-        <!-- Modal: image preview after capture -->
+        
         <div class="camera-modal" id="camera-modal">
           <div class="camera-modal-content">
             <img class="camera-preview-image" id="camera-preview-image" src="" />
 
             <div class="camera-buttons">
-              <!-- Cancel button (left) -->
+              
               <button class="camera-cancel-btn" onclick="cancelUpload()">
                 <img src="/images/icons/arrow-left.svg" alt="Back" />
                 <span>Back</span>
               </button>
 
-              <!-- Upload button (right) -->
+              
               <button class="camera-upload-btn" onclick="uploadImage()">
                 <span>Upload</span>
                 <img src="/images/icons/arrow-down.svg" alt="Upload" />
@@ -150,7 +172,7 @@
           <h2>Uploaded Image</h2>
           <div class="buttons">
             <button id="scan" type="button" onclick="ScanImage()">Scan</button>
-            <!-- <div id="scan">Scan</div> -->
+            
 
             <button id="delete" type="submit">Delete</button>
           </div>
@@ -168,10 +190,7 @@
         <h1 id="modal-title">Extraction Results</h1>
         <img class="modal-refresh-icon" id="refresh" src="/images/icons/arrow-clockwise.svg" alt="Refresh"
           onclick="RescanImage();" title="Refresh" />
-        <!-- <div class="tooltip">
-          <img class="modal-refresh-icon" id="refresh" src="/images/icons/arrow-clockwise.svg" alt="Refresh" />
-          <span class="tooltip-text">Refresh</span>
-        </div> -->
+        
         <img class="modal-save-icon" id="save" src="/images/icons/bookmark-simple.svg" alt="Save" onclick="saveData();"
           title="Save" />
         <img class="modal-close-icon" id="close" src="/images/icons/x.svg" alt="Close" title="Close" />
@@ -246,10 +265,9 @@
           <img src="/images/logo-footer.png" alt="MedExtract Logo" class="logo-img" />
         </a>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci,
-          id aspernatur itaque cumque vitae odit sint eligendi nam libero
-          voluptate magni aperiam, veniam ullam tenetur quidem nostrum enim
-          eos a.
+          Empowering healthcare through intelligent technology. Our system combines OCR, NLP, and BioBERT NER to
+          transform complex clinical narratives into structured medical insights. Supporting accuracy, efficiency, and
+          better patient care.
         </p>
       </div>
 
@@ -292,21 +310,18 @@
 
   <script>
 
-    // let medicineState = {};
-
     let medicineState = {};
     try {
       const saved = sessionStorage.getItem("medicineState");
       if (saved) medicineState = JSON.parse(saved);
     } catch (e) { /* ignore parse errors */ }
 
-    // Expose server-side values to client-side JS
+    
     const userId = "<%= userId %>";
     const username = "<%= username %>";
 
     let queuedImagesArray = [];
     savedForm = document.querySelector("#saved-form");
-    // deleteBtn = document.querySelector("#delete");
     queuedForm = document.querySelector("#queued-form");
     savedDiv = document.querySelector(".saved-div");
     queuedDiv = document.querySelector(".queued-div");
@@ -335,7 +350,7 @@
     }
 
     function displayedSavedImages() {
-      let image = savedImages[0]; // Only care about one image
+      let image = savedImages[0];
 
       if (image && image.user_id) {
         savedDiv.innerHTML = `
@@ -343,14 +358,14 @@
         <img id="prescrip-img" src="https://thesis-webpage-v13-production.up.railway.app/user-image/${image.user_id}" alt="Saved Image">
       </div>`;
       } else {
-        savedDiv.innerHTML = ""; // Nothing to show
+        savedDiv.innerHTML = "";
       }
     }
 
-    savedForm.addEventListener("submit", (e) => { // new
+    savedForm.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      cooldownButton(document.getElementById("delete")); // prevent spam
+      cooldownButton(document.getElementById("delete"));
       if (!savedImages || savedImages.length === 0 || !savedImages[0].image) {
         showServerMessage("No image to delete.", "error");
         return;
@@ -388,7 +403,7 @@
     input.addEventListener("change", () => {
       const files = input.files;
       if (files.length) {
-        // Only keep the first file
+        
         queuedImagesArray = [files[0]];
       }
       queuedForm.reset();
@@ -402,7 +417,6 @@
       for (let i = 0; i < files.length; i++) {
         if (!files[i].type.match("image")) continue;
 
-        // Only allow the first image to be added
         queuedImagesArray = [files[i]];
         break;
       }
@@ -423,7 +437,7 @@
 
     queuedForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      cooldownButton(document.getElementById("upload")); // prevent spam
+      cooldownButton(document.getElementById("upload"));
       sendQueuedImagesToServer();
     })
 
@@ -449,12 +463,7 @@
         });
     }
 
-    // tabs
-
-    // const tabs = document.querySelectorAll(".tab-btn");
     const contents = document.querySelectorAll(".content");
-
-    // modal
 
 
     const modal_container = document.getElementById("modal_container");
@@ -463,7 +472,7 @@
 
 
     const modalTitle = document.querySelector("#modal-title");
-    const scanButton = document.getElementById("scan"); // Scan button
+    const scanButton = document.getElementById("scan");
 
 
 
@@ -483,21 +492,21 @@
 
     let loading;
 
-    let formattedText = ""; // Variable to store formatted text
-    let medicineArray = []; // Variable to store medicine array
+    let formattedText = "";
+    let medicineArray = [];
 
     const ScanImage = async () => {
-      cooldownButton(document.getElementById("scan")); // prevent spam
+      cooldownButton(document.getElementById("scan"));
 
       if (!savedImages || savedImages.length === 0 || !savedImages[0].image) {
         showServerMessage("No image uploaded. Please upload first.", "error");
-        return; // stop everything
+        return;
       }
 
       disableModalClose();
       disableModalRefresh();
 
-      userSelectedMedicine = false; // reset selection
+      userSelectedMedicine = false;
 
       modal_container.classList.add("show");
       count = 0;
@@ -521,30 +530,30 @@
         });
 
         if (!response.ok) {
-          // 🔴 Backend rejected the request
+          
           console.warn("⚠️ Response not OK, showing selector error.");
           stopLoaderAndShowSelectorError();
-          return; // stop execution here
+          return; 
         }
 
         const data = await response.json();
         console.log("Processed Image Results:", data);
 
-        // --- Store formatted text if available ---
+        
         if (data.formatted_text) {
           formattedText = data.formatted_text;
           console.log("✅ Formatted Text for Verification:", formattedText);
         }
 
-        // --- Store medicine array ---
+        
         if (data.medicineArray && data.medicineArray.length > 0) {
           medicineArray = data.medicineArray;
           console.log("✅ Medicine Array for Verification:", medicineArray);
 
-          // Let renderMedicineList decide normal vs error
+          
           renderMedicineList();
         } else {
-          // 🔴 No medicines detected in response
+          
           console.warn("⚠️ No medicines detected in response.");
           stopLoaderAndShowSelectorError();
         }
@@ -552,18 +561,18 @@
       } catch (error) {
         console.error("Error processing the image:", error);
 
-        // 🔴 Explicitly show error UI inside modal
+        
         stopLoaderAndShowSelectorError();
       }
     };
 
     const RescanImage = async () => {
       disableModalClose();
-      disableModalRefresh(); // disable refresh during rescan
+      disableModalRefresh();
 
-      userSelectedMedicine = false; // reset selection
+      userSelectedMedicine = false; 
 
-      // Reset loader state
+      
       clearInterval(loading);
       count = 0;
       per = 0;
@@ -571,7 +580,7 @@
       loadingText.innerHTML = "";
       loading = setInterval(animate, 100);
 
-      // Hide selector + tabs while rescanning
+      
       selectorDiv.classList.remove("active");
       tabActive.classList.remove("active");
       back.classList.remove("active");
@@ -624,12 +633,13 @@
         enableModalRefresh();
       }
     };
+
     back.addEventListener('click', () => {
 
-      clearInterval(loading); // Stop the interval
+      clearInterval(loading); 
       count = 0;
       per = 0;
-      // progress.style.width = "0px";
+      
 
       loaderActive.classList.remove("active");
       tabActive.classList.remove("active");
@@ -646,14 +656,14 @@
 
 
     close.addEventListener('click', () => {
-      userSelectedMedicine = false; // reset selection
+      userSelectedMedicine = false;
       modal_container.classList.remove('show');
 
-      // Stop and reset the animation
-      clearInterval(loading); // Stop the interval
+      
+      clearInterval(loading);
       count = 0;
       per = 0;
-      // progress.style.width = "0px"; // Reset progress bar width
+      
 
       loaderActive.classList.add("active");
       tabActive.classList.remove("active");
@@ -665,8 +675,8 @@
 
     var loadingText = document.querySelector(".loading-text");
 
-    var count = 0; // Start at 0%
-    var per = 0; // Start at 0px
+    var count = 0;
+    var per = 0;
 
     function animate() {
 
@@ -676,7 +686,7 @@
         loadingText.classList.remove("loading-text-blink");
         loaderActive.classList.remove("active");
 
-        // ✅ Only show selector if user hasn't selected yet
+        
         if (!userSelectedMedicine) {
           selectorDiv.classList.add("active");
         }
@@ -688,7 +698,7 @@
         loadingText.classList.add("loading-text-blink");
         per = per + 6;
         count = count + 1;
-        // progress.style.width = per + "px";
+        
       }
     }
 
@@ -702,7 +712,7 @@
         tabActive.classList.add("active");
         back.classList.add("active");
         saveBtn.classList.add("active");
-        // loadingText.innerHTML = "";
+        
 
 
       } else {
@@ -710,7 +720,7 @@
         loadingText.classList.add("loading-text-blink");
         per = per + 6;
         count = count + 1;
-        // progress.style.width = per + "px";
+      
       }
     }
 
@@ -718,7 +728,7 @@
 
     async function sendRawTextToBackend(rawText) {
       try {
-        const response = await fetch("https://thesis-webpage-v13-production-55fa.up.railway.app/process-raw-text", { // Update URL as needed
+        const response = await fetch("https://thesis-webpage-v13-production-55fa.up.railway.app/process-raw-text", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -735,7 +745,7 @@
         const data = await response.json();
         console.log("Response from backend:", data);
 
-        // Handle the response (e.g., update the UI with drug information)
+        
         if (data.success) {
           console.log("Raw text successfully processed!");
         } else {
@@ -751,7 +761,6 @@
 
     function parseChatGPTString(input) {
       if (!input) return [];
-      // Match /Medicine/ [Strength] (Frequency) <Duration>
       const regex = /\/([^\/]+)\/\s*\[([^\]]+)\]\s*\(([^)]+)\)\s*<([^>]+)>/g;
       let match;
       const results = [];
@@ -768,21 +777,20 @@
       return results;
     }
 
-
     function renderMedicineList() {
       selectorDiv.innerHTML = "";
 
       console.log("renderMedicineList() medicineState (before):", medicineState);
 
-      // GPT parsed items
+      
       const gptItems = parseChatGPTString(formattedText).filter(i => i && i.name);
       const gptKeys = gptItems.map(i => i.name.trim().toLowerCase());
 
-      // BioBERT parsed items
+      
       const bioKeys = (medicineArray || []).map(n => (n || "").trim().toLowerCase());
       const bioSet = new Set(bioKeys);
 
-      // ✅ Require actual overlap
+      
       const overlap = gptKeys.filter(key => bioSet.has(key));
 
       if (!gptKeys.length || !bioSet.size || !overlap.length) {
@@ -794,7 +802,7 @@
       const container = document.createElement("div");
       container.classList.add("medicine-container");
 
-      // 🔵 Add header row
+     
       const headerRow = document.createElement("div");
       headerRow.classList.add("medicine-row", "medicine-header");
       ["Name", "Strength", "Frequency", "Duration", "Action"].forEach(title => {
@@ -809,7 +817,7 @@
         if (!item.name) return;
 
         const itemKey = (item.name || "").trim().toLowerCase();
-        if (!bioSet.has(itemKey)) return; // ✅ enforce overlap rule
+        if (!bioSet.has(itemKey)) return;
 
         const row = document.createElement("div");
         row.classList.add("medicine-row");
@@ -821,10 +829,6 @@
         // Column 2: Strength
         const strengthDiv = document.createElement("div");
         strengthDiv.textContent = item.strength;
-
-        // // Column 3: Frequency
-        // const freqDiv = document.createElement("div");
-        // freqDiv.textContent = item.frequency;
 
         // Column 3: Frequency (with edit/close icons)
         const freqDiv = document.createElement("div");
@@ -850,12 +854,13 @@
 
         const freqInput = document.createElement("input");
         freqInput.type = "number";
-        freqInput.min = "1"; // ✅ must not go below 1
+        freqInput.min = "1";
         freqInput.style.width = "60px";
         freqInput.style.display = "none";
-        freqInput.style.fontSize = "18px";
+        freqInput.classList.add("frequency-input");
+       
 
-        // Enter edit mode
+        
         freqEditIcon.onclick = () => {
           const match = freqValue.match(/(\d+)\s*a\s*day/i);
           if (match) {
@@ -870,7 +875,7 @@
           freqCloseIcon.style.display = "inline-block";
         };
 
-        // Exit edit mode
+        
         freqCloseIcon.onclick = () => {
           if (freqInput.value !== "" && parseInt(freqInput.value, 10) >= 1) {
             const newVal = `${parseInt(freqInput.value, 10)} a day`;
@@ -897,15 +902,15 @@
         const durationDiv = document.createElement("div");
         durationDiv.classList.add("duration-cell");
 
-        // load saved value (normalize out parentheses if present)
+        
         let savedRaw = (medicineState[itemKey] && medicineState[itemKey].duration) || null;
         if (savedRaw) savedRaw = savedRaw.replace(/[()]/g, "").trim();
 
-        // initial item duration from GPT (normalize)
+        
         let initialFromItem = (item.duration && item.duration.toLowerCase() !== "empty") ? item.duration : null;
         if (initialFromItem) initialFromItem = initialFromItem.replace(/[()]/g, "").trim();
 
-        // Decide what to display: priority -> savedRaw > initialFromItem > 'no duration'
+        
         let durationValue = savedRaw || initialFromItem || "no duration";
 
         const textSpan = document.createElement("span");
@@ -927,7 +932,8 @@
         input.min = "0";
         input.style.width = "60px";
         input.style.display = "none";
-        input.style.fontSize = "18px";   // ✅ make input text bigger
+        input.classList.add("duration-input");
+        
 
         const select = document.createElement("select");
         ["days", "weeks", "months"].forEach(opt => {
@@ -938,9 +944,10 @@
 
         });
         select.style.display = "none";
-        select.style.fontSize = "18px";  // ✅ make dropdown text bigger
+        select.classList.add("duration-select");
+        
 
-        // helper: persist to medicineState + sessionStorage
+        
         function commitDurationToState(key, newDuration) {
           medicineState[key] = medicineState[key] || {};
           medicineState[key].duration = newDuration;
@@ -952,7 +959,6 @@
           console.log("Committed duration for", key, "=>", newDuration);
         }
 
-        // Enter edit mode
         editIcon.onclick = () => {
           medicineState[itemKey] = medicineState[itemKey] || {};
           if (!medicineState[itemKey].duration) {
@@ -978,7 +984,7 @@
           closeIcon.style.display = "inline-block";
         };
 
-        // Exit edit mode
+
         closeIcon.onclick = () => {
           if (input.value !== "" && !isNaN(parseInt(input.value, 10))) {
             const num = parseInt(input.value, 10);
@@ -987,7 +993,7 @@
               durationValue = newVal;
               commitDurationToState(itemKey, newVal);
             } else {
-              durationValue = "no duration"; // ✅ 0 becomes no duration
+              durationValue = "no duration";
               commitDurationToState(itemKey, durationValue);
             }
           } else {
@@ -1019,9 +1025,9 @@
         const btnDiv = document.createElement("div");
         const button = document.createElement("button");
         button.textContent = "Generate Insight";
-        button.style.fontSize = "18px";
+        button.classList.add("generate-insight-button");
 
-        // Inside Generate Insight button
+        
         button.onclick = () => {
           if (input.style.display !== "none") {
             if (input.value !== "" && !isNaN(parseInt(input.value, 10))) {
@@ -1031,7 +1037,7 @@
                 durationValue = newVal;
                 commitDurationToState(itemKey, newVal);
               } else {
-                durationValue = "no duration"; // ✅ 0 becomes no duration
+                durationValue = "no duration";
                 commitDurationToState(itemKey, durationValue);
               }
             } else {
@@ -1078,14 +1084,6 @@
     }
 
 
-
-
-
-
-
-
-
-
     // Listen for real-time updates using SSE
     const eventSource = new EventSource("https://thesis-webpage-v13-production-775f.up.railway.app/api/stream-medicines");
 
@@ -1094,7 +1092,7 @@
     eventSource.onmessage = (event) => {
       const payload = JSON.parse(event.data);
 
-      // The stream might send just the array OR an object; handle both.
+      
       if (Array.isArray(payload)) {
         medicineArray = payload;
       } else {
@@ -1105,31 +1103,35 @@
       renderMedicineList();
     };
 
-
     async function openMedicineModal(medicineName, strength, frequency, durationValue) {
       disableModalClose();
 
-      // Stop and reset the animation
-      clearInterval(loading); // Stop the interval
+      
+      clearInterval(loading);
       count = 0;
       per = 0;
-      // progress.style.width = "0px"; // Reset progress bar width
 
-      // Reset progress bar and start animation
+      
       count = 0;
       per = 0;
-      // progress.style.width = "0px"; // Reset progress bar width
-      loading = setInterval(animate2, 100); // Start the animation
+      loading = setInterval(animate2, 100);
       loaderActive.classList.add("active");
 
       selectorDiv.classList.remove("active");
       modalTitle.textContent = `${medicineName} Medical Insights`;
 
-
       console.log("Selected Medicine:", medicineName);
       console.log("Strength:", strength);
       console.log("Frequency:", frequency);
       console.log("Duration:", durationValue);
+
+      
+      function setContentWithNotice(element, notice, content) {
+        element.innerHTML = `
+      <p class="info-source">${notice}</p>
+      <p>${content}</p>
+    `;
+      }
 
       // Fetch drug information from the API
       try {
@@ -1152,7 +1154,6 @@
 
         const data = await response.json();
 
-        // Confirmation in console if strength and frequency were sent and received
         if (
           data.strength !== undefined &&
           data.frequency !== undefined &&
@@ -1161,15 +1162,12 @@
           data.frequency === frequency &&
           data.duration === durationValue
         ) {
-          console.log(
-            "✅ strengthDiv, durationValue and freqDiv successfully passed to backend and received in response!");
+          console.log("✅ strengthDiv, durationValue and freqDiv successfully passed to backend and received in response!");
           stopLoaderAndShowTabs();
         } else {
-          console.warn(
-            "⚠️ strengthDiv, durationValue and/or freqDiv may not have been passed or received correctly.");
+          console.warn("⚠️ strengthDiv, durationValue and/or freqDiv may not have been passed or received correctly.");
         }
 
-        // Update modal content with the response from the backend
         if (data.error) {
           drug_information.textContent = "";
           interactions.textContent = "";
@@ -1178,43 +1176,94 @@
           price.textContent = "";
           stopLoaderAndShowTabsError();
         } else {
-          drug_information.textContent = data.drug_information || "No details available.";
-          interactions.textContent = data.interaction || "No interactions available.";
-          indications.textContent = data.dosage || "No indications available.";
-          side_effects.textContent = data.side_effects || "No side effects available.";
-          price.innerHTML = (data.price || "No price information available.").replace(/\n/g, "<br>");
+          
+          setContentWithNotice(
+            drug_information,
+            "The information provided is derived from Drug Bank.",
+            data.drug_information || "No details available."
+          );
+
+          setContentWithNotice(
+            interactions,
+            "The information provided is derived from Drug Bank.",
+            data.interaction || "No interactions available."
+          );
+
+          setContentWithNotice(
+            indications,
+            "The information provided is derived from the scanned medical prescription.",
+            data.dosage || "No indications available."
+          );
+
+          setContentWithNotice(
+            side_effects,
+            "The information provided is derived from Drug Bank.",
+            data.side_effects || "No side effects available."
+          );
+
+          setContentWithNotice(
+            price,
+            "The information provided was derived from publicly available online sources via OpenAI. Prices are suggested retail and may vary or change without notice.",
+            (data.price || "No price information available.").replace(/\n/g, "<br>")
+          );
         }
       } catch (error) {
-        // console.error("Failed to fetch drug information:", error);
-        // alert("Failed to retrieve drug information. Please try again.");
-        // create better error handling here
-
         console.error("Failed to fetch drug information:", error);
-
-        stopLoaderAndShowTabsError();  // ✅ Show modal error UI
-        // showServerMessage("Failed to retrieve drug information. Please try again.", "error"); // ✅ consistent error notice
+        stopLoaderAndShowTabsError();
       }
     }
 
-    const saveBtn = document.querySelector("#save");
 
+    const saveBtn = document.querySelector("#save");
 
     function saveData() {
       const modalTitle = document.querySelector("#modal-title");
       const medicineName = modalTitle.textContent.split(" Medical Insights")[0];
-      var details = document.getElementById("drug_information").textContent;
-      const interactions = document.getElementById("interactions").textContent;
-      const guidelines = document.getElementById("indications").textContent;
-      const effects = document.getElementById("side_effects").textContent;
-      const prices = document.getElementById("price").textContent;
+
+      
+      function cleanText(id, notice) {
+        const el = document.getElementById(id);
+        if (!el) return "";
+
+        
+        let text = el.textContent.trim();
+
+        
+        if (text.startsWith(notice)) {
+          text = text.replace(notice, "").trim();
+        }
+
+        return text;
+      }
+
+      const details = cleanText(
+        "drug_information",
+        "The information provided is derived from Drug Bank."
+      );
+      const interactions = cleanText(
+        "interactions",
+        "The information provided is derived from Drug Bank."
+      );
+      const guidelines = cleanText(
+        "indications",
+        "The information provided is derived from the scanned medical prescription."
+      );
+      const effects = cleanText(
+        "side_effects",
+        "The information provided is derived from Drug Bank."
+      );
+      const prices = cleanText(
+        "price",
+        "The information provided was derived from publicly available online sources via OpenAI. Prices are suggested retail and may vary or change without notice."
+      );
 
       const data = {
         medicineName,
-        details,
-        interactions,
-        guidelines,
-        effects,
-        prices
+        details: details || "No details available.",
+        interactions: interactions || "No interactions available.",
+        guidelines: guidelines || "No indications available.",
+        effects: effects || "No side effects available.",
+        prices: prices || "No price information available.",
       };
 
       fetch("/user/save-history", {
@@ -1234,12 +1283,13 @@
         });
     }
 
+
     function stopLoaderAndShowSelector() {
-      clearInterval(loading); // stop progress animation
-      loaderActive.classList.remove("active"); // hide loader
+      clearInterval(loading); 
+      loaderActive.classList.remove("active"); 
       loadingText.innerHTML = "";
-      selectorDiv.classList.add("active"); // show selector
-      enableModalClose(); // ✅ allow closing again
+      selectorDiv.classList.add("active"); 
+      enableModalClose(); 
       enableModalRefresh();
     }
 
@@ -1250,7 +1300,7 @@
 
       selectorDiv.classList.add("active");
 
-      // Always inject error message directly
+      
       selectorDiv.innerHTML = `
     <div class="selector-error-message">
       <p>Sorry, we could not extract any medicines from your image. This may happen if:</p>
@@ -1273,17 +1323,17 @@
       loaderActive.classList.remove("active");
       loadingText.innerHTML = "";
 
-      // ✅ Always reset and show the tab selector
+      
       const tabBox = document.querySelector(".tab-box");
       if (tabBox) tabBox.style.display = "";
 
-      // ✅ Reset dropdown to Medication Details
+      
       const tabSelector = document.getElementById("tabSelector");
       if (tabSelector) {
-        tabSelector.value = "0"; // set to first option
+        tabSelector.value = "0"; 
       }
 
-      // ✅ Reset active tab content
+      
       const allContents = document.querySelectorAll(".content-box .content");
       allContents.forEach((c) => c.classList.remove("active"));
       const drugInfo = document.getElementById("drug_information");
@@ -1293,7 +1343,7 @@
       back.classList.add("active");
       saveBtn.classList.add("active");
 
-      enableModalClose(); // ✅ allow closing again
+      enableModalClose();
     }
 
 
@@ -1302,20 +1352,19 @@
       loaderActive.classList.remove("active");
       loadingText.innerHTML = "";
 
-      // ✅ Keep tab container visible so error can be shown
       tabActive.classList.add("active");
 
-      // ❌ Hide tab selector dropdown (since it’s meaningless on error)
+      
       const tabBox = document.querySelector(".tab-box");
       if (tabBox) tabBox.style.display = "none";
 
-      // ✅ Reset dropdown to Medication Details just in case
+      
       const tabSelector = document.getElementById("tabSelector");
       if (tabSelector) {
         tabSelector.value = "0";
       }
 
-      // ✅ Reset active content and show error only in Medication Details
+      
       const allContents = document.querySelectorAll(".content-box .content");
       allContents.forEach((c) => c.classList.remove("active"));
       const drugInfo = document.getElementById("drug_information");
@@ -1335,12 +1384,11 @@
     `;
       }
 
-      // ✅ Back is still available so user can retry
+      
       back.classList.add("active");
 
-      saveBtn.classList.remove("active"); // disable save on error
-      enableModalClose(); // ✅ allow closing again
-
+      saveBtn.classList.remove("active");
+      enableModalClose();
     }
 
 
@@ -1368,13 +1416,13 @@
       const messageText = document.getElementById("server-message-text");
       const messageIcon = document.getElementById("server-message-icon");
 
-      // Reset classes
+      
       serverMessage.classList.remove("success", "error");
 
-      // Set text
+      
       messageText.textContent = message;
 
-      // Apply type + icon
+      
       if (type === "success") {
         serverMessage.classList.add("success");
         messageIcon.src = "/images/icons/seal-check-green.svg";
@@ -1383,11 +1431,11 @@
         messageIcon.src = "/images/icons/seal-warning-red.svg";
       }
 
-      // Show with animation
+      
       serverMessage.classList.remove("hidden");
       serverMessage.classList.add("show");
 
-      // Save to sessionStorage so it survives reload
+      
       sessionStorage.setItem(
         "serverMessage",
         JSON.stringify({
@@ -1396,10 +1444,10 @@
         })
       );
 
-      // Reset timer if already running
+      
       if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
 
-      // Auto-close after 3s
+      
       serverMessageTimeout = setTimeout(() => {
         hideServerMessage();
       }, 3000);
@@ -1408,22 +1456,22 @@
     function hideServerMessage() {
       const serverMessage = document.getElementById("server-message");
 
-      // Stop timer
+      
       if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
 
-      // Remove from sessionStorage
+      
       sessionStorage.removeItem("serverMessage");
       serverMessageTimeout = null;
 
-      // Animate out
+      
       serverMessage.classList.remove("show");
 
       setTimeout(() => {
         serverMessage.classList.add("hidden");
-      }, 400); // matches CSS transition
+      }, 400); 
     }
 
-    // Close button → hide immediately & clear sessionStorage
+    
     document
       .getElementById("server-message-close")
       .addEventListener("click", () => {
@@ -1438,14 +1486,14 @@
           type
         } = JSON.parse(stored);
         if (message) showServerMessage(message, type);
-        // don’t remove here — showServerMessage will auto-remove after timeout
+        
       }
     });
 
     function cooldownButton(button, ms = 3000) {
       if (!button) return;
       button.disabled = true;
-      button.classList.add("disabled"); // optional for styling
+      button.classList.add("disabled"); 
       setTimeout(() => {
         button.disabled = false;
         button.classList.remove("disabled");
@@ -1455,7 +1503,7 @@
     function disableModalClose() {
       if (close) {
         close.style.pointerEvents = "none";
-        close.style.opacity = "0.5"; // visual cue
+        close.style.opacity = "0.5"; 
       }
     }
 
@@ -1469,7 +1517,7 @@
     function disableModalRefresh() {
       if (refresh) {
         refresh.style.pointerEvents = "none";
-        refresh.style.opacity = "0.5"; // visual cue
+        refresh.style.opacity = "0.5"; 
       }
     }
 
@@ -1486,15 +1534,14 @@
       document.querySelector(".user-menu .dropdown").classList.toggle("active");
     }
 
-    // Close dropdown if clicking outside
+    
     document.addEventListener("click", () => {
       document.querySelector(".user-menu .dropdown").classList.remove("active");
     });
 
     // logout
 
-    // Elements
-    const logoutLinks = document.querySelectorAll(".logout-confirm"); // 🔹 this is your trigger element (replace with your logout button/link class)
+    const logoutLinks = document.querySelectorAll(".logout-confirm");
     const logoutModal = document.querySelector(".logout-modal-container");
     const logoutCloseBtn = document.getElementById("logout-close-btn");
     const logoutCancelBtn = document.getElementById("logout-cancel-btn");
@@ -1503,22 +1550,22 @@
     // Open modal
     logoutLinks.forEach(link => {
       link.addEventListener("click", (e) => {
-        e.preventDefault(); // prevent jumping to top
+        e.preventDefault(); 
         logoutModal.classList.add("active");
       });
     });
 
-    // Close modal (X button)
+    
     logoutCloseBtn.addEventListener("click", () => {
       logoutModal.classList.remove("active");
     });
 
-    // Close modal (Cancel button)
+    
     logoutCancelBtn.addEventListener("click", () => {
       logoutModal.classList.remove("active");
     });
 
-    // Confirm logout
+    
     logoutConfirmBtn.addEventListener("click", () => {
       window.location.href = "/logout";
     });
@@ -1536,7 +1583,7 @@
         const cameraContainer = document.getElementById("camera-container");
 
         cameraDiv.classList.add("active");
-        cameraContainer.style.display = "flex"; // make sure it's visible
+        cameraContainer.style.display = "flex"; 
 
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
@@ -1571,7 +1618,7 @@
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       capturedBase64 = canvas.toDataURL("image/png");
 
-      ////// stop stream after capture //////
+      
       const stream = video.srcObject;
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
@@ -1584,18 +1631,17 @@
     function showPreview(base64) {
       document.getElementById("camera-preview-image").src = base64;
 
-      // hide camera container
+      
       document.getElementById("camera-container").style.display = "none";
 
-      // show preview modal
+      
       document.getElementById("camera-modal").classList.add("active");
     }
 
     function cancelUpload() {
       document.getElementById("camera-modal").classList.remove("active");
 
-      /////// CHANGED OVER HERE ///////
-      // Instead of reshowing camera, reopen it properly
+      
       openCamera();
 
       capturedBase64 = null;
@@ -1604,7 +1650,7 @@
     function closeCamera() {
       const video = document.getElementById("camera-video");
 
-      ////// safety check for stream //////
+      
       const stream = video.srcObject;
       if (stream && stream.getTracks) {
         stream.getTracks().forEach((track) => track.stop());
@@ -1613,7 +1659,7 @@
 
       document.getElementById("camera-div").classList.remove("active");
 
-      // reset state
+      
       document.getElementById("camera-modal").classList.remove("active");
       document.getElementById("camera-container").style.display = "flex";
       capturedBase64 = null;
@@ -1629,6 +1675,25 @@
       const data = await res.json();
       location.reload();
     }
+
+    function toggleBurger() {
+      const burger = document.getElementById("burger-toggle");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const burgerIcon = burger.querySelector("img");
+
+      mobileMenu.classList.toggle("open");
+
+      if (mobileMenu.classList.contains("open")) {
+        burgerIcon.src = "/images/icons/x-white.svg";
+      } else {
+        burgerIcon.src = "/images/icons/list-white.svg"; 
+      }
+    }
+
+
+
+
+
 
   </script>
 
