@@ -78,11 +78,11 @@ def get_medicine_price(medicine_name, strength=None, frequency=None, duration=No
             f"Form: {form}\n\n"
             "Tasks:\n"
             "1. Identify one well-known branded product and one generic product for this medicine in the Philippines.\n"
-            "2. Give the most recent, updated and typical retail price per package (bottle/tube/box/piece) for each, using the brand name and the generic name.\n"
+            "2. Provide the *estimated* Suggested Retail Price (SRP) per standard package (bottle/tube/box/piece) for each, using the brand name and the generic name.\n"
             "3. If the drug is a liquid (ml) or ointment/cream (grams), assume standard package sizes (e.g., 60ml bottle, 5g tube, 10 tablets per blister pack).\n"
             "4. Format your answer as:\n"
-            "Branded: <BrandName> - ₱<price> per {form}\n"
-            "Generic: <GenericName> - ₱<price> per {form}\n"
+            "Branded: The Suggested Retail price for <BrandName> - ₱<price> per {form} (Estimated)"
+            "Generic: The Suggested Retail price for <GenericName> - ₱<price> per {form} (Estimated)"
             "If price is not available, write 'N/A'."
         )
         response = client.chat.completions.create(
@@ -129,9 +129,11 @@ def summarize_drug_info(drug_information, interaction, side_effects, dosage, str
         # If strength and frequency are provided, customize the dosage and price
         if strength and frequency:
             custom_dosage = (
-                f"Take {strength} per dose, {frequency} per day"
+                f"Take {strength}"
+                + (" per dose" if 'tablet' not in strength.lower() and 'capsule' not in strength.lower() else "")
+                + f", {frequency}"
                 + (f" for {duration}" if duration and duration.lower() != "no duration" else "")
-                + " as prescribed by your doctor. Always follow your healthcare provider's instructions for timing and duration."
+                + ". Always follow your healthcare provider's instructions for timing and duration."
             )
             price_lines = []
             if 'Branded' in brand_generic_prices:
@@ -182,28 +184,25 @@ def summarize_field(field_text, field_type):
         client = openai.OpenAI(api_key=openai.api_key)
         if field_type == "description":
             prompt = (
-                "Summarize the following drug description for a patient in 1-5 short sentences. "
-                "Use simple language. Do not copy the input text.\n\n"
+                "Summarize the following drug description for a patient in short, complete sentences. "
+                "Ensure the summary is clear and not cut off. Use simple language.\n\n"
                 f"{field_text}"
             )
         elif field_type == "interaction":
             prompt = (
-                "Summarize the following drug interaction information for a patient in 4 short sentence. "
-                "List the following drug interactions for a patient in simple words. "
-                "Show at most 10 drug names. If more exist, just say 'and others'. "
-                "Keep it short and clear.\n\n"
+                "Summarize the following drug interaction information for a patient in short, complete sentences. "
+                "List up to 10 drug names. If there are more, say 'and others'. Use simple language.\n\n"
                 f"{field_text}"
             )
-
         elif field_type == "side_effects":
             prompt = (
-                "Summarize the following side effects for a patient in 1-5 short sentences. "
-                "Only mention the most common or serious side effects. Use simple language.\n\n"
+                "Summarize the following side effects for a patient in short, complete sentences. "
+                "Mention only the most common or serious side effects. Use simple language.\n\n"
                 f"{field_text}"
             )
         elif field_type == "dosage":
             prompt = (
-                "Summarize the following dosage guidelines for a patient in 1-5 short sentences. "
+                "Summarize the following dosage guidelines for a patient in short, complete sentences. "
                 "Use simple language.\n\n"
                 f"{field_text}"
             )
@@ -216,8 +215,9 @@ def summarize_field(field_text, field_type):
                 {"role": "system", "content": "You are a medical assistant that summarizes drug information for patients."},
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=60,
-            temperature=0.2
+            max_tokens=200,
+            temperature=0.2,
+            stop=["\n\n", "###", "END"]
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
@@ -324,7 +324,7 @@ def get_drug_info_endpoint():
         return jsonify({
             "drug_information": summarized_drug_information,
             "indication": summarize_field(indication, "description"),
-            "dosage": summarized_dosage if not (strength and frequency) else f"{strength} per dose, {frequency} per day",
+            "dosage": summarized_dosage if not (strength and frequency) else f"{strength} per dose, {frequency}",
             "side_effects": summarized_side_effects,
             "interaction": summarized_interaction,
             "price": price_text,
@@ -370,7 +370,7 @@ def get_extract_info_endpoint():
             num_days = None
             if duration and duration.lower() != "no duration":
                 custom_dosage = (
-                    f"Take {strength} per dose, {frequency} per day for {duration} as prescribed by your doctor. "
+                    f"Take {strength} per dose, {frequency} for {duration} as prescribed by your doctor. "
                     "Always follow your healthcare provider's instructions for timing and duration."
                 )
                 # Extract number of days
@@ -410,7 +410,7 @@ def get_extract_info_endpoint():
                 custom_price = "\n".join([f"• {line}" for line in price_lines]) if price_lines else "No fixed price available for this drug."
             else:
                 custom_dosage = (
-                    f"Take {strength} per dose, {frequency} per day as prescribed by your doctor. "
+                    f"Take {strength} per dose, {frequency} as prescribed by your doctor. "
                     "Always follow your healthcare provider's instructions for timing and duration."
                 )
                 freq_num = int(re.findall(r'\d+', frequency)[0]) if frequency else 1  # <-- ADD THIS LINE
