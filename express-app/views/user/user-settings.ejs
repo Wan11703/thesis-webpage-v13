@@ -19,7 +19,7 @@
                 </a>
             </div>
 
-            <!-- Navigation -->
+            <!-- Desktop Navigation -->
             <ul class="nav" id="user-nav">
                 <li><a href="/user-extract">Extract</a></li>
                 <li><a href="/user-search">Search</a></li>
@@ -33,15 +33,35 @@
                 </span>
                 <div class="dropdown">
                     <a href="/user-settings">
-                        <img src="/images/icons/gear-six.svg" alt="Settings" />
-                        Settings
+                        <img src="/images/icons/gear-six.svg" alt="Settings" /> Settings
                     </a>
                     <a class="logout-confirm" href="#">
-                        <img src="/images/icons/sign-out.svg" alt="Sign Out" />
-                        Sign Out
+                        <img src="/images/icons/sign-out.svg" alt="Sign Out" /> Sign Out
                     </a>
                 </div>
             </div>
+
+            <!-- Burger Toggle -->
+            <div class="burger" id="burger-toggle" onclick="toggleBurger()">
+                <img src="/images/icons/list-white.svg" alt="Menu" class="burger-icon" />
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobile-menu">
+            <div class="mobile-user">
+                <img src="/images/icons/user-circle.svg" alt="User Menu" class="user-icon" />
+                <span class="username">
+                    <%= username %>
+                </span>
+            </div>
+
+            <ul>
+                <li><a href="/user-extract">Extract</a></li>
+                <li><a href="/user-search">Search</a></li>
+                <li><a href="/user-settings">Settings</a></li>
+                <li><a class="logout-confirm" href="#">Sign Out</a></li>
+            </ul>
         </div>
     </nav>
 
@@ -90,7 +110,7 @@
                         <h3>Email</h3>
                         <%= email %>
                     </div>
-                    <p class="email-edit">Cannot be changed</p>
+                    <p class="email-edit"></p>
                 </div>
                 <div class="password-settings">
                     <div class="password">
@@ -160,20 +180,35 @@
             <div class="modal-body">
                 <div class="input-control">
                     <label for="current-password">Current Password</label>
-                    <input type="password" id="current-password" name="current-password" />
+                    <div class="input-wrapper">
+                        <input type="password" id="current-password" name="current-password" />
+                        <img src="/images/icons/eye-slash.svg" alt="Toggle Password" class="toggle-password"
+                            id="toggle1" />
+                    </div>
                     <div class="error"></div>
+
                 </div>
 
                 <div class="input-control">
                     <label for="new-password">New Password</label>
-                    <input type="password" id="new-password" name="new-password" />
+                    <div class="input-wrapper">
+                        <input type="password" id="new-password" name="new-password" />
+                        <img src="/images/icons/eye-slash.svg" alt="Toggle Password" class="toggle-password"
+                            id="toggle2" />
+                    </div>
                     <div class="error"></div>
+
                 </div>
 
                 <div class="input-control">
                     <label for="confirm-password">Confirm Password</label>
-                    <input type="password" id="confirm-password" name="confirm-password" />
+                    <div class="input-wrapper">
+                        <input type="password" id="confirm-password" name="confirm-password" />
+                        <img src="/images/icons/eye-slash.svg" alt="Toggle Password" class="toggle-password"
+                            id="toggle3" />
+                    </div>
                     <div class="error"></div>
+
                 </div>
             </div>
 
@@ -204,8 +239,13 @@
 
                 <div class="input-control">
                     <label for="delete-current-password">Current Password</label>
-                    <input type="password" id="delete-current-password" name="delete-current-password" />
+                    <div class="input-wrapper">
+                        <input type="password" id="delete-current-password" name="delete-current-password" />
+                        <img src="/images/icons/eye-slash.svg" alt="Toggle Password" class="toggle-password"
+                            id="toggle4" />
+                    </div>
                     <div class="error"></div>
+
                 </div>
             </div>
 
@@ -219,17 +259,17 @@
 
 
 
-    <!-- Extraction modal (structure unchanged, only names updated) -->
+
     <div id="modal_container" class="history-modal-container">
         <div class="history-modal">
             <div class="history-modal-header">
                 <h1 id="history-modal-title">Extraction Results</h1>
 
-                <!-- delete icon keeps same id for JS compatibility -->
+
                 <img class="history-modal-delete" id="delete" src="/images/icons/trash.svg" alt="Delete"
                     onclick="deleteSave();" />
 
-                <!-- close icon keeps same id for JS compatibility -->
+
                 <img class="history-modal-close" id="close" src="/images/icons/x.svg" alt="Close" />
             </div>
 
@@ -276,65 +316,63 @@
 
 
     <footer class="footer">
-    <div class="container">
-      <div class="f-1">
-        <a href="/user-extract">
-          <img src="/images/logo-footer.png" alt="MedExtract Logo" class="logo-img" />
-        </a>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci,
-          id aspernatur itaque cumque vitae odit sint eligendi nam libero
-          voluptate magni aperiam, veniam ullam tenetur quidem nostrum enim
-          eos a.
-        </p>
-      </div>
+        <div class="container">
+            <div class="f-1">
+                <a href="/user-extract">
+                    <img src="/images/logo-footer.png" alt="MedExtract Logo" class="logo-img" />
+                </a>
+                <p>
+                    Empowering healthcare through intelligent technology. Our system combines OCR, NLP, and BioBERT NER
+                    to transform complex clinical narratives into structured medical insights—supporting accuracy,
+                    efficiency, and better patient care.
+                </p>
+            </div>
 
-      <div class="f-2">
-        <div>
-          <h2>Links</h2>
-          <ul class="nav">
-            <li><a href="/user-extract">Extract</a></li>
-            <li><a href="/user-search">Search</a></li>
-            <li><a href="/user-settings">Settings</a></li>
-            <li><a class="logout-confirm" href="#">Log Out</a></li>
-            </a>
-          </ul>
-        </div>
-      </div>
+            <div class="f-2">
+                <div>
+                    <h2>Links</h2>
+                    <ul class="nav">
+                        <li><a href="/user-extract">Extract</a></li>
+                        <li><a href="/user-search">Search</a></li>
+                        <li><a href="/user-settings">Settings</a></li>
+                        <li><a class="logout-confirm" href="#">Log Out</a></li>
+                        </a>
+                    </ul>
+                </div>
+            </div>
 
-      <div class="f-3">
-        <h2>Contacts</h2>
-        <div class="contacts">
-          <div>
-            <img src="/flaticons/user/location.png" /> &nbsp;
-            <p>
-              University of The East Caloocan, 105 Samson Rd, Caloocan, Metro
-              Manila
-            </p>
-          </div>
-          <div>
-            <img src="/flaticons/user/email.png" /> &nbsp;
-            <p>nogot.markvincent@ue.edu.ph</p>
-          </div>
-          <div>
-            <img src="/flaticons/user/call.png" /> &nbsp;
-            <p>09991624156</p>
-          </div>
+            <div class="f-3">
+                <h2>Contacts</h2>
+                <div class="contacts">
+                    <div>
+                        <img src="/flaticons/user/location.png" /> &nbsp;
+                        <p>
+                            University of The East Caloocan, 105 Samson Rd, Caloocan, Metro
+                            Manila
+                        </p>
+                    </div>
+                    <div>
+                        <img src="/flaticons/user/email.png" /> &nbsp;
+                        <p>nogot.markvincent@ue.edu.ph</p>
+                    </div>
+                    <div>
+                        <img src="/flaticons/user/call.png" /> &nbsp;
+                        <p>09991624156</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </footer>
+    </footer>
 
     <script>
 
-        // new codes, 14:40 09/12/2025
 
         function toggleDropdown(event) {
             event.stopPropagation();
             document.querySelector(".user-menu .dropdown").classList.toggle("active");
         }
 
-        // Close dropdown if clicking outside
+
         document.addEventListener("click", () => {
             document.querySelector(".user-menu .dropdown").classList.remove("active");
         });
@@ -348,26 +386,26 @@
         const changeUsernameForm = document.querySelector(".username-modal-content");
         const usernameInput = document.getElementById("new-username");
 
-        // Show modal
+
         usernameEdit.addEventListener("click", () => {
             usernameModal.classList.add("active");
         });
 
         function resetUsernameForm() {
-            changeUsernameForm.reset(); // clears input values
+            changeUsernameForm.reset();
             usernameInput.parentElement.classList.remove("error", "success");
 
             const errorDisplay = usernameInput.parentElement.querySelector(".error");
             if (errorDisplay) errorDisplay.innerText = "";
         }
 
-        // Close modal with close button
+
         usernameCloseBtn.addEventListener("click", () => {
             usernameModal.classList.remove("active");
             resetUsernameForm();
         });
 
-        // Close modal with cancel button
+
         usernameCancelBtn.addEventListener("click", () => {
             usernameModal.classList.remove("active");
             resetUsernameForm();
@@ -384,15 +422,15 @@
         const newPasswordInput = document.getElementById("new-password");
         const confirmPasswordInput = document.getElementById("confirm-password");
 
-        // Show modal
+
         passwordEdit.addEventListener("click", () => {
             passwordModal.classList.add("active");
         });
 
         function resetPasswordForm() {
-            changePasswordForm.reset(); // clears input values
+            changePasswordForm.reset();
 
-            // clear error/success state for each input
+
             [currentPasswordInput, newPasswordInput, confirmPasswordInput].forEach(
                 (input) => {
                     input.parentElement.classList.remove("error", "success");
@@ -402,21 +440,21 @@
             );
         }
 
-        // Close modal with close button
+
         passwordCloseBtn.addEventListener("click", () => {
             passwordModal.classList.remove("active");
             resetPasswordForm();
         });
 
-        // Close modal with cancel button
+
         passwordCancelBtn.addEventListener("click", () => {
             passwordModal.classList.remove("active");
             resetPasswordForm();
         });
 
-        // Validation helpers
+
         function setError(input, message) {
-            const inputControl = input.parentElement;
+            const inputControl = input.closest(".input-control");
             inputControl.classList.add("error");
             inputControl.classList.remove("success");
             const errorDisplay = inputControl.querySelector(".error");
@@ -424,7 +462,7 @@
         }
 
         function setSuccess(input) {
-            const inputControl = input.parentElement;
+            const inputControl = input.closest(".input-control");
             inputControl.classList.add("success");
             inputControl.classList.remove("error");
             const errorDisplay = inputControl.querySelector(".error");
@@ -439,12 +477,15 @@
             } else if (value.length < 8) {
                 setError(usernameInput, "Username must be at least 8 characters");
                 return false;
+            } else if (value.length > 12) {
+                setError(usernameInput, "Username cannot exceed 12 characters");
+                return false;
             } else {
                 setSuccess(usernameInput);
                 return true;
             }
         }
-        // Password validation
+
         function validatePassword() {
             let valid = true;
 
@@ -455,12 +496,21 @@
             if (currentVal === "") {
                 setError(currentPasswordInput, "Enter your current password");
                 valid = false;
+            } else if (currentVal.length < 8) {
+                setError(currentPasswordInput, "Current password must be at least 8 characters");
+                valid = false;
+            } else if (currentVal.length > 64) {
+                setError(currentPasswordInput, "Current password cannot exceed 64 characters");
+                valid = false;
             } else {
                 setSuccess(currentPasswordInput);
             }
 
             if (newVal.length < 8) {
                 setError(newPasswordInput, "New password must be at least 8 characters");
+                valid = false;
+            } else if (newVal.length > 12) {
+                setError(newPasswordInput, "New password cannot exceed 12 characters");
                 valid = false;
             } else {
                 setSuccess(newPasswordInput);
@@ -480,7 +530,7 @@
         changePasswordForm.addEventListener("submit", (e) => {
             e.preventDefault();
 
-            // Run validation first
+
             const isValid = validatePassword();
             if (!isValid) return;
 
@@ -505,10 +555,10 @@
                 .then((message) => {
                     showServerMessage(message, "success");
 
-                    // Reset the form fields
+
                     resetPasswordForm();
 
-                    // Refresh to show updated password_datetime
+
                     setTimeout(() => location.reload(), 1500);
                 })
                 .catch((error) => {
@@ -517,11 +567,11 @@
         });
 
 
-        // Hook into form submit
+
         changeUsernameForm.addEventListener("submit", (e) => {
             e.preventDefault();
 
-            // Run validation
+
             if (!validateUsername()) return;
 
             fetch("/user/change-username", {
@@ -542,10 +592,10 @@
                     return response.text();
                 })
                 .then((message) => {
-                    // Success → show message + reload
+
                     showServerMessage(message, "success");
 
-                    // Close & reset modal immediately
+
                     usernameModal.classList.remove("active");
                     changeUsernameForm.reset();
                     usernameInput.parentElement.classList.remove("error", "success");
@@ -555,7 +605,7 @@
                     setTimeout(() => location.reload(), 1500);
                 })
                 .catch((error) => {
-                    // Error → show server error message
+
                     showServerMessage(error.message, "error");
                 });
         });
@@ -569,13 +619,13 @@
             const messageText = document.getElementById("server-message-text");
             const messageIcon = document.getElementById("server-message-icon");
 
-            // Reset classes
+
             serverMessage.classList.remove("success", "error");
 
-            // Set text
+
             messageText.textContent = message;
 
-            // Apply type + icon
+
             if (type === "success") {
                 serverMessage.classList.add("success");
                 messageIcon.src = "/images/icons/seal-check-green.svg";
@@ -584,20 +634,20 @@
                 messageIcon.src = "/images/icons/seal-warning-red.svg";
             }
 
-            // Show with animation
+
             serverMessage.classList.remove("hidden");
             serverMessage.classList.add("show");
 
-            // Save to sessionStorage so it survives reload
+
             sessionStorage.setItem(
                 "serverMessage",
                 JSON.stringify({ message, type })
             );
 
-            // Reset timer if already running
+
             if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
 
-            // Auto-close after 3s
+
             serverMessageTimeout = setTimeout(() => {
                 hideServerMessage();
             }, 3000);
@@ -606,22 +656,22 @@
         function hideServerMessage() {
             const serverMessage = document.getElementById("server-message");
 
-            // Stop timer
+
             if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
 
-            // Remove from sessionStorage
+
             sessionStorage.removeItem("serverMessage");
             serverMessageTimeout = null;
 
-            // Animate out
+
             serverMessage.classList.remove("show");
 
             setTimeout(() => {
                 serverMessage.classList.add("hidden");
-            }, 400); // matches CSS transition
+            }, 400);
         }
 
-        // Close button → hide immediately & clear sessionStorage
+
         document
             .getElementById("server-message-close")
             .addEventListener("click", () => {
@@ -633,11 +683,11 @@
             if (stored) {
                 const { message, type } = JSON.parse(stored);
                 if (message) showServerMessage(message, type);
-                // don’t remove here — showServerMessage will auto-remove after timeout
+
             }
         });
 
-        // Elements
+
         const historyShow = document.querySelector(".history-show");
         const historyModalContainer = document.querySelector(".history-modal-container");
         const historyCloseBtn = document.getElementById("close");
@@ -647,7 +697,6 @@
 
         const bookmarkTitle = document.querySelector(".bookmark-title");
 
-        // Fetch bookmark and update title
         const checkBookmarkAndUpdate = async () => {
             try {
                 const response = await fetch("/user/get-history");
@@ -666,7 +715,6 @@
             }
         };
 
-        // Show modal or message
         const showBookmark = async () => {
             try {
                 const response = await fetch("/user/get-history");
@@ -675,21 +723,22 @@
                 if (data.history_save) {
                     const bookmarkArray = JSON.parse(data.history_save);
                     const medicineName = bookmarkArray[0] || "Unknown Medicine";
-                    const savedDate = new Date(data.history_datetime);
+                    // const savedDate = new Date(data.history_datetime);
 
                     // Update modal
                     document.getElementById("history-modal-title").textContent =
-                        `Bookmark 1 – ${medicineName} ${savedDate.toLocaleString()}`;
+                        `${medicineName}`;
+                    // `Bookmark 1 – ${medicineName} ${savedDate.toLocaleString()}`;
                     document.getElementById("history-details").textContent = bookmarkArray[1] || "";
                     document.getElementById("history-interactions").textContent = bookmarkArray[2] || "";
                     document.getElementById("history-guidelines").textContent = bookmarkArray[3] || "";
                     document.getElementById("history-effects").textContent = bookmarkArray[4] || "";
                     document.getElementById("history-prices").textContent = bookmarkArray[5] || "";
 
-                    // ✅ Show modal only if history exists
+
                     historyModalContainer.classList.add("show");
 
-                    // Reset tabs
+
                     document.querySelector(".history-tabs").classList.add("active");
                     historyTabSelector.value = "0";
                     historyContents.forEach((content, index) => {
@@ -700,7 +749,7 @@
                         }
                     });
                 } else {
-                    // No history → don’t open modal
+
                     showServerMessage("No bookmark found.", "error");
                 }
             } catch (err) {
@@ -709,13 +758,13 @@
         };
 
 
-        // Close modal
+
         historyCloseBtn.addEventListener("click", () => {
             historyModalContainer.classList.remove("show");
             document.querySelector(".history-tabs").classList.remove("active");
         });
 
-        // Handle tab switching
+
         historyTabSelector.addEventListener("change", (e) => {
             const selectedIndex = parseInt(e.target.value, 10);
             historyContents.forEach((content, index) => {
@@ -723,10 +772,10 @@
             });
         });
 
-        // Init
+
         checkBookmarkAndUpdate();
 
-        // Bind Show click
+
         historyShow.addEventListener("click", showBookmark);
 
         const deleteShow = document.querySelector(".delete-confirm");
@@ -744,9 +793,9 @@
         });
 
         function resetDeleteForm() {
-            deleteForm.reset(); // clears input values
+            deleteForm.reset();
 
-            // clear error state for each input
+
             [deleteConfirmInput, deleteCurrentPasswordInput].forEach((input) => {
                 input.parentElement.classList.remove("error", "success");
                 const errorDisplay = input.parentElement.querySelector(".error");
@@ -767,7 +816,7 @@
         deleteForm.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            if (!validateDelete()) return; // stop if invalid
+            if (!validateDelete()) return;
 
             const confirmVal = deleteConfirmInput.value.trim();
             const passwordVal = deleteCurrentPasswordInput.value.trim();
@@ -787,15 +836,15 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // ✅ success → show server message and maybe redirect
+
                     showServerMessage(data.message || "Account deleted successfully", "success");
 
-                    // optionally redirect to logout/login page
+
                     setTimeout(() => {
                         window.location.href = "/guest-login";
                     }, 1500);
                 } else {
-                    // ❌ backend error (wrong password, wrong confirm, etc.)
+
                     showServerMessage(data.message || "Failed to delete account", "error");
                 }
             } catch (err) {
@@ -817,8 +866,15 @@
                 setSuccess(deleteConfirmInput);
             }
 
+
             if (passwordVal === "") {
                 setError(deleteCurrentPasswordInput, "Enter your current password");
+                valid = false;
+            } else if (passwordVal.length < 8) {
+                setError(deleteCurrentPasswordInput, "Current password must be at least 8 characters");
+                valid = false;
+            } else if (passwordVal.length > 64) {
+                setError(deleteCurrentPasswordInput, "Current password cannot exceed 64 characters");
                 valid = false;
             } else {
                 setSuccess(deleteCurrentPasswordInput);
@@ -839,11 +895,10 @@
                 const result = await response.json();
 
                 if (response.ok) {
-                    // ✅ success
+
                     showServerMessage(result.message || "History deleted successfully", "success");
                     setTimeout(() => location.reload(), 1500);
                 } else {
-                    // ❌ backend error
                     showServerMessage(result.message || "Failed to delete history.", "error");
                 }
             } catch (error) {
@@ -854,35 +909,67 @@
 
         // logout
 
-        // Elements
-        const logoutLinks = document.querySelectorAll(".logout-confirm"); // 🔹 this is your trigger element (replace with your logout button/link class)
+        const logoutLinks = document.querySelectorAll(".logout-confirm");
         const logoutModal = document.querySelector(".logout-modal-container");
         const logoutCloseBtn = document.getElementById("logout-close-btn");
         const logoutCancelBtn = document.getElementById("logout-cancel-btn");
         const logoutConfirmBtn = document.getElementById("logout-confirm-btn");
 
-        // Open modal
         logoutLinks.forEach(link => {
             link.addEventListener("click", (e) => {
-                e.preventDefault(); // prevent jumping to top
+                e.preventDefault();
                 logoutModal.classList.add("active");
             });
         });
 
-        // Close modal (X button)
         logoutCloseBtn.addEventListener("click", () => {
             logoutModal.classList.remove("active");
         });
 
-        // Close modal (Cancel button)
         logoutCancelBtn.addEventListener("click", () => {
             logoutModal.classList.remove("active");
         });
 
-        // Confirm logout
         logoutConfirmBtn.addEventListener("click", () => {
             window.location.href = "/logout";
         });
+
+        const toggle1 = document.getElementById("toggle1");
+        const toggle2 = document.getElementById("toggle2");
+        const toggle3 = document.getElementById("toggle3");
+        const toggle4 = document.getElementById("toggle4");
+
+        function setupToggle(toggle, input) {
+            toggle.addEventListener("click", () => {
+                if (input.type === "password") {
+                    input.type = "text";
+                    toggle.src = "/images/icons/eye.svg";
+                } else {
+                    input.type = "password";
+                    toggle.src = "/images/icons/eye-slash.svg";
+                }
+            });
+        }
+
+        setupToggle(toggle1, currentPasswordInput);
+        setupToggle(toggle2, newPasswordInput);
+        setupToggle(toggle3, confirmPasswordInput);
+        setupToggle(toggle4, deleteCurrentPasswordInput);
+
+        function toggleBurger() {
+            const burger = document.getElementById("burger-toggle");
+            const mobileMenu = document.getElementById("mobile-menu");
+            const burgerIcon = burger.querySelector("img");
+
+            mobileMenu.classList.toggle("open");
+
+            if (mobileMenu.classList.contains("open")) {
+                burgerIcon.src = "/images/icons/x-white.svg";
+            } else {
+                burgerIcon.src = "/images/icons/list-white.svg";
+            }
+        }
+
 
 
 

@@ -1,38 +1,3 @@
-html {
-  font-size: 18px;
-}
-
-h1 {
-  font-size: 2rem;
-}
-
-/* 36px */
-h2 {
-  font-size: 1.5rem;
-}
-
-/* 27px */
-h3 {
-  font-size: 1.17rem;
-}
-
-/* 21px */
-h4 {
-  font-size: 1rem;
-}
-
-/* 18px */
-h5 {
-  font-size: 0.83rem;
-}
-
-/* 15px */
-h6 {
-  font-size: 0.67rem;
-}
-
-/* 12px */
-
 button {
   padding: 6px 30px;
   color: white;
@@ -47,10 +12,10 @@ button {
 }
 
 button:hover {
-background-color: #0056b3;
+  background-color: #0056b3;
 }
 
-#button-text{
+#button-text {
   text-align: center;
 }
 
@@ -58,9 +23,6 @@ background-color: #0056b3;
   text-align: justify;
   padding-right: 30px;
 }
-
-
-/* flex-box */
 
 /* header */
 
@@ -221,58 +183,6 @@ a {
   text-align: left;
 }
 
-/* footer */
-
-.footer {
-  height: 230px;
-  display: flex;
-  background-color: #0288D1;
-  color: white;
-}
-
-.footer .container {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  gap: 20px;
-}
-
-.footer ul {
-  display: flex;
-  flex-direction: column;
-  list-style: none;
-  gap: 10px;
-}
-
-.f-1 {
-  flex: 2;
-}
-
-.f-2 {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.f-3 {
-  flex: 2;
-}
-
-.contacts {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.contacts div {
-  display: flex;
-}
-
-.contacts div img {
-  width: 24px;
-  height: 24px;
-}
-
 /* server message */
 
 .message-container .container {
@@ -299,13 +209,6 @@ a {
 
 }
 
-@media (max-width: 730px) {
-  .server-message-modal {
-    width: 100%;
-    font-size: 12px;
-  }
-}
-
 .message-container .container.active {
   padding: 10px 30px;
   display: block;
@@ -321,134 +224,51 @@ a {
   align-items: center;
 }
 
-/* media */
+/* media queries */
 
-@media (max-width: 768px) {
-  .guest-navbar .nav {
-    display: none;
+@media (max-width: 900px) {
+
+  button{
+    font-size: 16px;
+  }
+
+  .header .container {
     flex-direction: column;
-    background-color: black;
-    position: absolute;
-    top: 60px;
-    right: 0;
-    width: 100%;
-    padding: 10px 0;
   }
 
-  .guest-navbar .nav.show {
+  .button {
     display: flex;
-    padding: 20px;
-    background-color: #333333;
-
-  }
-
-  #user-nav {
-    align-items: flex-start;
-    margin: 0px;
-  }
-
-  .username-holder {
-    width: 100%;
-  }
-
-  .menu-toggle {
-    display: block;
-
-  }
-
-  .user-navbar .nav {
-    display: none;
-    flex-direction: column;
-    background-color: black;
-    position: absolute;
-    top: 60px;
-    right: 0;
-    width: 100%;
-    padding: 10px 0;
-
-
-
-  }
-
-  .user-navbar .nav.show {
-    display: flex;
-    padding: 20px;
-    background-color: #333333;
-    z-index: 1;
-
-
-  }
-
-  .user-navbar .username-holder {
-    color: white;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-
-  .footer .container {
-    flex-direction: column;
-
-  }
-
-  .footer {
-    height: auto;
-  }
-
-  .f-2 {
-
-    width: 100%;
-  }
-
-  .f-2 div {
-    width: 100%;
-    display: flex;
-    gap: 20px;
     align-items: center;
     justify-content: center;
   }
 
-  .footer ul {
-    display: flex;
-    flex-direction: row;
-    list-style: none;
-    gap: 10px;
+  .header-img {
+    max-width: 90%;
+    margin-top: 20px;
+    min-width: 300px;
+  }
+
+  .box-container {
+    flex-direction: column;
+  }
+
+  .header .container p {
+    padding-right: 0;
   }
 }
 
+@media (max-width: 400px) {
 
-@media (max-width: 480px) {
-  .footer .container {
-    flex-direction: column;
-
+  .boxes img{
+    max-width: 80px;
+    margin: 10px;
   }
 
-  .footer {
-    height: auto;
+  h1 {
+    font-size: 1.5rem;
   }
 
-  .f-2 {
-
-    width: 100%;
-  }
-
-  .f-2 div {
-    width: 100%;
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .footer ul {
-    display: flex;
-    flex-direction: row;
-    list-style: none;
-    gap: 10px;
-  }
-}
-
-@media (max-width: 410px) {
-  .f-2 div {
-    flex-direction: column;
+  button{
+    font-size: 14px;
   }
 }

@@ -37,7 +37,7 @@ form button {
     display: none;
 }
 
-#recovery-form.show{
+#recovery-form.show {
     display: block;
 }
 
@@ -45,7 +45,7 @@ form button {
     display: none;
 }
 
-#confirm-form.show{
+#confirm-form.show {
     display: block;
 }
 
@@ -54,19 +54,19 @@ form button {
     display: none;
 }
 
-#change-form.show{
+#change-form.show {
     display: block;
 }
 
 /* links */
 
-.links{
+.links {
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
 }
 
-.links a{
+.links a {
     color: blue;
     font-size: 14px;
 }
@@ -83,7 +83,7 @@ button {
     border-radius: 4px;
 }
 
-.buttons{
+.buttons {
     margin-top: 10px;
     display: flex;
     gap: 20px;
@@ -127,7 +127,7 @@ button {
 .password {
     display: flex;
     gap: 8px;
-    /* Add spacing between the checkbox and label */
+
     justify-content: flex-end;
 }
 
@@ -143,7 +143,7 @@ button {
     font-size: 18px;
 }
 
-#resend{
+#resend {
     cursor: pointer;
 }
 
@@ -155,7 +155,7 @@ button {
 
 .input-wrapper input {
     width: 100%;
-    padding-right: 36px; /* space for eye icon */
+    padding-right: 36px;
 }
 
 .toggle-password {
@@ -170,4 +170,41 @@ button {
 
 .toggle-password:hover {
     opacity: 1;
+}
+
+@media (max-width: 1200px) {
+
+    #form,
+    .input-control input,
+    .input-control label,
+    .email-holder {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    #form,
+    .input-control input,
+    .input-control label,
+    .email-holder {
+        font-size: 14px;
+    }
+
+    .input-control .error,
+    .links a {
+        font-size: 12px;
+    }
+
+
+    form button {
+        font-size: 14px;
+        padding: 6px;
+    }
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 24px;
+    }
 }
