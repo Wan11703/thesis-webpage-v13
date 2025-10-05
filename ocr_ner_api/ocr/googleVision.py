@@ -385,16 +385,22 @@ def format_corrected_text_with_openai(raw_text):
         response = openai.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are an assistant that formats medical prescription text into structured sentences."},
                 {"role": "user", "content": (
-                    "Format the following prescription text into sentences like '/generic medicine name/ [dosage] (number of times per day a day) <duration> was prescribed'. "
-                    "For each medicine, use only the generic name (not brand names, not combinations, not trade names). "
-                    "Include the dosage in square brackets and frequency as a number per day in parenthesis (e.g. '(1 a day)', '(2 a day)'). "
-                    "If the frequency is written as 'once', 'twice', 'thrice', or 'every X hours', convert it to a number per day (e.g. 'twice a day' -> '(2 a day)', 'every 8 hours' -> '(3 a day)'). "
-                    "If there is a duration in the text (e.g. 'for 10 days', 'for one week', 'x7d', 'x14 days', 'for 1 month'), include it in angle brackets like <for 10 days>. "
-                    "**If there is a time range (e.g. '8pm to 8am', 'from 7:00 to 19:00'), include it as part of the duration in the angle brackets.** "
-                    "If there is no duration, include <no duration>. "
-                    "Only output one sentence per medicine. Example: '/aspirin/ [100mg] (1 a day) <for 10 days> was prescribed.'\n"
+                    "Strictly and consistently format the following prescription text into sentences using this exact format:\n\n"
+                    "Format:\n"
+                    "/<generic medicine name>/ [<form> <dosage>] (<number> a day) <duration> was prescribed.\n\n"
+                    "Formatting Rules (follow them exactly, no deviations):\n"
+                    "1. Always enclose the generic medicine name with forward slashes `/` (example: `/paracetamol/`). Never omit them.\n"
+                    "2. Inside the slashes: only the **generic medicine name** — no brand names or formulation words like 'syrup', 'drops', 'tablet', etc.\n"
+                    "3. Move the dosage form (tablet, capsule, syrup, suspension, drops, ointment, etc.) into the square brackets **before** the dosage number.\n"
+                    "   Example:\n"
+                    "   - 'Phenytoin suspension 0.5 ml' → `/phenytoin/ [suspension 0.5 ml] (2 a day) <no duration> was prescribed.`\n"
+                    "   - 'Furosemide tablet 1.2 mg' → `/furosemide/ [tablet 1.2 mg] (2 a day) <no duration> was prescribed.`\n"
+                    "4. Frequency: convert 'once', 'twice', 'thrice', or 'every X hours' into numeric format like `(1 a day)`, `(2 a day)`, `(3 a day)`.\n"
+                    "5. Duration: include it in < > if present, otherwise use `<no duration>`.\n"
+                    "6. Each medicine must be in a separate sentence that ends with 'was prescribed.'\n"
+                    "7. Output only the formatted sentences, no explanations, no headings, no numbering.\n\n"
+                    "If the input already has a formatted section, correct it to strictly match the format.\n\n"
                     f"{raw_text_cleaned}"
                 )}
             ]
