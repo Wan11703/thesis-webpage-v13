@@ -13,7 +13,7 @@ app = FastAPI()
 # Add CORS middleware to allow requests from your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://thesis-webpage-v13-production.up.railway.app",
+    allow_origins=["https://med-extract.up.railway.app",
                    "https://thesis-webpage-v13-production-775f.up.railway.app",
                    "https://thesis-webpage-v13-production-c1fa.up.railway.app"],  # Replace with your frontend's URL
     allow_credentials=True,
@@ -62,7 +62,7 @@ async def process_image(request: Request):
         return JSONResponse(content={"error": "No user_id provided"}, status_code=403)
 
     # Use the proxy route on your Node server
-    image_url = f"https://thesis-webpage-v13-production.up.railway.app/api/image-proxy/{user_id}"
+    image_url = f"https://med-extract.up.railway.app/api/image-proxy/{user_id}"
     # image_url = f"http://localhost:3000/api/image-proxy/{user_id}"
     
     try:

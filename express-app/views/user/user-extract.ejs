@@ -340,7 +340,7 @@
       if (image && image.user_id) {
         savedDiv.innerHTML = `
       <div class="image">
-        <img id="prescrip-img" src="https://thesis-webpage-v13-production.up.railway.app/user-image/${image.user_id}" alt="Saved Image">
+        <img id="prescrip-img" src="https://med-extract.up.railway.app/user-image/${image.user_id}" alt="Saved Image">
       </div>`;
       } else {
         savedDiv.innerHTML = ""; // Nothing to show
@@ -504,7 +504,7 @@
       per = 0;
       loading = setInterval(animate, 100);
 
-      const imageUrl = `https://thesis-webpage-v13-production.up.railway.app/api/image-proxy/${userId}`;
+      const imageUrl = `https://med-extract.up.railway.app/api/image-proxy/${userId}`;
       console.log("Image URL:", imageUrl);
       console.log("User ID:", userId);
 
@@ -577,7 +577,7 @@
       back.classList.remove("active");
       saveBtn.classList.remove("active");
 
-      const imageUrl = `https://thesis-webpage-v13-production.up.railway.app/api/image-proxy/${userId}`;
+      const imageUrl = `https://med-extract.up.railway.app/api/image-proxy/${userId}`;
       console.log("Rescan Image URL:", imageUrl);
       console.log("User ID:", userId);
 
