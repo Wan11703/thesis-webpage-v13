@@ -111,7 +111,7 @@
 
     <div class="camera-div" id="camera-div">
       <div class="camera-box-container">
-        
+
         <div class="camera-header">
           <button class="camera-close-btn" onclick="closeCamera()">
             <img src="/images/icons/x.svg" alt="Close" />
@@ -119,12 +119,12 @@
         </div>
 
         <div class="camera-container" id="camera-container">
-          
 
-          
+
+
           <video class="camera-video" id="camera-video" autoplay></video>
 
-          
+
           <div class="camera-footer">
             <button class="camera-capture-btn" onclick="captureImage()">
               <img src="/images/icons/camera.svg" alt="Capture" />
@@ -132,19 +132,19 @@
           </div>
         </div>
 
-        
+
         <div class="camera-modal" id="camera-modal">
           <div class="camera-modal-content">
             <img class="camera-preview-image" id="camera-preview-image" src="" />
 
             <div class="camera-buttons">
-              
+
               <button class="camera-cancel-btn" onclick="cancelUpload()">
                 <img src="/images/icons/arrow-left.svg" alt="Back" />
                 <span>Back</span>
               </button>
 
-              
+
               <button class="camera-upload-btn" onclick="uploadImage()">
                 <span>Upload</span>
                 <img src="/images/icons/arrow-down.svg" alt="Upload" />
@@ -172,7 +172,7 @@
           <h2>Uploaded Image</h2>
           <div class="buttons">
             <button id="scan" type="button" onclick="ScanImage()">Scan</button>
-            
+
 
             <button id="delete" type="submit">Delete</button>
           </div>
@@ -190,7 +190,7 @@
         <h1 id="modal-title">Extraction Results</h1>
         <img class="modal-refresh-icon" id="refresh" src="/images/icons/arrow-clockwise.svg" alt="Refresh"
           onclick="RescanImage();" title="Refresh" />
-        
+
         <img class="modal-save-icon" id="save" src="/images/icons/bookmark-simple.svg" alt="Save" onclick="saveData();"
           title="Save" />
         <img class="modal-close-icon" id="close" src="/images/icons/x.svg" alt="Close" title="Close" />
@@ -316,7 +316,7 @@
       if (saved) medicineState = JSON.parse(saved);
     } catch (e) { /* ignore parse errors */ }
 
-    
+
     const userId = "<%= userId %>";
     const username = "<%= username %>";
 
@@ -403,7 +403,7 @@
     input.addEventListener("change", () => {
       const files = input.files;
       if (files.length) {
-        
+
         queuedImagesArray = [files[0]];
       }
       queuedForm.reset();
@@ -508,6 +508,10 @@
 
       userSelectedMedicine = false;
 
+      // 🔹 Always reset any saved input states before starting a new scan
+      medicineState = {};
+      sessionStorage.removeItem("medicineState");
+
       modal_container.classList.add("show");
       count = 0;
       per = 0;
@@ -530,49 +534,47 @@
         });
 
         if (!response.ok) {
-          
           console.warn("⚠️ Response not OK, showing selector error.");
           stopLoaderAndShowSelectorError();
-          return; 
+          return;
         }
 
         const data = await response.json();
         console.log("Processed Image Results:", data);
 
-        
         if (data.formatted_text) {
           formattedText = data.formatted_text;
           console.log("✅ Formatted Text for Verification:", formattedText);
         }
 
-        
         if (data.medicineArray && data.medicineArray.length > 0) {
           medicineArray = data.medicineArray;
           console.log("✅ Medicine Array for Verification:", medicineArray);
 
-          
           renderMedicineList();
         } else {
-          
           console.warn("⚠️ No medicines detected in response.");
           stopLoaderAndShowSelectorError();
         }
 
       } catch (error) {
         console.error("Error processing the image:", error);
-
-        
         stopLoaderAndShowSelectorError();
       }
     };
+
 
     const RescanImage = async () => {
       disableModalClose();
       disableModalRefresh();
 
-      userSelectedMedicine = false; 
+      medicineState = {};
+      sessionStorage.removeItem("medicineState");
 
-      
+
+      userSelectedMedicine = false;
+
+
       clearInterval(loading);
       count = 0;
       per = 0;
@@ -580,7 +582,7 @@
       loadingText.innerHTML = "";
       loading = setInterval(animate, 100);
 
-      
+
       selectorDiv.classList.remove("active");
       tabActive.classList.remove("active");
       back.classList.remove("active");
@@ -636,10 +638,10 @@
 
     back.addEventListener('click', () => {
 
-      clearInterval(loading); 
+      clearInterval(loading);
       count = 0;
       per = 0;
-      
+
 
       loaderActive.classList.remove("active");
       tabActive.classList.remove("active");
@@ -659,11 +661,12 @@
       userSelectedMedicine = false;
       modal_container.classList.remove('show');
 
-      
+      medicineState = {};
+      sessionStorage.removeItem("medicineState");
+
       clearInterval(loading);
       count = 0;
       per = 0;
-      
 
       loaderActive.classList.add("active");
       tabActive.classList.remove("active");
@@ -686,7 +689,7 @@
         loadingText.classList.remove("loading-text-blink");
         loaderActive.classList.remove("active");
 
-        
+
         if (!userSelectedMedicine) {
           selectorDiv.classList.add("active");
         }
@@ -698,7 +701,7 @@
         loadingText.classList.add("loading-text-blink");
         per = per + 6;
         count = count + 1;
-        
+
       }
     }
 
@@ -712,7 +715,7 @@
         tabActive.classList.add("active");
         back.classList.add("active");
         saveBtn.classList.add("active");
-        
+
 
 
       } else {
@@ -720,7 +723,7 @@
         loadingText.classList.add("loading-text-blink");
         per = per + 6;
         count = count + 1;
-      
+
       }
     }
 
@@ -745,7 +748,7 @@
         const data = await response.json();
         console.log("Response from backend:", data);
 
-        
+
         if (data.success) {
           console.log("Raw text successfully processed!");
         } else {
@@ -782,15 +785,15 @@
 
       console.log("renderMedicineList() medicineState (before):", medicineState);
 
-      
+
       const gptItems = parseChatGPTString(formattedText).filter(i => i && i.name);
       const gptKeys = gptItems.map(i => i.name.trim().toLowerCase());
 
-      
+
       const bioKeys = (medicineArray || []).map(n => (n || "").trim().toLowerCase());
       const bioSet = new Set(bioKeys);
 
-      
+
       const overlap = gptKeys.filter(key => bioSet.has(key));
 
       if (!gptKeys.length || !bioSet.size || !overlap.length) {
@@ -802,7 +805,7 @@
       const container = document.createElement("div");
       container.classList.add("medicine-container");
 
-     
+
       const headerRow = document.createElement("div");
       headerRow.classList.add("medicine-row", "medicine-header");
       ["Name", "Strength", "Frequency", "Duration", "Action"].forEach(title => {
@@ -858,9 +861,9 @@
         freqInput.style.width = "60px";
         freqInput.style.display = "none";
         freqInput.classList.add("frequency-input");
-       
 
-        
+
+
         freqEditIcon.onclick = () => {
           const match = freqValue.match(/(\d+)\s*a\s*day/i);
           if (match) {
@@ -875,7 +878,7 @@
           freqCloseIcon.style.display = "inline-block";
         };
 
-        
+
         freqCloseIcon.onclick = () => {
           if (freqInput.value !== "" && parseInt(freqInput.value, 10) >= 1) {
             const newVal = `${parseInt(freqInput.value, 10)} a day`;
@@ -902,15 +905,15 @@
         const durationDiv = document.createElement("div");
         durationDiv.classList.add("duration-cell");
 
-        
+
         let savedRaw = (medicineState[itemKey] && medicineState[itemKey].duration) || null;
         if (savedRaw) savedRaw = savedRaw.replace(/[()]/g, "").trim();
 
-        
+
         let initialFromItem = (item.duration && item.duration.toLowerCase() !== "empty") ? item.duration : null;
         if (initialFromItem) initialFromItem = initialFromItem.replace(/[()]/g, "").trim();
 
-        
+
         let durationValue = savedRaw || initialFromItem || "no duration";
 
         const textSpan = document.createElement("span");
@@ -933,7 +936,7 @@
         input.style.width = "60px";
         input.style.display = "none";
         input.classList.add("duration-input");
-        
+
 
         const select = document.createElement("select");
         ["days", "weeks", "months"].forEach(opt => {
@@ -945,9 +948,9 @@
         });
         select.style.display = "none";
         select.classList.add("duration-select");
-        
 
-        
+
+
         function commitDurationToState(key, newDuration) {
           medicineState[key] = medicineState[key] || {};
           medicineState[key].duration = newDuration;
@@ -1027,7 +1030,7 @@
         button.textContent = "Generate Insight";
         button.classList.add("generate-insight-button");
 
-        
+
         button.onclick = () => {
           if (input.style.display !== "none") {
             if (input.value !== "" && !isNaN(parseInt(input.value, 10))) {
@@ -1092,7 +1095,7 @@
     eventSource.onmessage = (event) => {
       const payload = JSON.parse(event.data);
 
-      
+
       if (Array.isArray(payload)) {
         medicineArray = payload;
       } else {
@@ -1106,12 +1109,12 @@
     async function openMedicineModal(medicineName, strength, frequency, durationValue) {
       disableModalClose();
 
-      
+
       clearInterval(loading);
       count = 0;
       per = 0;
 
-      
+
       count = 0;
       per = 0;
       loading = setInterval(animate2, 100);
@@ -1125,7 +1128,7 @@
       console.log("Frequency:", frequency);
       console.log("Duration:", durationValue);
 
-      
+
       function setContentWithNotice(element, notice, content) {
         element.innerHTML = `
       <p class="info-source">${notice}</p>
@@ -1176,7 +1179,7 @@
           price.textContent = "";
           stopLoaderAndShowTabsError();
         } else {
-          
+
           setContentWithNotice(
             drug_information,
             "The information provided is derived from Drug Bank.",
@@ -1220,15 +1223,15 @@
       const modalTitle = document.querySelector("#modal-title");
       const medicineName = modalTitle.textContent.split(" Medical Insights")[0];
 
-      
+
       function cleanText(id, notice) {
         const el = document.getElementById(id);
         if (!el) return "";
 
-        
+
         let text = el.textContent.trim();
 
-        
+
         if (text.startsWith(notice)) {
           text = text.replace(notice, "").trim();
         }
@@ -1285,11 +1288,11 @@
 
 
     function stopLoaderAndShowSelector() {
-      clearInterval(loading); 
-      loaderActive.classList.remove("active"); 
+      clearInterval(loading);
+      loaderActive.classList.remove("active");
       loadingText.innerHTML = "";
-      selectorDiv.classList.add("active"); 
-      enableModalClose(); 
+      selectorDiv.classList.add("active");
+      enableModalClose();
       enableModalRefresh();
     }
 
@@ -1300,7 +1303,7 @@
 
       selectorDiv.classList.add("active");
 
-      
+
       selectorDiv.innerHTML = `
     <div class="selector-error-message">
       <p>Sorry, we could not extract any medicines from your image. This may happen if:</p>
@@ -1323,17 +1326,17 @@
       loaderActive.classList.remove("active");
       loadingText.innerHTML = "";
 
-      
+
       const tabBox = document.querySelector(".tab-box");
       if (tabBox) tabBox.style.display = "";
 
-      
+
       const tabSelector = document.getElementById("tabSelector");
       if (tabSelector) {
-        tabSelector.value = "0"; 
+        tabSelector.value = "0";
       }
 
-      
+
       const allContents = document.querySelectorAll(".content-box .content");
       allContents.forEach((c) => c.classList.remove("active"));
       const drugInfo = document.getElementById("drug_information");
@@ -1354,17 +1357,17 @@
 
       tabActive.classList.add("active");
 
-      
+
       const tabBox = document.querySelector(".tab-box");
       if (tabBox) tabBox.style.display = "none";
 
-      
+
       const tabSelector = document.getElementById("tabSelector");
       if (tabSelector) {
         tabSelector.value = "0";
       }
 
-      
+
       const allContents = document.querySelectorAll(".content-box .content");
       allContents.forEach((c) => c.classList.remove("active"));
       const drugInfo = document.getElementById("drug_information");
@@ -1384,7 +1387,7 @@
     `;
       }
 
-      
+
       back.classList.add("active");
 
       saveBtn.classList.remove("active");
@@ -1416,13 +1419,13 @@
       const messageText = document.getElementById("server-message-text");
       const messageIcon = document.getElementById("server-message-icon");
 
-      
+
       serverMessage.classList.remove("success", "error");
 
-      
+
       messageText.textContent = message;
 
-      
+
       if (type === "success") {
         serverMessage.classList.add("success");
         messageIcon.src = "/images/icons/seal-check-green.svg";
@@ -1431,11 +1434,11 @@
         messageIcon.src = "/images/icons/seal-warning-red.svg";
       }
 
-      
+
       serverMessage.classList.remove("hidden");
       serverMessage.classList.add("show");
 
-      
+
       sessionStorage.setItem(
         "serverMessage",
         JSON.stringify({
@@ -1444,10 +1447,10 @@
         })
       );
 
-      
+
       if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
 
-      
+
       serverMessageTimeout = setTimeout(() => {
         hideServerMessage();
       }, 3000);
@@ -1456,22 +1459,22 @@
     function hideServerMessage() {
       const serverMessage = document.getElementById("server-message");
 
-      
+
       if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
 
-      
+
       sessionStorage.removeItem("serverMessage");
       serverMessageTimeout = null;
 
-      
+
       serverMessage.classList.remove("show");
 
       setTimeout(() => {
         serverMessage.classList.add("hidden");
-      }, 400); 
+      }, 400);
     }
 
-    
+
     document
       .getElementById("server-message-close")
       .addEventListener("click", () => {
@@ -1486,14 +1489,14 @@
           type
         } = JSON.parse(stored);
         if (message) showServerMessage(message, type);
-        
+
       }
     });
 
     function cooldownButton(button, ms = 3000) {
       if (!button) return;
       button.disabled = true;
-      button.classList.add("disabled"); 
+      button.classList.add("disabled");
       setTimeout(() => {
         button.disabled = false;
         button.classList.remove("disabled");
@@ -1503,7 +1506,7 @@
     function disableModalClose() {
       if (close) {
         close.style.pointerEvents = "none";
-        close.style.opacity = "0.5"; 
+        close.style.opacity = "0.5";
       }
     }
 
@@ -1517,7 +1520,7 @@
     function disableModalRefresh() {
       if (refresh) {
         refresh.style.pointerEvents = "none";
-        refresh.style.opacity = "0.5"; 
+        refresh.style.opacity = "0.5";
       }
     }
 
@@ -1534,7 +1537,7 @@
       document.querySelector(".user-menu .dropdown").classList.toggle("active");
     }
 
-    
+
     document.addEventListener("click", () => {
       document.querySelector(".user-menu .dropdown").classList.remove("active");
     });
@@ -1550,22 +1553,22 @@
     // Open modal
     logoutLinks.forEach(link => {
       link.addEventListener("click", (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         logoutModal.classList.add("active");
       });
     });
 
-    
+
     logoutCloseBtn.addEventListener("click", () => {
       logoutModal.classList.remove("active");
     });
 
-    
+
     logoutCancelBtn.addEventListener("click", () => {
       logoutModal.classList.remove("active");
     });
 
-    
+
     logoutConfirmBtn.addEventListener("click", () => {
       window.location.href = "/logout";
     });
@@ -1583,7 +1586,7 @@
         const cameraContainer = document.getElementById("camera-container");
 
         cameraDiv.classList.add("active");
-        cameraContainer.style.display = "flex"; 
+        cameraContainer.style.display = "flex";
 
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
@@ -1618,7 +1621,7 @@
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       capturedBase64 = canvas.toDataURL("image/png");
 
-      
+
       const stream = video.srcObject;
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
@@ -1631,17 +1634,17 @@
     function showPreview(base64) {
       document.getElementById("camera-preview-image").src = base64;
 
-      
+
       document.getElementById("camera-container").style.display = "none";
 
-      
+
       document.getElementById("camera-modal").classList.add("active");
     }
 
     function cancelUpload() {
       document.getElementById("camera-modal").classList.remove("active");
 
-      
+
       openCamera();
 
       capturedBase64 = null;
@@ -1650,7 +1653,7 @@
     function closeCamera() {
       const video = document.getElementById("camera-video");
 
-      
+
       const stream = video.srcObject;
       if (stream && stream.getTracks) {
         stream.getTracks().forEach((track) => track.stop());
@@ -1659,7 +1662,7 @@
 
       document.getElementById("camera-div").classList.remove("active");
 
-      
+
       document.getElementById("camera-modal").classList.remove("active");
       document.getElementById("camera-container").style.display = "flex";
       capturedBase64 = null;
@@ -1686,7 +1689,7 @@
       if (mobileMenu.classList.contains("open")) {
         burgerIcon.src = "/images/icons/x-white.svg";
       } else {
-        burgerIcon.src = "/images/icons/list-white.svg"; 
+        burgerIcon.src = "/images/icons/list-white.svg";
       }
     }
 
