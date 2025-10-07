@@ -11,7 +11,7 @@ app = Flask(__name__)
 CORS(app)   # Enable CORS for the entire app
 
 CORS(app, origins=[
-    "https://thesis-webpage-v13-production.up.railway.app",
+    "https://med-extract.up.railway.app",
     "https://thesis-webpage-v13-production-55fa.up.railway.app"
 ])
 

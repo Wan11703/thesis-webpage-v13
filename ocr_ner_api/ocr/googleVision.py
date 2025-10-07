@@ -43,7 +43,7 @@ app = FastAPI(title="OCR and NER API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://thesis-webpage-v13-production.up.railway.app",  
+    allow_origins=["https://med-extract.up.railway.app",  
                    "https://thesis-webpage-v13-production-775f.up.railway.app"],  # Replace with your frontend's URL
     allow_credentials=True,
     allow_methods=["*"],
