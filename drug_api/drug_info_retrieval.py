@@ -71,69 +71,94 @@ def get_medicine_price(medicine_name, strength=None, frequency=None, duration=No
     try:
         client = openai.OpenAI(api_key=openai.api_key)
 
-        user_prompt = (
-            f"Medicine: {medicine_name}\n"
-            f"Strength: {strength or 'N/A'}\n"
-            f"Frequency: {frequency or 'N/A'}\n"
-            f"Duration: {duration or 'N/A'}\n"
-            f"Form: {form}\n\n"
-            "STRICT INSTRUCTIONS:\n"
-            "You must always provide a valid estimated price — never respond with 'N/A' or 'Not available'. "
-            "If unsure, provide a realistic estimated price range for the Philippines based on typical over-the-counter or prescription pricing.\n\n"
-            "TASKS:\n"
-            "1. Identify one well-known **branded product** and one **generic product** for the given medicine commonly sold in the Philippines.\n"
-            "2. Provide the **estimated SRP (Suggested Retail Price)** per unit or package (tablet, capsule, bottle, tube, etc.) for both products.\n"
-            "3. If the drug form is liquid (ml) or ointment/cream (grams), assume standard package sizes "
-            "(e.g., 60ml bottle, 5g tube, 10 tablets per blister pack).\n"
-            "4. Use ₱ to represent Philippine Peso.\n"
-            "5. Then, perform a **transparent computation** using the given frequency and duration:\n"
-            "     - Frequency = number of doses per day\n"
-            "     - Duration = number of days\n"
-            "     - Total Cost = SRP × frequency × duration\n"
-            "6. Always show frequency and duration in your output for full transparency.\n"
-            "7. Follow this exact format:\n\n"
-            "──────────────────────────────\n"
-            "Branded Product:\n"
-            "• Brand Name: <BrandName>\n"
-            "• SRP per {form}: ₱<price> (Estimated)\n"
-            "• Frequency: <frequency>\n"
-            "• Duration: <duration> days\n"
-            "• Estimated Total Cost: ₱<computed_total> = (₱<price> × <frequency> × <duration>)\n\n"
-            "Generic Product:\n"
-            "• Generic Name: <GenericName>\n"
-            "• SRP per {form}: ₱<price> (Estimated)\n"
-            "• Frequency: <frequency>\n"
-            "• Duration: <duration> days\n"
-            "• Estimated Total Cost: ₱<computed_total> = (₱<price> × <frequency> × <duration>)\n"
-            "──────────────────────────────\n\n"
-            "Always include the '₱' sign before prices and always compute total cost."
-        )
+        # Check if frequency and duration are provided → decide mode
+        full_computation = bool(frequency and duration)
+
+        if full_computation:
+            # 🔹 Mode 1: Full Computation (for price transparency module)
+            user_prompt = (
+                f"Medicine: {medicine_name}\n"
+                f"Strength: {strength or 'N/A'}\n"
+                f"Frequency: {frequency or 'N/A'}\n"
+                f"Duration: {duration or 'N/A'}\n"
+                f"Form: {form}\n\n"
+                "STRICT INSTRUCTIONS:\n"
+                "You must always provide a valid estimated price — never respond with 'N/A' or 'Not available'. "
+                "If unsure, provide a realistic estimated price range for the Philippines based on typical over-the-counter or prescription pricing.\n\n"
+                "TASKS:\n"
+                "1. Identify one well-known **branded product** and one **generic product** for the given medicine commonly sold in the Philippines.\n"
+                "2. Provide the **estimated SRP (Suggested Retail Price)** per unit or package (tablet, capsule, bottle, tube, etc.) for both products.\n"
+                "3. If the drug form is liquid (ml) or ointment/cream (grams), assume standard package sizes "
+                "(e.g., 60ml bottle, 5g tube, 10 tablets per blister pack).\n"
+                "4. Use ₱ to represent Philippine Peso.\n"
+                "5. Then, perform a **transparent computation** using the given frequency and duration:\n"
+                "     - Frequency = number of doses per day\n"
+                "     - Duration = number of days\n"
+                "     - Total Cost = SRP × frequency × duration\n"
+                "6. Always show frequency and duration in your output for full transparency.\n"
+                "7. Follow this exact format and **do not include any introduction or conclusion**.\n"
+                "8. Output should start immediately with 'Branded Product:' and end after the Generic Product section.\n\n"
+                "──────────────────────────────\n"
+                "Branded Product:\n"
+                "• Brand Name: <BrandName>\n"
+                f"• SRP per {form}: ₱<price> (Estimated)\n"
+                "• Frequency: <frequency>\n"
+                "• Duration: <duration> days\n"
+                "• Estimated Total Cost: ₱<computed_total> = (₱<price> × <frequency> × <duration>)\n\n"
+                "Generic Product:\n"
+                "• Generic Name: <GenericName>\n"
+                f"• SRP per {form}: ₱<price> (Estimated)\n"
+                "• Frequency: <frequency>\n"
+                "• Duration: <duration> days\n"
+                "• Estimated Total Cost: ₱<computed_total> = (₱<price> × <frequency> × <duration>)\n"
+                "──────────────────────────────\n\n"
+                "Do not include phrases like 'Certainly', 'Here are the prices', 'Hope this helps', "
+                "'These are estimates', or any disclaimers — only output the data in the specified format."
+            )
+
+        else:
+            # 🔹 Mode 2: Simple SRP Lookup (for user-search)
+            user_prompt = (
+                f"Medicine: {medicine_name}\n"
+                f"Form: {form}\n\n"
+                "STRICT INSTRUCTIONS:\n"
+                "You must output only the SRP for both branded and generic products — no introductions, explanations, or computations.\n"
+                "Format strictly as follows:\n\n"
+                "Branded Product:\n"
+                "• Brand Name: <BrandName>\n"
+                f"• SRP per {form}: ₱<price> (Estimated)\n\n"
+                "Generic Product:\n"
+                "• Generic Name: <GenericName>\n"
+                f"• SRP per {form}: ₱<price> (Estimated)\n\n"
+                "Do not include any disclaimers or commentary such as 'prices may vary', 'these are estimates', or 'hope this helps'."
+            )
 
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": (
                     "You are a pharmaceutical pricing assistant specialized in Philippine medicine prices. "
-                    "You must always return valid SRP values with full price computations — never omit values or return N/A."
+                    "Always respond with valid SRP data — never omit or say 'N/A'."
                 )},
                 {"role": "user", "content": user_prompt}
             ],
-            temperature=0.3  # Lower temp = more consistent, factual output
+            temperature=0.3
         )
 
         result = response.choices[0].message.content.strip()
 
-        # 🧹 Clean the GPT response
-        result = re.sub(r'^Sure,.*?\n\n', '', result, flags=re.DOTALL)
-        result = re.sub(r'──────────────────────────────', '', result)
-        result = re.sub(r'This is the information.*', '', result, flags=re.DOTALL)
-        result = result.strip()
+        # Optional cleaning — just in case
+        result = re.sub(r'^(Certainly|Sure|Here|Alright|Of course)[^\n]*\n+', '', result, flags=re.IGNORECASE)
+        result = re.sub(r'(These prices|Hope this helps|may vary)[^\n]*', '', result, flags=re.IGNORECASE)
+        result = re.sub(r'─{5,}', '', result)
+        result = re.sub(r'\n\s*\n+', '\n\n', result.strip())
 
         print("OpenAI price response:\n", result)
         return result
 
     except Exception as e:
         return f"Error: {str(e)}"
+
 
 def get_dosage_guidelines(medicine_name, raw_text):
     try:
