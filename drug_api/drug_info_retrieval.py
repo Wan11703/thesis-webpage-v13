@@ -70,32 +70,68 @@ def get_medicine_price(medicine_name, strength=None, frequency=None, duration=No
     form = infer_form_from_strength(strength)
     try:
         client = openai.OpenAI(api_key=openai.api_key)
+
         user_prompt = (
             f"Medicine: {medicine_name}\n"
             f"Strength: {strength or 'N/A'}\n"
             f"Frequency: {frequency or 'N/A'}\n"
             f"Duration: {duration or 'N/A'}\n"
             f"Form: {form}\n\n"
-            "Tasks:\n"
-            "1. Identify one well-known branded product and one generic product for this medicine in the Philippines.\n"
-            "2. Provide the *estimated* Suggested Retail Price (SRP) per standard package (bottle/tube/box/piece) for each, using the brand name and the generic name.\n"
-            "3. If the drug is a liquid (ml) or ointment/cream (grams), assume standard package sizes (e.g., 60ml bottle, 5g tube, 10 tablets per blister pack).\n"
-            "4. Format your answer as:\n"
-            "Branded: The Suggested Retail price for <BrandName> - ₱<price> per {form} (Estimated)"
-            "Generic: The Suggested Retail price for <GenericName> - ₱<price> per {form} (Estimated)"
-            "If price is not available, write 'N/A'."
+            "STRICT INSTRUCTIONS:\n"
+            "You must always provide a valid estimated price — never respond with 'N/A' or 'Not available'. "
+            "If unsure, provide a realistic estimated price range for the Philippines based on typical over-the-counter or prescription pricing.\n\n"
+            "TASKS:\n"
+            "1. Identify one well-known **branded product** and one **generic product** for the given medicine commonly sold in the Philippines.\n"
+            "2. Provide the **estimated SRP (Suggested Retail Price)** per unit or package (tablet, capsule, bottle, tube, etc.) for both products.\n"
+            "3. If the drug form is liquid (ml) or ointment/cream (grams), assume standard package sizes "
+            "(e.g., 60ml bottle, 5g tube, 10 tablets per blister pack).\n"
+            "4. Use ₱ to represent Philippine Peso.\n"
+            "5. Then, perform a **transparent computation** using the given frequency and duration:\n"
+            "     - Frequency = number of doses per day\n"
+            "     - Duration = number of days\n"
+            "     - Total Cost = SRP × frequency × duration\n"
+            "6. Always show frequency and duration in your output for full transparency.\n"
+            "7. Follow this exact format:\n\n"
+            "──────────────────────────────\n"
+            "Branded Product:\n"
+            "• Brand Name: <BrandName>\n"
+            "• SRP per {form}: ₱<price> (Estimated)\n"
+            "• Frequency: <frequency>\n"
+            "• Duration: <duration> days\n"
+            "• Estimated Total Cost: ₱<computed_total> = (₱<price> × <frequency> × <duration>)\n\n"
+            "Generic Product:\n"
+            "• Generic Name: <GenericName>\n"
+            "• SRP per {form}: ₱<price> (Estimated)\n"
+            "• Frequency: <frequency>\n"
+            "• Duration: <duration> days\n"
+            "• Estimated Total Cost: ₱<computed_total> = (₱<price> × <frequency> × <duration>)\n"
+            "──────────────────────────────\n\n"
+            "Always include the '₱' sign before prices and always compute total cost."
         )
+
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": (
-                    "You are an assistant that provides medicine prices for the Philippines."
+                    "You are a pharmaceutical pricing assistant specialized in Philippine medicine prices. "
+                    "You must always return valid SRP values with full price computations — never omit values or return N/A."
                 )},
                 {"role": "user", "content": user_prompt}
-            ]
+            ],
+            temperature=0.3  # Lower temp = more consistent, factual output
         )
-        print("OpenAI price response:\n", response.choices[0].message.content)
-        return response.choices[0].message.content
+
+        result = response.choices[0].message.content.strip()
+
+        # 🧹 Clean the GPT response
+        result = re.sub(r'^Sure,.*?\n\n', '', result, flags=re.DOTALL)
+        result = re.sub(r'──────────────────────────────', '', result)
+        result = re.sub(r'This is the information.*', '', result, flags=re.DOTALL)
+        result = result.strip()
+
+        print("OpenAI price response:\n", result)
+        return result
+
     except Exception as e:
         return f"Error: {str(e)}"
 
@@ -148,7 +184,7 @@ def summarize_drug_info(drug_information, interaction, side_effects, dosage, str
                     f"Generic: {generic['name']} - ₱{generic['price']} per {form}" if generic['price'] != 'N/A'
                     else f"Generic: {generic['name']} - N/A"
                 )
-            custom_price = "\n".join([f"• {line}" for line in price_lines]) if price_lines else "No fixed price available for this drug."
+            custom_price = price_text
         else:
             custom_dosage = summarized_dosage
             custom_price = price_text
@@ -407,7 +443,7 @@ def get_extract_info_endpoint():
                     else:
                         price_lines.append(f"{brand_type}: {name} - N/A")
 
-                custom_price = "\n".join([f"• {line}" for line in price_lines]) if price_lines else "No fixed price available for this drug."
+                custom_price = price_text
             else:
                 custom_dosage = (
                     f"Take {strength} per dose, {frequency} as prescribed by your doctor. "
@@ -437,7 +473,7 @@ def get_extract_info_endpoint():
                     else:
                         price_lines.append(f"{brand_type}: {name} - N/A")
 
-                custom_price = "\n".join([f"• {line}" for line in price_lines]) if price_lines else "No fixed price available for this drug."
+                custom_price = price_text
 
 
         else:
