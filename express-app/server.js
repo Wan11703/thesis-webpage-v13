@@ -787,6 +787,37 @@ app.post("/recovery-request", formUpload.none(), (req, res) => {
 });
 
 
+
+// --- Recovery Step 2: Verify Recovery Code ---
+app.post("/recovery-verify", formUpload.none(), (req, res) => {
+    const { email, code } = req.body;
+
+    if (!email || !code)
+        return res.status(400).send("Email and code are required.");
+
+    dbConnection.query(
+        "SELECT * FROM user_tbl WHERE email = ?",
+        [email],
+        (err, results) => {
+            if (err) return res.status(500).send("Database error.");
+            if (results.length === 0)
+                return res.status(400).send("Invalid email or code.");
+
+            const user = results[0];
+            const now = new Date();
+
+            if (user.recovery_code !== code || now > user.recovery_code_expires) {
+                return res.status(400).send("Invalid or expired recovery code.");
+            }
+
+            // Mark email as validated for password reset (use session)
+            req.session.recoveryUser = { email: email };
+
+            res.status(200).send("Code verified. Proceed to change password.");
+        }
+    );
+});
+
 // --- Recovery Step 3: Reset Password ---
 app.post("/recovery-reset", formUpload.none(), (req, res) => {
     const { password1 } = req.body;
