@@ -283,10 +283,15 @@
 
       const rawDrugName = inputBox.value;
       const drugName = rawDrugName
+        .trim() // remove spaces from start and end
         .toLowerCase()
+        .replace(/\s+/g, " ") // collapse multiple spaces into one
         .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .filter(word => word.length > 0) // ✅ remove empty entries
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
+
+
 
       modalTitle.textContent = "Searched: " + drugName;
       modal_container.classList.add("show");
@@ -303,7 +308,7 @@
       loading = setInterval(animate, 100);
       disableModalClose();
 
-      
+
       function setContentWithNotice(element, notice, content) {
         element.innerHTML = `
       <p class="info-source">${notice}</p>
@@ -311,7 +316,7 @@
     `;
       }
 
-      fetch("https://thesis-webpage-v13-production-55fa.up.railway.app/get-drug-info", {
+      fetch("http://localhost:5000/get-drug-info", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -335,7 +340,7 @@
             return;
           }
 
-          
+
           setContentWithNotice(
             drug_information,
             "The information provided is derived from Drug Bank.",

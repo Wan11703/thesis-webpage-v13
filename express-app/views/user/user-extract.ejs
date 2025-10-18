@@ -785,14 +785,11 @@
 
       console.log("renderMedicineList() medicineState (before):", medicineState);
 
-
       const gptItems = parseChatGPTString(formattedText).filter(i => i && i.name);
       const gptKeys = gptItems.map(i => i.name.trim().toLowerCase());
 
-
       const bioKeys = (medicineArray || []).map(n => (n || "").trim().toLowerCase());
       const bioSet = new Set(bioKeys);
-
 
       const overlap = gptKeys.filter(key => bioSet.has(key));
 
@@ -804,7 +801,6 @@
 
       const container = document.createElement("div");
       container.classList.add("medicine-container");
-
 
       const headerRow = document.createElement("div");
       headerRow.classList.add("medicine-row", "medicine-header");
@@ -858,11 +854,17 @@
         const freqInput = document.createElement("input");
         freqInput.type = "number";
         freqInput.min = "1";
+        freqInput.max = "999"; // ✅ Limit frequency input
         freqInput.style.width = "60px";
         freqInput.style.display = "none";
         freqInput.classList.add("frequency-input");
 
-
+        // ✅ Enforce max value 999
+        freqInput.addEventListener("input", () => {
+          if (parseInt(freqInput.value, 10) > 999) {
+            freqInput.value = 999;
+          }
+        });
 
         freqEditIcon.onclick = () => {
           const match = freqValue.match(/(\d+)\s*a\s*day/i);
@@ -877,7 +879,6 @@
           freqInput.style.display = "inline-block";
           freqCloseIcon.style.display = "inline-block";
         };
-
 
         freqCloseIcon.onclick = () => {
           if (freqInput.value !== "" && parseInt(freqInput.value, 10) >= 1) {
@@ -900,19 +901,15 @@
         freqDiv.appendChild(freqEditIcon);
         freqDiv.appendChild(freqCloseIcon);
 
-
         // Column 4: Duration (with edit/close icons)
         const durationDiv = document.createElement("div");
         durationDiv.classList.add("duration-cell");
 
-
         let savedRaw = (medicineState[itemKey] && medicineState[itemKey].duration) || null;
         if (savedRaw) savedRaw = savedRaw.replace(/[()]/g, "").trim();
 
-
         let initialFromItem = (item.duration && item.duration.toLowerCase() !== "empty") ? item.duration : null;
         if (initialFromItem) initialFromItem = initialFromItem.replace(/[()]/g, "").trim();
-
 
         let durationValue = savedRaw || initialFromItem || "no duration";
 
@@ -933,10 +930,17 @@
         const input = document.createElement("input");
         input.type = "number";
         input.min = "0";
+        input.max = "999"; // ✅ Limit duration input
         input.style.width = "60px";
         input.style.display = "none";
         input.classList.add("duration-input");
 
+        // ✅ Enforce max value 999
+        input.addEventListener("input", () => {
+          if (parseInt(input.value, 10) > 999) {
+            input.value = 999;
+          }
+        });
 
         const select = document.createElement("select");
         ["days", "weeks", "months"].forEach(opt => {
@@ -944,12 +948,9 @@
           option.value = opt;
           option.textContent = opt;
           select.appendChild(option);
-
         });
         select.style.display = "none";
         select.classList.add("duration-select");
-
-
 
         function commitDurationToState(key, newDuration) {
           medicineState[key] = medicineState[key] || {};
@@ -986,7 +987,6 @@
           select.style.display = "inline-block";
           closeIcon.style.display = "inline-block";
         };
-
 
         closeIcon.onclick = () => {
           if (input.value !== "" && !isNaN(parseInt(input.value, 10))) {
@@ -1029,7 +1029,6 @@
         const button = document.createElement("button");
         button.textContent = "Generate Insight";
         button.classList.add("generate-insight-button");
-
 
         button.onclick = () => {
           if (input.style.display !== "none") {

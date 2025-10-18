@@ -474,9 +474,6 @@
             if (value === "") {
                 setError(usernameInput, "Username cannot be empty");
                 return false;
-            } else if (value.length < 8) {
-                setError(usernameInput, "Username must be at least 8 characters");
-                return false;
             } else if (value.length > 12) {
                 setError(usernameInput, "Username cannot exceed 12 characters");
                 return false;

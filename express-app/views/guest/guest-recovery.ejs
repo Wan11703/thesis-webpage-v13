@@ -203,7 +203,6 @@
         });
 
         async function sendRecoveryCode(isResend = false) {
-            
             const inputControls = recovery_form.querySelectorAll(".input-control");
             inputControls.forEach(ic => {
                 ic.classList.remove("error", "success");
@@ -220,27 +219,34 @@
                 const formData = new FormData();
                 formData.append("email", email.value.trim());
 
-                const res = await fetch("/recovery-request", { method: "POST", body: formData });
-                const message = await res.text();
-                if (!res.ok) throw new Error(message);
+                const res = await fetch("/recovery-request", {
+                    method: "POST",
+                    body: formData
+                });
 
+                const data = await res.json();
+
+                if (!res.ok) throw new Error(data.error || "Something went wrong");
+
+                
                 if (!isResend) {
                     recovery_form.classList.remove("show");
                     confirm_form.classList.add("show");
                 }
 
-                document.querySelector(".email-holder").textContent = `Recovery Code sent to ${email.value.trim()}`;
+                document.querySelector(".email-holder").textContent =
+                    `Recovery Code sent to ${email.value.trim()}`;
 
                 if (isResend) {
                     showServerMessage("Recovery code resent successfully!");
+                } else {
+                    showServerMessage("Recovery code sent successfully!");
                 }
 
-                
-                if (isResend || !isResend) {
-                    disableResendLink();
-                }
+                disableResendLink();
 
             } catch (err) {
+                
                 showServerMessage(err.message, "error");
             }
         }

@@ -724,7 +724,9 @@ const transporter = nodemailer.createTransport({
 app.post("/recovery-request", formUpload.none(), (req, res) => {
     const { email } = req.body;
 
-    if (!email) return res.status(400).json({ error: "Email is required." });
+    if (!email) {
+        return res.status(400).json({ error: "Email is required." });
+    }
 
     dbConnection.query(
         "SELECT * FROM user_tbl WHERE email = ?",
@@ -732,74 +734,58 @@ app.post("/recovery-request", formUpload.none(), (req, res) => {
         (err, results) => {
             if (err) {
                 console.error("DB SELECT error:", err);
-                return res.status(500).json({ error: "Database error", details: err.message });
+                return res.status(500).json({
+                    error: "Database error",
+                    details: err.message
+                });
             }
+
             if (results.length === 0) {
-                return res.status(400).json({ error: "If the email exists, a code was sent." });
+                return res.status(400).json({ error: "Email does not exist." });
             }
 
-            const code = ("000000" + Math.floor(Math.random() * 999999)).slice(-6); // 6-digit code
-            const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+            const code = ("000000" + Math.floor(Math.random() * 999999)).slice(-6);
+            const expires = new Date(Date.now() + 15 * 60 * 1000);
 
-            const updateQuery =
-                "UPDATE user_tbl SET recovery_code = ?, recovery_code_expires = ? WHERE email = ?";
+            const updateQuery = `
+                UPDATE user_tbl
+                SET recovery_code = ?, recovery_code_expires = ?
+                WHERE email = ?
+            `;
+
             dbConnection.query(updateQuery, [code, expires, email], (err) => {
                 if (err) {
                     console.error("DB UPDATE error:", err);
-                    return res.status(500).json({ error: "Failed to save recovery code", details: err.message });
+                    return res.status(500).json({
+                        error: "Failed to save recovery code",
+                        details: err.message
+                    });
                 }
 
-                // Send email
                 const mailOptions = {
                     from: process.env.EMAIL_USER,
                     to: email,
                     subject: "Your Recovery Code",
-                    text: `Your MedExtract recovery code is: ${code}`,
+                    text: `Your MedExtract recovery code is: ${code}`
                 };
 
                 transporter.sendMail(mailOptions, (err, info) => {
                     if (err) {
                         console.error("Email sending error:", err);
-                        return res.status(500).json({ error: "Failed to send recovery email", details: err.message });
+                        return res.status(500).json({
+                            error: "Failed to send recovery email",
+                            details: err.message
+                        });
                     }
 
                     console.log("Recovery email sent:", info.response);
-                    res.status(200).json({ message: "If the email exists, a code was sent." });
+                    res.status(200).json({ message: "Recovery code sent successfully." });
                 });
             });
         }
     );
 });
 
-// --- Recovery Step 2: Verify Recovery Code ---
-app.post("/recovery-verify", formUpload.none(), (req, res) => {
-    const { email, code } = req.body;
-
-    if (!email || !code)
-        return res.status(400).send("Email and code are required.");
-
-    dbConnection.query(
-        "SELECT * FROM user_tbl WHERE email = ?",
-        [email],
-        (err, results) => {
-            if (err) return res.status(500).send("Database error.");
-            if (results.length === 0)
-                return res.status(400).send("Invalid email or code.");
-
-            const user = results[0];
-            const now = new Date();
-
-            if (user.recovery_code !== code || now > user.recovery_code_expires) {
-                return res.status(400).send("Invalid or expired recovery code.");
-            }
-
-            // Mark email as validated for password reset (use session)
-            req.session.recoveryUser = { email: email };
-
-            res.status(200).send("Code verified. Proceed to change password.");
-        }
-    );
-});
 
 // --- Recovery Step 3: Reset Password ---
 app.post("/recovery-reset", formUpload.none(), (req, res) => {
