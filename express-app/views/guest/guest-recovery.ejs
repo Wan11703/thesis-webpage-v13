@@ -228,7 +228,7 @@
 
                 if (!res.ok) throw new Error(data.error || "Something went wrong");
 
-                
+
                 if (!isResend) {
                     recovery_form.classList.remove("show");
                     confirm_form.classList.add("show");
@@ -246,10 +246,11 @@
                 disableResendLink();
 
             } catch (err) {
-                
+
                 showServerMessage(err.message, "error");
             }
         }
+
 
         function disableResendLink() {
             clearInterval(resendTimer);
@@ -435,13 +436,13 @@
             const messageText = document.getElementById("server-message-text");
             const messageIcon = document.getElementById("server-message-icon");
 
-            
+
             serverMessage.classList.remove("success", "error");
 
-            
+
             messageText.textContent = message;
 
-            
+
             if (type === "success") {
                 serverMessage.classList.add("success");
                 messageIcon.src = "/images/icons/seal-check-green.svg";
@@ -450,20 +451,20 @@
                 messageIcon.src = "/images/icons/seal-warning-red.svg";
             }
 
-            
+
             serverMessage.classList.remove("hidden");
             serverMessage.classList.add("show");
 
-            
+
             sessionStorage.setItem(
                 "serverMessage",
                 JSON.stringify({ message, type })
             );
 
-            
+
             if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
 
-            
+
             serverMessageTimeout = setTimeout(() => {
                 hideServerMessage();
             }, 3000);
@@ -472,22 +473,22 @@
         function hideServerMessage() {
             const serverMessage = document.getElementById("server-message");
 
-            
+
             if (serverMessageTimeout) clearTimeout(serverMessageTimeout);
 
-            
+
             sessionStorage.removeItem("serverMessage");
             serverMessageTimeout = null;
 
-            
+
             serverMessage.classList.remove("show");
 
             setTimeout(() => {
                 serverMessage.classList.add("hidden");
-            }, 400); 
+            }, 400);
         }
 
-        
+
         document
             .getElementById("server-message-close")
             .addEventListener("click", () => {
@@ -499,7 +500,7 @@
             if (stored) {
                 const { message, type } = JSON.parse(stored);
                 if (message) showServerMessage(message, type);
-            
+
             }
         });
 

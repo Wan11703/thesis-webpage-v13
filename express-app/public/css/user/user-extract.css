@@ -2,7 +2,7 @@
   .strength-input {
       width: auto;
       min-width: 40px;
-      max-width: 120px;
+      max-width: 140px;
       
       flex-shrink: 0;
   }
