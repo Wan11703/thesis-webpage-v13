@@ -44,7 +44,7 @@ app = FastAPI(title="OCR and NER API", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://med-extract.up.railway.app",  
-                   "https://thesis-webpage-v13-production-775f.up.railway.app"],  # Replace with your frontend's URL
+                   "https://thesis-webpage-v13-production-775f.up.railway.app"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -71,15 +71,15 @@ def get_image_from_db(user_id):
         'password': result.password,
         'host': result.hostname,
         'port': result.port,
-        'database': result.path[1:],  # Remove the leading '/' from the path (database name)
-        'charset': 'utf8mb4'  # Explicitly set the character set
+        'database': result.path[1:],  
+        'charset': 'utf8mb4'  
     }
 
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
 
-        # Explicitly set the character set for the session
+        
         cursor.execute("SET NAMES utf8mb4;")
 
         # Execute the query to fetch the image
@@ -150,7 +150,7 @@ async def process_image(request: Request):
     print(f"Received data: {data}")
     
     user_id = data.get("user_id")
-    image_url = data.get("image_url")  # Get the image_url from the request payload
+    image_url = data.get("image_url")  
 
     if not user_id and not image_url:
         return JSONResponse(content={"error": "No user_id or image_url provided"}, status_code=400)
@@ -297,7 +297,7 @@ def call_azure_vision_api(temp_image_path):
         "api-version": "2024-02-01" # Use the latest API version
     }
     response = requests.post(
-        f"{AZURE_ENDPOINT}/computervision/imageanalysis:analyze",  # Updated endpoint
+        f"{AZURE_ENDPOINT}/computervision/imageanalysis:analyze",  
         headers=headers,
         params=params,
         data=image_data,

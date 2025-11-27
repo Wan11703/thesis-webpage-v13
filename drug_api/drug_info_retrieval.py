@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # Import Flask-CORS
+from flask_cors import CORS  
 import pandas as pd
 import openai
 import os
@@ -8,25 +8,25 @@ import re
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
-CORS(app)   # Enable CORS for the entire app
+CORS(app)   
 
 CORS(app, origins=[
     "https://med-extract.up.railway.app",
     "https://thesis-webpage-v13-production-55fa.up.railway.app"
 ])
 
-# Define the path to the CSV files
+
 df_path = os.path.join(current_dir,'drugbank_clean.csv')
 df_prepared_path = os.path.join(current_dir,'drug_information.csv')
 
-# Set up your OpenAI API key
+
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 def get_drug_info(drug_name):
     try:
-        # Load DataFrames
+        
         df_prepared = pd.read_csv(df_prepared_path, index_col="name")
-        df = pd.read_csv(df_path, low_memory=False)  # Suppress DtypeWarning
+        df = pd.read_csv(df_path, low_memory=False)  
         drug_name_lower = drug_name.lower()
 
         # Check if the drug exists in the database
@@ -36,7 +36,7 @@ def get_drug_info(drug_name):
             print(f"Drug '{drug_name}' not found in the database.")
             return None
 
-        # Process drug interactions
+       
         # Process drug interactions
         if isinstance(drug_info['drug-interactions'], str):
             interactions = drug_info['drug-interactions'].split()
@@ -48,13 +48,13 @@ def get_drug_info(drug_name):
                 except IndexError:
                     pass
 
-            # Keep only the first 10 unique drugs
+            
             mapped_interactions = list(dict.fromkeys(mapped_interactions))[:10]
 
             drug_info['drug-interactions'] = ', '.join(mapped_interactions)
 
 
-        # Extract drug information
+        
         drug_information = drug_info['description']
         indication = drug_info['indication']
         side_effects = drug_info['toxicity']
@@ -147,7 +147,7 @@ def get_medicine_price(medicine_name, strength=None, frequency=None, duration=No
 
         result = response.choices[0].message.content.strip()
 
-        # Optional cleaning — just in case
+        
         result = re.sub(r'^(Certainly|Sure|Here|Alright|Of course)[^\n]*\n+', '', result, flags=re.IGNORECASE)
         result = re.sub(r'(These prices|Hope this helps|may vary)[^\n]*', '', result, flags=re.IGNORECASE)
         result = re.sub(r'─{5,}', '', result)
@@ -285,13 +285,9 @@ def summarize_field(field_text, field_type):
         return f"Error: {str(e)}"
 
 def clean_text(text):
-    # Remove [references]
     text = re.sub(r'\[[^\]]*\]', '', text)
-    # Remove (parentheticals) except for the first one after the drug name
     text = re.sub(r'\((?!paracetamol\)).*?\)', '', text, flags=re.IGNORECASE)
-    # Remove underscores
     text = text.replace('_', '')
-    # Remove extra whitespace
     text = re.sub(r'\s+', ' ', text)
     return text.strip()
 
@@ -314,7 +310,7 @@ def parse_brand_generic_prices(price_text):
         # Match Branded
         branded_match = re.search(r'branded\**:?\s*(.+?)\s*-\s*₱\s*([\d,\.]+)', line, re.IGNORECASE)
         if branded_match:
-            price_str = branded_match.group(2).replace(",", "")  # remove commas
+            price_str = branded_match.group(2).replace(",", "")  
             prices['Branded'] = {
                 'name': branded_match.group(1).strip(),
                 'price': float(price_str)
@@ -324,7 +320,7 @@ def parse_brand_generic_prices(price_text):
         # Match Generic
         generic_match = re.search(r'generic\**:?\s*(.+?)\s*-\s*₱\s*([\d,\.]+)', line, re.IGNORECASE)
         if generic_match:
-            price_str = generic_match.group(2).replace(",", "")  # remove commas
+            price_str = generic_match.group(2).replace(",", "")  
             prices['Generic'] = {
                 'name': generic_match.group(1).strip(),
                 'price': float(price_str)
@@ -345,7 +341,7 @@ def infer_form_from_strength(strength):
         return "tube"
     if any(x in strength for x in ["tablet", "tab", "capsule", "cap", "piece", "pill"]):
         return "piece"
-    return "piece"  # Default to piece if unsure
+    return "piece"  
 
 @app.route('/get-drug-info', methods=['POST'])
 def get_drug_info_endpoint():
@@ -392,7 +388,7 @@ def get_drug_info_endpoint():
             "summary": summary,
             "strength": strength,
             "frequency": frequency,
-            "duration": duration,  # <-- add this
+            "duration": duration,  
         })
     else:
         return jsonify({"error": f"Drug '{drug_name}' not found in the database."}), 404
@@ -406,7 +402,7 @@ def get_extract_info_endpoint():
     frequency = data.get('frequency', '')
     duration = data.get('duration', '')
 
-    form = infer_form_from_strength(strength)  # <-- ADD THIS LINE
+    form = infer_form_from_strength(strength)  
 
     result = get_drug_info(drug_name)
     
@@ -444,7 +440,7 @@ def get_extract_info_endpoint():
                 elif weeks_match:
                     num_days = int(weeks_match.group(1)) * 7
                 elif months_match:
-                    num_days = int(months_match.group(1)) * 30  # Approximate 1 month as 30 days
+                    num_days = int(months_match.group(1)) * 30  
 
                 freq_num = int(re.findall(r'\d+', frequency)[0])
                 price_lines = []
@@ -474,14 +470,14 @@ def get_extract_info_endpoint():
                     f"Take {strength} per dose, {frequency} as prescribed by your doctor. "
                     "Always follow your healthcare provider's instructions for timing and duration."
                 )
-                freq_num = int(re.findall(r'\d+', frequency)[0]) if frequency else 1  # <-- ADD THIS LINE
+                freq_num = int(re.findall(r'\d+', frequency)[0]) if frequency else 1  
                 price_lines = []
                 for brand_type, info in brand_generic_prices.items():
                     price_per_unit = info['price']
                     name = info['name']
 
                     if isinstance(price_per_unit, float):
-                        if form == "piece":  # only compute daily/total for tablets/capsules
+                        if form == "piece":  
                             if duration and num_days:
                                 total_price = price_per_unit * freq_num * num_days
                                 price_lines.append(
@@ -544,7 +540,7 @@ def process_raw_text():
         print(f"Received raw text: {raw_text}")
         # Add your drug information retrieval logic here
 
-        # Example response
+        
         return jsonify({"success": True, "message": "Raw text processed successfully"})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500

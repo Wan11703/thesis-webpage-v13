@@ -10,12 +10,11 @@ import requests
 
 app = FastAPI()
 
-# Add CORS middleware to allow requests from your frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://med-extract.up.railway.app",
                    "https://thesis-webpage-v13-production-775f.up.railway.app",
-                   "https://thesis-webpage-v13-production-c1fa.up.railway.app"],  # Replace with your frontend's URL
+                   "https://thesis-webpage-v13-production-c1fa.up.railway.app"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -29,7 +28,7 @@ async def stream_medicines():
             # Stream the latest extracted medicines
             if latest_extracted_medicines:
                 yield f"data: {json.dumps(latest_extracted_medicines)}\n\n"
-            await asyncio.sleep(1)  # Check for updates every second
+            await asyncio.sleep(1)  
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
